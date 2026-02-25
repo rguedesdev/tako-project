@@ -1,0 +1,19 @@
+.navbar {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
+  background-color: #c1c1c1;
+  margin-bottom: 20px;
+}
+
+.navList {
+  display: flex;
+  gap: 20px;
+}
+
+.navLink {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 1.2em;
+}

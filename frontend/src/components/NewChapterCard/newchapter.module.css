@@ -1,0 +1,33 @@
+.newChapterCard {
+  display: inline-flex;
+  padding: 0 20px 0 0;
+  flex-direction: row;
+  gap: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.mangaCover {
+  border-radius: 8px;
+}
+.mangaTitle {
+  font-size: 1.2em;
+  font-weight: 600;
+}
+
+.capLi {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+}
+
+.scanWrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+}
+
+.scanName {
+  font-size: 0.9em;
+}
