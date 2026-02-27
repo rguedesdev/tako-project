@@ -4,16 +4,33 @@
   padding: 20px 0;
   background-color: #c1c1c1;
   margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); /* Light Mode */
+  /* box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);  Dark Mode */
+}
+
+.logo {
+  width: 150px;
+  height: auto;
 }
 
 .navList {
+  width: 1280px;
+  padding: 0 16px;
   display: flex;
-  gap: 20px;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.linksWapper {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
 }
 
 .navLink {
   display: flex;
   flex-direction: row;
   align-items: center;
-  font-size: 1.2em;
+  gap: 5px;
+  font-size: 1.1em;
 }

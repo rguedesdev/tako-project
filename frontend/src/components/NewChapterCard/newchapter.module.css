@@ -1,33 +1,165 @@
+/* =========================
+   GRID PRINCIPAL DOS CARDS
+   ========================= */
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+/* =========================
+   CARD DE CAPÍTULO
+   ========================= */
 .newChapterCard {
-  display: inline-flex;
-  padding: 0 20px 0 0;
+  width: 100%;
+  min-width: 0;
+  display: flex;
   flex-direction: row;
   gap: 20px;
+  padding: 0 20px 0 0;
+  background-color: #c1c1c1;
+  border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+
+  /* =========================
+     TRANSIÇÃO E CAMADA GPU
+     ========================= */
+  transition:
+    transform 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out;
+  position: relative; /* garante transform isolado */
+  will-change: transform; /* força navegador otimizar transform */
+  backface-visibility: hidden; /* evita flicker no hover */
+}
+
+.newChapterCard:hover {
+  transform: translateY(-5px); /* levanta o card sem alterar tamanho */
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25);
+}
+
+/* =========================
+   FIGURA / IMAGEM DO MANGA
+   ========================= */
+.coverWrapper {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  height: 185px;
+  width: auto;
+
+  /* =========================
+     CAMADA PRÓPRIA PARA ESTABILIDADE
+     ========================= */
+  will-change: transform; /* GPU render */
 }
 
 .mangaCover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   border-radius: 8px;
-}
-.mangaTitle {
-  font-size: 1.2em;
-  font-weight: 600;
+
+  /* =========================
+     EVITA TREMER AO HOVER DO CARD
+     ========================= */
+  transform: translateZ(0); /* cria camada GPU própria */
 }
 
-.capLi {
+/* =========================
+   LISTA DE CAPÍTULOS
+   ========================= */
+.capList {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.chaptersWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.mangaTitle {
+  font-size: 1em;
+  font-weight: 600;
+  margin-top: 3px;
+  margin-bottom: 5px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* =========================
+   ITEM DE CAPÍTULO (LI)
+   ========================= */
+.capLi {
+  display: grid;
+  grid-template-columns: 1fr 90px;
+  align-items: center;
+  gap: 24px;
+}
+
+.capInfo {
+  display: flex;
   align-items: center;
   gap: 5px;
 }
 
+.capTime {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.75em;
+  color: #888;
+}
+
+/* =========================
+   LINK DO CAPÍTULO
+   ========================= */
+.capLink {
+  font-size: 0.9em;
+  padding: 2px 6px;
+  transition: all ease-in 0.15s;
+}
+
+.capLink:hover {
+  background-color: aqua;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* =========================
+   LINHA GRADIENTE
+   ========================= */
+.hrFaded {
+  border: none;
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(to right, transparent, #30096e, transparent);
+}
+
+/* =========================
+   SCAN / STAFF
+   ========================= */
 .scanWrapper {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 5px;
+  margin-bottom: 5px;
 }
 
 .scanName {
-  font-size: 0.9em;
+  font-size: 0.8em;
+  padding: 2px 6px;
+  transition: all ease-in 0.15s;
+  cursor: pointer;
+}
+
+.scanName:hover {
+  background-color: aqua;
+  padding: 2px 6px;
+  border-radius: 4px;
 }
