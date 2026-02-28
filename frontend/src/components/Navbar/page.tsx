@@ -11,6 +11,13 @@ import { RiHome9Line } from "react-icons/ri";
 import { GiEvilBook } from "react-icons/gi";
 import { HiOutlineBookOpen } from "react-icons/hi2";
 
+import { MdOutlinePeopleOutline } from "react-icons/md";
+
+import { PiNotePencil } from "react-icons/pi";
+import { FiLogIn } from "react-icons/fi";
+
+import { FaRegBell } from "react-icons/fa";
+
 // Images
 import TakoP from "../../../public/tako-logo.png";
 
@@ -33,9 +40,30 @@ function Navbar() {
               <RiHome3Line size={18} />
               <span>Home</span>
             </li>
+
             <li className={styles.navLink}>
               <HiOutlineBookOpen size={18} />
-              <span>Manga</span>
+              <span>Obras</span>
+            </li>
+
+            <li className={styles.navLink}>
+              <MdOutlinePeopleOutline size={20} />
+              <span>Scans</span>
+            </li>
+
+            <li className={styles.navLink}>
+              <FiLogIn size={16} />
+              <span>Login</span>
+            </li>
+
+            <li className={styles.navLink}>
+              <PiNotePencil size={18} />
+              <span>Cadastre-se</span>
+            </li>
+
+            <li className={styles.navLink}>
+              <FaRegBell size={20} />
+              {/* <span>Notificações</span> */}
             </li>
           </div>
         </ul>

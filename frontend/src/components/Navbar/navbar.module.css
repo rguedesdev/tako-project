@@ -2,8 +2,8 @@
   display: flex;
   justify-content: center;
   padding: 20px 0;
-  background-color: #c1c1c1;
-  margin-bottom: 20px;
+  background-color: #023684;
+  margin-bottom: 40px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); /* Light Mode */
   /* box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);  Dark Mode */
 }

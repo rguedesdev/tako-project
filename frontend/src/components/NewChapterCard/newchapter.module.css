@@ -15,9 +15,9 @@
   min-width: 0;
   display: flex;
   flex-direction: row;
-  gap: 20px;
-  padding: 0 20px 0 0;
-  background-color: #c1c1c1;
+  gap: 10px;
+  padding: 0 10px 0 0;
+  background-color: #343746;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 
@@ -81,6 +81,7 @@
 }
 
 .mangaTitle {
+  color: var(--text-primary);
   font-size: 1em;
   font-weight: 600;
   margin-top: 3px;
@@ -104,7 +105,8 @@
 .capInfo {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 2px;
+  color: var(--text-primary);
 }
 
 .capTime {
@@ -112,7 +114,7 @@
   align-items: center;
   gap: 3px;
   font-size: 0.75em;
-  color: #888;
+  color: var(--text-secondary);
 }
 
 /* =========================
@@ -125,7 +127,7 @@
 }
 
 .capLink:hover {
-  background-color: aqua;
+  background-color: #474a5d;
   padding: 2px 6px;
   border-radius: 4px;
 }
@@ -137,17 +139,18 @@
   border: none;
   height: 1px;
   width: 100%;
-  background: linear-gradient(to right, transparent, #30096e, transparent);
+  background: linear-gradient(to right, transparent, #c0c0c0, transparent);
 }
 
 /* =========================
    SCAN / STAFF
    ========================= */
 .scanWrapper {
+  color: var(--text-secondary);
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 5px;
+  gap: 2px;
   margin-bottom: 5px;
 }
 
@@ -159,7 +162,7 @@
 }
 
 .scanName:hover {
-  background-color: aqua;
+  background-color: #474a5d;
   padding: 2px 6px;
   border-radius: 4px;
 }

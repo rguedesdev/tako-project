@@ -7,6 +7,11 @@
 }
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg-color: #282a36;
+  --text-primary: #ffffff;
+  --text-secondary: #d7d6d6;
+}
+
+body {
+  background-color: var(--bg-color);
 }
