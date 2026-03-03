@@ -1,0 +1,77 @@
+.volNumber {
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.volTitle {
+  font-size: 1.1em;
+  font-weight: 600;
+}
+
+.capContent {
+  color: var(--text-primary);
+  background-color: var(--card-bg-color);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.capNumber {
+  font-size: 0.9em;
+  font-weight: bold;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0 5px 10px;
+}
+
+.capLine {
+  padding-left: 10px;
+  transition: all ease-in 0.15s;
+}
+
+.capLine:hover {
+  background-color: #474a5d;
+}
+
+/* apenas o último capLine ganha borda inferior */
+.capContent > div:last-child .capLine:hover {
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+/* .capLink {
+  display: block;
+  flex-direction: column;
+} */
+
+.capTitle {
+  font-weight: bold;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  padding-top: 10px;
+}
+
+.scanlator {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 10px;
+}
+
+.hrFadded {
+  border: none;
+  height: 1px;
+  background: linear-gradient(to right, transparent, white, transparent);
+}

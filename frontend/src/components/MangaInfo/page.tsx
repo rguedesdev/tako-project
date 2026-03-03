@@ -26,7 +26,7 @@ function MangaInfo() {
           priority
         />
       </div>
-      <div>
+      <div className={styles.mangaInfo}>
         <h1 className={styles.mangaTitle}>Kanan-sama wa Akumade Choroi</h1>
         <div className={styles.mangaTags}>
           <span className={styles.tag}>Comédia</span>
