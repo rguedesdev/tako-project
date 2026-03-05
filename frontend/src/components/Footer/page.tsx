@@ -11,7 +11,7 @@ function Footer() {
   return (
     <footer className={styles.footer}>
       <h2>
-        © 2026 Tako Project | Todos os direitos das obras são destinados aos
+        © 2026 Tako Project | Todos os direitos das obras pertencem aos
         mangakas. Se possível, apoiem as obras!
       </h2>
       <div className={styles.iconsWrapper}>

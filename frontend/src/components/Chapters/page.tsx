@@ -9,43 +9,44 @@ import { TbBooks } from "react-icons/tb";
 
 import { RxCornerTopLeft } from "react-icons/rx";
 import { RxCornerBottomLeft } from "react-icons/rx";
-import { RxDividerHorizontal } from "react-icons/rx";
 
 import { MdOutlinePeopleOutline } from "react-icons/md";
 import { BiHash } from "react-icons/bi";
 
+import { GiEvilBook } from "react-icons/gi";
+
 function Chapters() {
   const volumes = [
     {
-      id: 1,
-      number: 1,
+      id: 2,
+      number: 2,
       chapters: [
         {
           id: 10,
-          number: 2, // Capítulo 2
+          number: 4, // Capítulo 2
           releases: [
             {
               id: 1,
               language: "pt-BR",
-              title: "O despertar do herói",
+              title: "Título em Português 4",
               scanlator: "Scan BR",
             },
             {
               id: 2,
               language: "ja-JP",
-              title: "英雄の目覚め",
+              title: "日本語タイトル",
               scanlator: "Scan JP",
             },
           ],
         },
         {
           id: 11,
-          number: 1, // Capítulo 1
+          number: 3, // Capítulo 1
           releases: [
             {
               id: 3,
               language: "pt-BR",
-              title: "O começo",
+              title: "Título em Português 3",
               scanlator: "Scan BR",
             },
           ],
@@ -53,8 +54,8 @@ function Chapters() {
       ],
     },
     {
-      id: 2,
-      number: 2,
+      id: 1,
+      number: 1,
       chapters: [
         {
           id: 12,
@@ -63,14 +64,20 @@ function Chapters() {
             {
               id: 1,
               language: "pt-BR",
-              title: "O despertar do herói",
+              title: "Título em Português 2",
               scanlator: "Scan BR",
             },
             {
               id: 2,
               language: "ja-JP",
-              title: "英雄の目覚め",
+              title: "日本語タイトル",
               scanlator: "Scan JP",
+            },
+            {
+              id: 3,
+              language: "en-US",
+              title: "Title in English 2",
+              scanlator: "Scan EN",
             },
           ],
         },
@@ -81,7 +88,7 @@ function Chapters() {
             {
               id: 3,
               language: "pt-BR",
-              title: "O começo",
+              title: "Título em Português 1",
               scanlator: "Scan BR",
             },
           ],
@@ -102,7 +109,7 @@ function Chapters() {
       {volumes.map((volume) => (
         <div key={volume.id}>
           <div className={styles.volNumber}>
-            <TbBooks size={20} />
+            <GiEvilBook size={20} />
             <h2 className={styles.volTitle}>Volume {volume.number}</h2>
           </div>
 
@@ -113,26 +120,29 @@ function Chapters() {
                 <h3>Capítulo {chapter.number}</h3>
               </div>
 
-              {chapter.releases.map((release, index) => (
-                <div key={release.id}>
-                  <div className={styles.capLine}>
-                    <Link className={styles.capLink} href={`/`}>
-                      <div className={styles.capTitle}>
-                        <span>{languageFlags[release.language] ?? "🌍"}</span>
-                        <span>{release.title}</span>
-                      </div>
-                      <div className={styles.scanlator}>
-                        <MdOutlinePeopleOutline size={20} />
-                        <span>{release.scanlator}</span>
-                      </div>
-                    </Link>
-                  </div>
+              {/* Adicionamos uma div pai para as releases para controlar a linha vertical */}
+              <div className={styles.releasesGroup}>
+                {chapter.releases.map((release, index) => (
+                  <div key={release.id} className={styles.releaseWrapper}>
+                    <div className={styles.capLine}>
+                      <Link className={styles.capLink} href={`/`}>
+                        <div className={styles.capTitle}>
+                          <span>{languageFlags[release.language] ?? "🌍"}</span>
+                          <span>{release.title}</span>
+                        </div>
+                        <div className={styles.scanlator}>
+                          <MdOutlinePeopleOutline size={20} />
+                          <span>{release.scanlator}</span>
+                        </div>
+                      </Link>
+                    </div>
 
-                  {index < chapter.releases.length - 1 && (
-                    <hr className={styles.hrFadded} />
-                  )}
-                </div>
-              ))}
+                    {index < chapter.releases.length - 1 && (
+                      <hr className={styles.hrFadded} />
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           ))}
         </div>

@@ -9,6 +9,8 @@ import { AiOutlineRead } from "react-icons/ai";
 import { LuTv } from "react-icons/lu";
 import { RiBilibiliFill } from "react-icons/ri";
 import { RiBilibiliLine } from "react-icons/ri";
+import { LuSquareLibrary } from "react-icons/lu";
+import { CiPlay1 } from "react-icons/ci";
 
 // Images
 import Kanan from "../../../public/kanan.jpg";
@@ -16,15 +18,27 @@ import Kanan from "../../../public/kanan.jpg";
 function MangaInfo() {
   return (
     <section className={styles.mangaInfoContainer}>
-      <div className={styles.mangaWrapper}>
-        <Image
-          className={styles.mangaCover}
-          src={Kanan}
-          alt="Manga Cover"
-          fill
-          unoptimized
-          priority
-        />
+      <div>
+        <div className={styles.mangaWrapper}>
+          <Image
+            className={styles.mangaCover}
+            src={Kanan}
+            alt="Manga Cover"
+            fill
+            unoptimized
+            priority
+          />
+        </div>
+        <div className={styles.btnWrapper}>
+          <button className={styles.btnAdd}>
+            <LuSquareLibrary size={20} />
+            <span>Adicionar à Biblioteca</span>
+          </button>
+          <button className={styles.btnRead}>
+            <CiPlay1 size={20} />
+            <span>Iniciar leitura</span>
+          </button>
+        </div>
       </div>
       <div className={styles.mangaInfo}>
         <h1 className={styles.mangaTitle}>Kanan-sama wa Akumade Choroi</h1>
@@ -44,6 +58,15 @@ function MangaInfo() {
           more recently with desktop publishing software like Aldus PageMaker
           including versions of Lorem Ipsum.
         </p>
+
+        <div className={styles.mangakaContainer}>
+          <h3 className={styles.mangakaTitle}>Mangaka</h3>
+          <div className={styles.mangakas}>
+            <span className={styles.mangaka}>Rumiko Takahashi</span>
+            <span className={styles.mangaka}>Eichiiro Oda</span>
+          </div>
+        </div>
+
         <div className={styles.trackersContainer}>
           <h3 className={styles.trackersTitle}>Trackers</h3>
           <div className={styles.trackers}>

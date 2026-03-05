@@ -34,13 +34,92 @@
   padding: 10px 0 5px 10px;
 }
 
+/* 1. Container pai sem recuo */
+.releasesGroup {
+  padding-left: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.releaseWrapper {
+  position: relative;
+  padding-left: 35px;
+  /* Adicione border-radius aqui para que ele também sofra a transição se necessário */
+  transition:
+    background-color 0.2s ease,
+    border-radius 0.2s ease;
+  cursor: pointer;
+}
+
+/* --- LÓGICA DE HOVER --- */
+.releaseWrapper:hover {
+  background-color: #474a5d;
+}
+
+.releaseWrapper:hover::before,
+.releaseWrapper:hover::after {
+  background-color: #c0c0c0;
+}
+
+/* LINHA VERTICAL (O Tronco) */
+.releaseWrapper::before {
+  content: "";
+  position: absolute;
+  left: 15px;
+  top: 0;
+  width: 4px;
+  background-color: #474a5d;
+  bottom: 15px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+  z-index: 1;
+}
+
+/* LINHA HORIZONTAL (A Ramificação) */
+.releaseWrapper::after {
+  content: "";
+  position: absolute;
+  left: 15px;
+  /* AUMENTADO: De 22px para 28px para o traço descer e alinhar no meio */
+  top: 29px;
+  width: 15px;
+  height: 4px;
+  background-color: #474a5d;
+  border-radius: 0 4px 4px 0;
+  transform: translateY(-50%);
+  transition: background-color 0.2s ease;
+  z-index: 1;
+}
+
+.releaseWrapper:last-child {
+  /* O arredondamento fica "em espera", invisível sem a cor de fundo */
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.releaseWrapper:last-child:hover {
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+/* O ajuste do ÚLTIMO ITEM: Aumentamos de 22px para 28px para ele descer */
+.releaseWrapper:last-child::before {
+  bottom: auto;
+  height: 28px;
+}
+
+/* ESTABILIZADOR: Garante que o conteúdo não mude de lugar */
 .capLine {
-  padding-left: 10px;
+  padding: 10px 0; /* Aumentei um pouco o respiro do título */
+  width: 100%;
   transition: all ease-in 0.15s;
 }
 
-.capLine:hover {
-  background-color: #474a5d;
+.capLink {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 /* apenas o último capLine ganha borda inferior */
@@ -49,20 +128,18 @@
   border-bottom-right-radius: 10px;
 }
 
-/* .capLink {
-  display: block;
-  flex-direction: column;
-} */
-
 .capTitle {
   font-weight: bold;
+  line-height: 1.2;
   display: flex;
   flex-direction: row;
+  align-items: center;
   gap: 10px;
   padding-top: 10px;
 }
 
 .scanlator {
+  font-size: 0.9em;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -74,4 +151,18 @@
   border: none;
   height: 1px;
   background: linear-gradient(to right, transparent, white, transparent);
+}
+
+/* HR Ajustado */
+.hrFadded {
+  border: none;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.05),
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  margin: 0;
+  margin-left: 15px;
 }
