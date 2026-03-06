@@ -14,6 +14,15 @@ import { CiPlay1 } from "react-icons/ci";
 
 // Images
 import Kanan from "../../../public/kanan.jpg";
+import OtakuList from "../../../public/otakulist.png";
+import MAL from "../../../public/mal.png";
+import AniList from "../../../public/anilist.png";
+import AniPlanet from "../../../public/animeplanet.png";
+
+import OtakuyaSan from "../../../public/otakuyasan.png";
+import Amazon from "../../../public/amazon.png";
+import Rakuten from "../../../public/rakuten.png";
+import CDJapan from "../../../public/cdjapan.png";
 
 function MangaInfo() {
   return (
@@ -42,11 +51,11 @@ function MangaInfo() {
       </div>
       <div className={styles.mangaInfo}>
         <h1 className={styles.mangaTitle}>Kanan-sama wa Akumade Choroi</h1>
-        <div className={styles.mangaTags}>
+        {/* <div className={styles.mangaTags}>
           <span className={styles.tag}>Comédia</span>
           <span className={styles.tag}>Ecchi</span>
           <span className={styles.tag}>Romance</span>
-        </div>
+        </div> */}
         <p className={styles.sinopse}>
           Lorem Ipsum is simply dummy text of the printing and typesetting
           industry. Lorem Ipsum has been the industry's standard dummy text ever
@@ -59,20 +68,122 @@ function MangaInfo() {
           including versions of Lorem Ipsum.
         </p>
 
+        <div className={styles.genderDemographicContainer}>
+          <div className={styles.genderContainer}>
+            <h3 className={styles.genderTitle}>Gêneros</h3>
+            <div className={styles.genders}>
+              <span className={styles.gender}>Comédia</span>
+              <span className={styles.gender}>Ecchi</span>
+              <span className={styles.gender}>Romance</span>
+            </div>
+          </div>
+
+          <div className={styles.demographicContainer}>
+            <h3 className={styles.demographicTitle}>Demografia</h3>
+            <div className={styles.demographics}>
+              <span className={styles.demographic}>Seinen</span>
+            </div>
+          </div>
+        </div>
+
         <div className={styles.mangakaContainer}>
           <h3 className={styles.mangakaTitle}>Mangaka</h3>
           <div className={styles.mangakas}>
             <span className={styles.mangaka}>Rumiko Takahashi</span>
-            <span className={styles.mangaka}>Eichiiro Oda</span>
+            {/* <span className={styles.mangaka}>Eichiiro Oda</span> */}
           </div>
         </div>
 
         <div className={styles.trackersContainer}>
           <h3 className={styles.trackersTitle}>Trackers</h3>
           <div className={styles.trackers}>
-            <span className={styles.tracker}>OtakuList</span>
-            <span className={styles.tracker}>My Anime List</span>
-            <span className={styles.tracker}>AniList</span>
+            <span className={styles.otakulist}>
+              <Image
+                src={OtakuList}
+                alt="OtakuList Logo"
+                width={50}
+                height={40}
+                unoptimized
+                priority
+              />
+            </span>
+            <span className={styles.myanimelist}>
+              <Image
+                src={MAL}
+                alt="MAL Logo"
+                width={80}
+                height={40}
+                unoptimized
+                priority
+              />
+            </span>
+            <span className={styles.anilist}>
+              <Image
+                src={AniList}
+                alt="AniList Logo"
+                width={65}
+                height={40}
+                unoptimized
+                priority
+              />
+            </span>
+
+            <span className={styles.aniplanet}>
+              <Image
+                src={AniPlanet}
+                alt="Anime Planet Logo"
+                width={110}
+                height={40}
+                unoptimized
+                priority
+              />
+            </span>
+          </div>
+        </div>
+
+        <div className={styles.storesContainer}>
+          <h3 className={styles.storesTitle}>Compre em</h3>
+          <div className={styles.stores}>
+            <span className={styles.otakuyasan}>
+              <Image
+                src={OtakuyaSan}
+                alt="Otakuya-san Logo"
+                width={80}
+                height={40}
+                unoptimized
+                priority
+              />
+            </span>
+            <span className={styles.amazon}>
+              <Image
+                src={Amazon}
+                alt="Amazon Logo"
+                width={50}
+                height={40}
+                unoptimized
+                priority
+              />
+            </span>
+            <span className={styles.rakuten}>
+              <Image
+                src={Rakuten}
+                alt="Rakuten Logo"
+                width={50}
+                height={40}
+                unoptimized
+                priority
+              />
+            </span>
+            <span className={styles.cdjapan}>
+              <Image
+                src={CDJapan}
+                alt="CD Japan Logo"
+                width={70}
+                height={40}
+                unoptimized
+                priority
+              />
+            </span>
           </div>
         </div>
       </div>
