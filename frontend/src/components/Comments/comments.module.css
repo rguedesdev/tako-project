@@ -1,0 +1,15 @@
+/* Comentários */
+.title {
+  font-size: 20px;
+  margin-top: 20px;
+  margin-bottom: 15px;
+}
+
+.textArea {
+  width: 100%;
+  min-height: 150px;
+  padding: 16px;
+  border: 1px solid crimson;
+  border-radius: 8px;
+  outline: none;
+}

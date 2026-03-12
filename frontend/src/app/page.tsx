@@ -4,7 +4,7 @@ import Image from "next/image";
 // Style Sheet CSS
 import styles from "./home.module.css";
 
-function Home() {
+function HomePage() {
   return (
     <div className={styles.page}>
       <main className={styles.homeContainer}>
@@ -14,4 +14,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default HomePage;

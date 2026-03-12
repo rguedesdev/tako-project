@@ -5,7 +5,7 @@ import styles from "./title.module.css";
 import { MangaInfo } from "@/components/MangaInfo/page";
 import { Chapters } from "@/components/Chapters/page";
 
-function Title() {
+function TitlePage() {
   return (
     <div className={styles.page}>
       <main className={styles.titleContainer}>
@@ -16,4 +16,4 @@ function Title() {
   );
 }
 
-export default Title;
+export default TitlePage;

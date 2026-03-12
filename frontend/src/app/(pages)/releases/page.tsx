@@ -4,7 +4,7 @@ import styles from "./releases.module.css";
 // Components
 import { NewChapterCard } from "@/components/NewChapterCard/page";
 
-function Releases() {
+function ReleasesPage() {
   return (
     <div className={styles.page}>
       <main className={styles.releasesContainer}>
@@ -14,4 +14,4 @@ function Releases() {
   );
 }
 
-export default Releases;
+export default ReleasesPage;
