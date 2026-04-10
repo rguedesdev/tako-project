@@ -1,4 +1,7 @@
-/* Comentários */
+.comentsSection {
+  color: white;
+}
+
 .title {
   font-size: 20px;
   margin-top: 20px;
@@ -9,7 +12,117 @@
   width: 100%;
   min-height: 150px;
   padding: 16px;
-  border: 1px solid crimson;
+  border: 1px solid crimson; /* Mantido seu crimson */
   border-radius: 8px;
   outline: none;
+  background: transparent;
+  color: white;
+}
+
+.commentsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.commentWrapper {
+  position: relative;
+}
+
+.comment {
+  position: relative;
+  list-style: none;
+}
+
+.commentContent {
+  display: flex;
+  gap: 15px;
+  padding-top: 20px;
+}
+
+.avatarContainer {
+  position: relative;
+  width: 60px;
+  flex-shrink: 0;
+}
+
+.profilePicture {
+  border-radius: 50%;
+  position: relative;
+  z-index: 2;
+  background: #1a1a1b; /* Cor do fundo para "limpar" a linha atrás do avatar */
+}
+
+.commentBody {
+  flex: 1;
+}
+
+.commentMeta {
+  display: flex;
+  gap: 50px; /* Mantido seu gap original */
+}
+
+.commentText {
+  margin-top: 5px;
+  line-height: 1.5;
+}
+
+/* --- A ARQUITETURA DO REDDIT --- */
+/* 1. O TRILHO (O pai desenha a vertical) */
+.repliesWrapper {
+  margin-left: 30px;
+  padding-left: 30px;
+  position: relative;
+  /* A linha vertical única */
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* 2. O L CURVO (O pai desenha a curva, saindo da MESMA BORDAS) */
+.repliesWrapper::before {
+  content: "";
+  position: absolute;
+  /* O left deve ser negativo na exata espessura da borda */
+  left: -1px;
+  top: -20px;
+  width: 31px; /* 30px da margem + 1px da borda */
+  height: 45px;
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  border-bottom-left-radius: 20px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* A borracha só atua no último elemento do TRILHO 2 */
+.repliesWrapper > .commentWrapper:last-child {
+  position: relative;
+}
+
+/* --- EFEITO HOVER MANTIDO --- */
+.commentWrapper:hover > .repliesWrapper::before {
+  border-left-color: rgba(255, 255, 255, 0.6);
+  border-bottom-color: rgba(255, 255, 255, 0.6);
+  transition: border-color 0.2s ease;
+}
+
+.repliesWrapper .commentWrapper:hover > .repliesWrapper::before {
+  border-left-color: rgba(255, 255, 255, 0.6);
+  border-bottom-color: rgba(255, 255, 255, 0.6);
+}
+
+/* --- EFEITO HOVER NA LINHA --- */
+/* Quando o mouse entra no wrapper do comentário */
+.commentWrapper:hover > .repliesWrapper::before {
+  /* Altere para a cor que você quer que a linha fique (ex: branca ou um cinza mais claro) */
+  border-left-color: rgba(255, 255, 255, 0.6);
+  border-bottom-color: rgba(255, 255, 255, 0.6);
+
+  /* Adiciona uma transição suave para não ficar seco */
+  transition: border-color 0.2s ease;
+}
+
+/* Opcional: Se quiser que a linha também acenda quando passar o mouse na resposta */
+.repliesWrapper .commentWrapper:hover > .repliesWrapper::before {
+  border-left-color: rgba(255, 255, 255, 0.6);
+  border-bottom-color: rgba(255, 255, 255, 0.6);
 }
