@@ -21,9 +21,7 @@
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 
-  /* =========================
-     TRANSIÇÃO E CAMADA GPU
-     ========================= */
+  /* ==== TRANSIÇÃO E CAMADA GPU ==== */
   transition:
     transform 0.2s ease-in-out,
     box-shadow 0.2s ease-in-out;

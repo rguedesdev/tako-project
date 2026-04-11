@@ -11,7 +11,7 @@ import { MdAccessTime, MdOutlinePeopleOutline } from "react-icons/md";
 
 // Images
 import OnePiece from "../../../public/one-piece.jpg";
-// import RuriDragon from "../../../public/ruri-dragon.jpg";
+import RuriDragon from "../../../public/ruri-dragon.jpg";
 import ChainsawMan from "../../../public/chainsaw.jpg";
 import Elf from "../../../public/elf.jpg";
 import DramaQueen from "../../../public/drama.jpg";
@@ -45,8 +45,7 @@ function NewChapterCard() {
     },
     {
       id: 1,
-      image:
-        "https://bafybeign2avglfbkz77dfj5eexvyt4n7xqhgw6djb2daoxnzcanb6ti7se.ipfs.dweb.link/?filename=ruri-dragon.jpg",
+      image: RuriDragon,
       title: "Ruri Dragon",
       chapters: [
         { number: 21, time: "há 25 min", language: "Japanese" },
@@ -262,7 +261,7 @@ function NewChapterCard() {
   };
 
   return (
-    <div className={styles.cardsGrid}>
+    <section className={styles.cardsGrid}>
       {realeases &&
         realeases.map((realease) => (
           <article key={realease.id} className={styles.newChapterCard}>
@@ -307,7 +306,7 @@ function NewChapterCard() {
             </ul>
           </article>
         ))}
-    </div>
+    </section>
   );
 }
 
