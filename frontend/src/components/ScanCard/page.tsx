@@ -5,7 +5,8 @@ import Image from "next/image";
 import styles from "./scancard.module.css";
 
 // Icones
-import { MdOutlinePeopleOutline } from "react-icons/md";
+import { MdOutlinePeopleOutline, MdGroups } from "react-icons/md";
+import { ImMakeGroup } from "react-icons/im";
 import { HiOutlineBookOpen } from "react-icons/hi2";
 import { BiHash } from "react-icons/bi";
 
@@ -177,10 +178,10 @@ function ScansCard() {
 
   return (
     <section>
-      <h1 className={styles.scansSectionTitle}>
-        <MdOutlinePeopleOutline size={28} />
+      <h2 className={styles.scansSectionTitle}>
+        <ImMakeGroup size={20} />
         <span>Scans Parceiras</span>
-      </h1>
+      </h2>
       <div className={styles.scansGrid}>
         {scans.map((scan) => (
           <article key={scan.id} className={styles.scanCard}>

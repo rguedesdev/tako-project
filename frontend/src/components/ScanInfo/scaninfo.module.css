@@ -1,0 +1,337 @@
+.scanInfoContainer {
+  background-color: #343746;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: row;
+  padding: 20px;
+  gap: 30px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+
+  margin-bottom: 20px;
+}
+
+.scanWrapper {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.scanPicture {
+  object-fit: cover;
+}
+
+.btnWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btnFollow {
+  color: #c1c1c1;
+  background-color: #004f98;
+  margin-top: 10px;
+}
+
+.btnDonate {
+  color: #00b4d8;
+  border: 2px solid #00b4d8;
+}
+
+.btnFollow,
+.btnDonate {
+  padding: 10px 0;
+  border-radius: 7px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all ease-in 0.2s;
+}
+
+.btnDonate:hover {
+  color: var(--text-primary);
+  background-color: #00b4d8;
+}
+
+.btnFollow:hover {
+  color: var(--text-primary);
+  background-color: #0566c2;
+}
+
+.btnFollow:active,
+.btnDonate:active {
+  transform: scaleX(0.97);
+}
+
+.scanInfo {
+  color: var(--text-primary);
+}
+
+.scanNameWrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 15px;
+}
+
+.scanName {
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.verifiedBadge {
+  color: #13b3ac;
+  display: flex;
+  align-items: center;
+}
+
+.mangaTags {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  margin-bottom: 20px;
+}
+
+.tag {
+  font-size: 0.9em;
+  font-weight: bold;
+  background-color: #023684;
+  border-radius: 5px;
+  padding: 2px 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+.sinopse {
+  margin-bottom: 20px;
+}
+
+.genderContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 15px;
+}
+
+.genderTitle {
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.genders {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+}
+
+.gender {
+  font-size: 14px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+}
+
+.demographicContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 15px;
+}
+
+.mediasContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 15px;
+}
+
+.mediasTitle {
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.medias {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+.media {
+  font-size: 0.9em;
+  font-weight: bold;
+  background-color: #023684;
+  border-radius: 5px;
+  padding: 5px 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+
+  cursor: pointer;
+}
+
+.trackersContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 15px;
+}
+
+.trackersTitle {
+  font-size: 1em;
+  font-weight: bold;
+}
+
+.trackers {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+.otakulist {
+  font-size: 0.9em;
+  font-weight: bold;
+  background-color: #301d48;
+  border-radius: 5px;
+  padding: 2px 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding-top: 5px;
+  cursor: pointer;
+}
+
+.myanimelist {
+  font-size: 0.9em;
+  font-weight: bold;
+  background-color: #2e51a2;
+  border-radius: 5px;
+  padding: 2px 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.anilist {
+  font-size: 0.9em;
+  font-weight: bold;
+  background-color: #181f29;
+  border-radius: 5px;
+  padding: 2px 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.aniplanet {
+  font-size: 0.9em;
+  font-weight: bold;
+  background-color: #fd5341;
+  border-radius: 5px;
+  padding: 2px 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.storesContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.storesTitle {
+  font-size: 1em;
+  font-weight: bold;
+}
+
+.stores {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+.otakuyasan {
+  font-size: 0.9em;
+  font-weight: bold;
+  background-color: #00a8e1;
+  border-radius: 5px;
+  padding: 2px 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.amazon {
+  font-size: 0.9em;
+  font-weight: bold;
+  background-color: #151d28;
+  border-radius: 5px;
+  padding: 2px 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.rakuten {
+  font-size: 0.9em;
+  font-weight: bold;
+  background-color: #bb0000;
+  border-radius: 5px;
+  padding: 2px 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.cdjapan {
+  font-size: 0.9em;
+  font-weight: bold;
+  background-color: #ffffff;
+  border-radius: 5px;
+  padding: 2px 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}

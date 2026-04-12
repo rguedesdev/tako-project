@@ -8,6 +8,7 @@ import styles from "./newchapter.module.css";
 // Icons
 import { BiHash } from "react-icons/bi";
 import { MdAccessTime, MdOutlinePeopleOutline } from "react-icons/md";
+import { ImMakeGroup } from "react-icons/im";
 
 // Images
 import OnePiece from "../../../public/one-piece.jpg";
@@ -297,7 +298,7 @@ function NewChapterCard() {
               <hr className={styles.hrFaded} />
               <div>
                 <h3 className={styles.scanWrapper}>
-                  <MdOutlinePeopleOutline size={19} />
+                  <ImMakeGroup size={13} />
                   <span className={styles.scanName}>
                     {realease.scanInfo.name}
                   </span>

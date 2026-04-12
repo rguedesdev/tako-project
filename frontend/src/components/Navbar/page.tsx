@@ -11,7 +11,12 @@ import { RiHome9Line } from "react-icons/ri";
 import { GiEvilBook } from "react-icons/gi";
 import { HiOutlineBookOpen } from "react-icons/hi2";
 
-import { MdOutlinePeopleOutline } from "react-icons/md";
+import {
+  MdOutlinePeopleOutline,
+  MdOutlineStoreMallDirectory,
+} from "react-icons/md";
+import { ImMakeGroup } from "react-icons/im";
+import { MdOutlineLocalConvenienceStore } from "react-icons/md";
 
 import { PiNotePencil } from "react-icons/pi";
 import { FiLogIn } from "react-icons/fi";
@@ -47,8 +52,13 @@ function Navbar() {
             </li>
 
             <li className={styles.navLink}>
-              <MdOutlinePeopleOutline size={20} />
+              <ImMakeGroup size={14} />
               <span>Scans</span>
+            </li>
+
+            <li className={styles.navLink}>
+              <MdOutlineStoreMallDirectory size={20} />
+              <span>Loja</span>
             </li>
 
             <li className={styles.navLink}>
