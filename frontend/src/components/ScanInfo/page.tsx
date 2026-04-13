@@ -24,6 +24,7 @@ import { HiOutlineMail } from "react-icons/hi";
 
 // Images
 import AnimaRegia from "../../../public/scans/anima-regia.jpg";
+import OtaKoin from "../../../public/otakoin.png";
 
 function ScanInfo() {
   return (
@@ -68,30 +69,30 @@ function ScanInfo() {
           including versions of Lorem Ipsum.
         </p>
 
-        <div className={styles.genderContainer}>
-          <h3 className={styles.genderTitle}>Estatísticas</h3>
-          <div className={styles.genders}>
-            <span className={styles.gender}>
+        <div className={styles.statsContainer}>
+          <h3 className={styles.statsTitle}>Estatísticas</h3>
+          <div className={styles.stats}>
+            <span className={styles.stat}>
               <MdOutlinePeopleOutline size={18} />
               <span>1,5M Seguidores</span>
             </span>
 
-            <span className={styles.gender}>
+            <span className={styles.stat}>
               <HiOutlineBookOpen size={16} />
               <span>256 Mangas</span>
             </span>
 
-            <span className={styles.gender}>
+            <span className={styles.stat}>
               <BiHash size={16} />
               <span>999 Caps</span>
             </span>
 
-            <span className={styles.gender}>
+            <span className={styles.stat}>
               <FaArrowTrendUp size={16} />
               <span>5,6K Views</span>
             </span>
 
-            <span className={styles.gender}>
+            <span className={styles.stat}>
               <BiLike size={16} />
               <span>2,5K Likes</span>
             </span>
@@ -102,37 +103,37 @@ function ScanInfo() {
           <h3 className={styles.mediasTitle}>Links</h3>
           <div className={styles.medias}>
             <span className={styles.media}>
-              <IoIosGlobe size={20} />
+              <IoIosGlobe size={18} />
               <span>Site</span>
             </span>
 
             <span className={styles.media}>
-              <FaXTwitter size={15} />
+              <FaXTwitter size={14} />
               <span>Twitter/X</span>
             </span>
 
             <span className={styles.media}>
-              <LuFacebook size={18} />
+              <LuFacebook size={16} />
               <span>Facebook</span>
             </span>
 
             <span className={styles.media}>
-              <FaInstagram size={18} />
+              <FaInstagram size={16} />
               <span>Instagram</span>
             </span>
 
             <span className={styles.media}>
-              <RiDiscordLine size={18} />
+              <RiDiscordLine size={17} />
               <span>Discord</span>
             </span>
 
             <span className={styles.media}>
-              <RiBlueskyLine size={18} />
+              <RiBlueskyLine size={16} />
               <span>Bluesky</span>
             </span>
 
             <span className={styles.media}>
-              <RiTelegram2Line size={18} />
+              <RiTelegram2Line size={17} />
               <span>Telegram</span>
             </span>
 
@@ -142,12 +143,12 @@ function ScanInfo() {
             </span> */}
 
             <span className={styles.media}>
-              <Image src={Orkkut} alt="Orkkut Icon" width={14} height={14} />
+              <Image src={Orkkut} alt="Orkkut Icon" width={13} height={13} />
               <span>Orkkut</span>
             </span>
 
             <span className={styles.media}>
-              <HiOutlineMail size={18} />
+              <HiOutlineMail size={16} />
               <span>Email</span>
             </span>
           </div>

@@ -14,6 +14,7 @@ import { MdOutlinePeopleOutline } from "react-icons/md";
 import { BiHash } from "react-icons/bi";
 
 import { GiEvilBook } from "react-icons/gi";
+import { ImMakeGroup } from "react-icons/im";
 
 function Chapters() {
   const volumes = [
@@ -131,7 +132,7 @@ function Chapters() {
                           <span>{release.title}</span>
                         </div>
                         <div className={styles.scanlator}>
-                          <MdOutlinePeopleOutline size={20} />
+                          <ImMakeGroup size={14} />
                           <span>{release.scanlator}</span>
                         </div>
                       </Link>

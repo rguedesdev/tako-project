@@ -101,7 +101,7 @@ function MangaInfo() {
               <Image
                 src={OtakuList}
                 alt="OtakuList Logo"
-                width={50}
+                width={45}
                 height={40}
                 unoptimized
                 priority
@@ -111,8 +111,8 @@ function MangaInfo() {
               <Image
                 src={MAL}
                 alt="MAL Logo"
-                width={80}
-                height={40}
+                width={70}
+                height={30}
                 unoptimized
                 priority
               />
@@ -121,8 +121,8 @@ function MangaInfo() {
               <Image
                 src={AniList}
                 alt="AniList Logo"
-                width={65}
-                height={40}
+                width={50}
+                height={20}
                 unoptimized
                 priority
               />
@@ -132,7 +132,7 @@ function MangaInfo() {
               <Image
                 src={AniPlanet}
                 alt="Anime Planet Logo"
-                width={110}
+                width={95}
                 height={40}
                 unoptimized
                 priority
@@ -148,7 +148,7 @@ function MangaInfo() {
               <Image
                 src={OtakuyaSan}
                 alt="Otakuya-san Logo"
-                width={80}
+                width={70}
                 height={40}
                 unoptimized
                 priority
@@ -158,8 +158,8 @@ function MangaInfo() {
               <Image
                 src={Amazon}
                 alt="Amazon Logo"
-                width={50}
-                height={40}
+                width={40}
+                height={20}
                 unoptimized
                 priority
               />
@@ -168,7 +168,7 @@ function MangaInfo() {
               <Image
                 src={Rakuten}
                 alt="Rakuten Logo"
-                width={50}
+                width={40}
                 height={40}
                 unoptimized
                 priority
@@ -178,7 +178,7 @@ function MangaInfo() {
               <Image
                 src={CDJapan}
                 alt="CD Japan Logo"
-                width={70}
+                width={60}
                 height={40}
                 unoptimized
                 priority

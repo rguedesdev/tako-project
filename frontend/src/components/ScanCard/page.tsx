@@ -179,7 +179,7 @@ function ScansCard() {
   return (
     <section>
       <h2 className={styles.scansSectionTitle}>
-        <ImMakeGroup size={20} />
+        <ImMakeGroup size={19} />
         <span>Scans Parceiras</span>
       </h2>
       <div className={styles.scansGrid}>

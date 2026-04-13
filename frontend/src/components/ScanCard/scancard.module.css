@@ -56,20 +56,21 @@
 
 .scanNameWrapper {
   display: flex;
-  flex-direction: row;
   align-items: center;
   gap: 5px;
+  margin-bottom: 10px;
 }
 
 .scanName {
   color: #ffffff;
   font-size: 18px;
   font-weight: 500;
-  margin-bottom: 7px;
+  line-height: 1;
 }
 
 .verifiedBadge {
   color: #13b3ac;
+  flex-shrink: 0;
 }
 
 .scanDescription {
