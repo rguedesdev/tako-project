@@ -1,0 +1,29 @@
+# Define os serviços (containers) que vão rodar juntos
+services:
+  # Serviço do MongoDB
+  mongo:
+    # Imagem oficial do MongoDB (versão 8)
+    image: mongo:7
+
+    # Nome fixo do container (evita mongo-1, mongo-2 etc)
+    container_name: mongo
+
+    # Porta exposta para sua máquina
+    ports:
+      - "27017:27017"
+
+    # Volume persistente (dados não somem ao reiniciar)
+    volumes:
+      - mongo_data:/data/db
+
+    # Conecta o container à rede definida abaixo
+    networks:
+      - app_network
+
+# Volume persistente gerenciado pelo Docker
+volumes:
+  mongo_data:
+
+# Rede interna dos containers
+networks:
+  app_network:
