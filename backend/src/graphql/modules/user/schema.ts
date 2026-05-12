@@ -6,24 +6,34 @@ const userTypeDefs = /* GraphQL */ `
   }
 
   type Mutation {
-    signUp(data: SignUpInput!): User!
+    signUp(data: SignUpInput!): AuthPayload!
+    signIn(data: SignInInput!): AuthPayload!
   }
 
   ### MAIN TYPES ###
   type User {
     id: ID!
     name: String!
-    nickname: String!
+    username: String!
     email: String!
   }
 
   ### AUX TYPES ###
+  type AuthPayload {
+    user: User!
+    token: String!
+  }
 
   ### INPUTS ###
   input SignUpInput {
     name: String!
-    nickname: String!
+    username: String!
     email: String!
+    password: String!
+  }
+
+  input SignInInput {
+    login: String!
     password: String!
   }
 `;

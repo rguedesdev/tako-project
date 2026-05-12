@@ -14,4 +14,4 @@ TakoProjectDB.on("error", (error) => {
   console.log("Erro na conexão ao TakoProjectDB:", error);
 });
 
-export default TakoProjectDB;
+export { TakoProjectDB };

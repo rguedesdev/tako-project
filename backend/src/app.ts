@@ -1,17 +1,9 @@
 import Fastify from "fastify";
-import mercurius from "mercurius";
+import registerMercurius from "./plugins/mercurius";
 
 const app = Fastify();
 
-// Importando configurações do GraphQL
-import { schema, resolvers } from "./graphql/index";
-
-app.register(mercurius, {
-  schema,
-  resolvers,
-  ide: true,
-  path: "/graphql",
-});
+registerMercurius(app);
 
 // Rota GET simples
 app.get("/", async (request, reply) => {

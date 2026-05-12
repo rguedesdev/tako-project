@@ -1,11 +1,11 @@
-import TakoProjectDB from "../../../config/database";
+import { TakoProjectDB } from "../../../plugins/mongoose";
 import { Schema } from "mongoose";
 
 interface IUser {
   accountType: string;
   profilePicture?: string;
   name: string;
-  nickname: string;
+  username: string;
   email: string;
   password: string;
 }
@@ -25,7 +25,7 @@ const userSchema = new Schema<IUser>({
     required: true,
   },
 
-  nickname: {
+  username: {
     type: String,
     required: true,
     unique: true,
