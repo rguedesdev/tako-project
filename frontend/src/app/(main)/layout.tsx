@@ -1,12 +1,4 @@
 import type { Metadata } from "next";
-import { Roboto } from "next/font/google";
-import "./globals.css";
-
-const roboto = Roboto({
-  subsets: ["latin"],
-  weight: ["400", "500", "700"], // escolha os pesos que vai usar
-  variable: "--font-roboto",
-});
 
 export const metadata: Metadata = {
   title: "Tako Project",
@@ -16,10 +8,18 @@ export const metadata: Metadata = {
   },
 };
 
+// Components
+import { Navbar } from "@/components/Navbar/page";
+import { Footer } from "@/components/Footer/page";
+
 function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="pt-BR">
-      <body className={`${roboto.variable} antialiased`}>{children}</body>
+      <body className={`antialiased`}>
+        <Navbar />
+        {children}
+        <Footer />
+      </body>
     </html>
   );
 }

@@ -1,0 +1,18 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column; /* Alinha os filhos em coluna */
+  justify-content: center; /* Centraliza o conteúdo verticalmente */
+  align-items: center; /* Centraliza o conteúdo horizontalmente */
+}
+
+.signUpContainer {
+  width: 100%; /* Obriga o container a ocupar a largura disponível */
+  max-width: 1280px; /* Limita a largura máxima em telas grandes */
+  padding-inline: 16px; /* Evita que o conteúdo cole nas bordas em telas pequenas */
+
+  /* Se o seu formulário interno precisar de centralização própria: */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

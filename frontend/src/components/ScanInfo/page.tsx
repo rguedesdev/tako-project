@@ -108,13 +108,18 @@ function ScanInfo() {
             </span>
 
             <span className={styles.media}>
-              <FaXTwitter size={14} />
-              <span>Twitter/X</span>
+              <RiDiscordLine size={17} />
+              <span>Discord</span>
             </span>
 
             <span className={styles.media}>
-              <LuFacebook size={16} />
-              <span>Facebook</span>
+              <RiTelegram2Line size={17} />
+              <span>Telegram</span>
+            </span>
+
+            <span className={styles.media}>
+              <FaXTwitter size={14} />
+              <span>Twitter/X</span>
             </span>
 
             <span className={styles.media}>
@@ -123,18 +128,13 @@ function ScanInfo() {
             </span>
 
             <span className={styles.media}>
-              <RiDiscordLine size={17} />
-              <span>Discord</span>
+              <LuFacebook size={16} />
+              <span>Facebook</span>
             </span>
 
             <span className={styles.media}>
               <RiBlueskyLine size={16} />
               <span>Bluesky</span>
-            </span>
-
-            <span className={styles.media}>
-              <RiTelegram2Line size={17} />
-              <span>Telegram</span>
             </span>
 
             {/* <span className={styles.media}>

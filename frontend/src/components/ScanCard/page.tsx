@@ -9,8 +9,8 @@ import { MdOutlinePeopleOutline, MdGroups } from "react-icons/md";
 import { ImMakeGroup } from "react-icons/im";
 import { HiOutlineBookOpen } from "react-icons/hi2";
 import { BiHash } from "react-icons/bi";
-
 import { MdVerified } from "react-icons/md";
+import { LiaPagerSolid } from "react-icons/lia";
 
 // Imagens
 import AnimaRegia from "../../../public/scans/anima-regia.jpg";

@@ -23,6 +23,8 @@ import { FiLogIn } from "react-icons/fi";
 
 import { FaRegBell } from "react-icons/fa";
 
+import { RiGalleryView } from "react-icons/ri";
+
 // Images
 import TakoP from "../../../public/tako-logo.png";
 
@@ -47,8 +49,13 @@ function Navbar() {
             </li>
 
             <li className={styles.navLink}>
+              <RiGalleryView size={18} />
+              <span>Lançamentos</span>
+            </li>
+
+            <li className={styles.navLink}>
               <HiOutlineBookOpen size={18} />
-              <span>Obras</span>
+              <span>Mangas</span>
             </li>
 
             <li className={styles.navLink}>

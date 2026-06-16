@@ -1,5 +1,5 @@
 import Fastify from "fastify";
-import registerMercurius from "./plugins/mercurius";
+import { registerMercurius } from "./plugins/mercurius";
 
 const app = Fastify();
 

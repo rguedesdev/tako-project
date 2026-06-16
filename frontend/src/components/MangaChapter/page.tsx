@@ -8,13 +8,13 @@ import Link from "next/link";
 // Style Sheet CSS
 import styles from "./mangachapter.module.css";
 
-// Icons
-import { CgArrowDownR } from "react-icons/cg";
-import { TbArrowAutofitDown } from "react-icons/tb";
-import { CgArrowRightR } from "react-icons/cg";
-import { TbArrowAutofitRight } from "react-icons/tb";
-import { CgArrowLeftR } from "react-icons/cg";
-import { TbArrowAutofitLeft } from "react-icons/tb";
+// Icones
+import {
+  TbArrowAutofitDown,
+  TbArrowAutofitLeft,
+  TbArrowAutofitRight,
+} from "react-icons/tb";
+import { CgArrowDownR, CgArrowLeftR, CgArrowRightR } from "react-icons/cg";
 
 import { PiSwap } from "react-icons/pi";
 import { RiSwapBoxLine } from "react-icons/ri";
@@ -60,6 +60,14 @@ function MangaChapter() {
     Page10,
   ];
 
+  useEffect(() => {
+    const saved = localStorage.getItem("readerMode");
+
+    if (saved === "swap" || saved === "scroll") {
+      setMode(saved);
+    }
+  }, []);
+
   function setSwapMode() {
     setMode("swap");
     localStorage.setItem("readerMode", "swap");
@@ -69,14 +77,6 @@ function MangaChapter() {
     setMode("scroll");
     localStorage.setItem("readerMode", "scroll");
   }
-
-  useEffect(() => {
-    const saved = localStorage.getItem("readerMode");
-
-    if (saved === "swap" || saved === "scroll") {
-      setMode(saved);
-    }
-  }, []);
 
   function nextPage() {
     setIsWide(false);
@@ -115,7 +115,7 @@ function MangaChapter() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [mode]); // 💥 IMPORTANTE
+  }, [mode]);
 
   return (
     <section>
@@ -136,16 +136,25 @@ function MangaChapter() {
         </Link>
       </div>
       <div className={styles.ReadingButtons}>
-        <button className={styles.swapBtn} onClick={setSwapMode}>
+        <button
+          className={`${styles.swapBtn} ${mode === "swap" ? styles.readerModeActiveBtn : <></>}`}
+          onClick={setSwapMode}
+        >
           <TbArrowAutofitLeft size={20} />
           <span>Swap</span>
         </button>
 
-        <button className={styles.scrollBtn} onClick={setScrollMode}>
+        <button
+          className={`${styles.scrollBtn} ${mode === "scroll" ? styles.readerModeActiveBtn : <></>}`}
+          onClick={setScrollMode}
+        >
           <TbArrowAutofitDown size={20} />
           <span>Scroll</span>
         </button>
       </div>
+
+      <hr className={styles.hrFadded} />
+
       <div className={styles.mangaWrapper}>
         {mode === "swap" && (
           <Image
@@ -177,6 +186,8 @@ function MangaChapter() {
             />
           ))}
       </div>
+
+      <hr className={styles.hrFadded} />
     </section>
   );
 }

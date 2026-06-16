@@ -141,7 +141,7 @@ function MangaInfo() {
           </div>
         </div>
 
-        <div className={styles.storesContainer}>
+        {/* <div className={styles.storesContainer}>
           <h3 className={styles.storesTitle}>Compre em</h3>
           <div className={styles.stores}>
             <span className={styles.otakuyasan}>
@@ -185,7 +185,7 @@ function MangaInfo() {
               />
             </span>
           </div>
-        </div>
+        </div> */}
       </div>
     </section>
   );

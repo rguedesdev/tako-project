@@ -13,7 +13,7 @@ function ScanPage() {
     <div className={styles.page}>
       <main className={styles.scanContainers}>
         <ScanInfo />
-        <MangaCard />
+        <MangaCard pageTitle={`Mangas Traduzidos`} />
       </main>
     </div>
   );

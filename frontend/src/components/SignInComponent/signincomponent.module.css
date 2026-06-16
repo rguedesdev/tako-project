@@ -1,0 +1,35 @@
+.signInBox {
+  width: 600px;
+  min-height: 200px;
+  padding: 16px;
+  border-radius: 10px;
+  background-color: rgb(23, 30, 45);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.signInTitle {
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+
+  margin-bottom: 16px;
+}
+
+.signInBtn {
+  width: 100%;
+  padding: 16px 0;
+  background-color: #0377b9;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: #ffffff;
+  cursor: pointer;
+
+  margin: 10px 0;
+
+  transition: transform 0.2s ease;
+}
+
+.signInBtn:active {
+  transform: scaleX(0.97);
+}

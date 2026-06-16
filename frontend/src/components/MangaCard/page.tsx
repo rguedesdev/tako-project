@@ -20,7 +20,7 @@ import Takamine from "../../../public/takamine.jpg";
 import BokuKokoro from "../../../public/boku-kokoro.jpg";
 import DrSlump from "../../../public/dr-slump.jpg";
 
-function MangaCard() {
+function MangaCard({ pageTitle }) {
   const mangas = [
     {
       id: 1,
@@ -64,7 +64,7 @@ function MangaCard() {
     <section>
       <h2 className={styles.sectionTitleWrapper}>
         <HiOutlineBookOpen className={styles.sectionIcon} size={25} />
-        <span className={styles.sectionTitle}>Mangas Traduzidos</span>
+        <span className={styles.sectionTitle}>{pageTitle}</span>
       </h2>
       <div className={styles.mangasGrid}>
         {mangas.map((manga) => (
