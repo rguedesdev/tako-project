@@ -1,40 +1,48 @@
 .volNumber {
-  color: var(--text-primary);
+  color: #ffffff;
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 10px;
-  margin-top: 20px;
-  margin-bottom: 10px;
+  margin: 24px 0 20px;
 }
 
 .volTitle {
-  font-size: 1.1em;
+  margin: 0;
+  font-size: 22px;
   font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0;
 }
 
 .capContent {
   color: var(--text-primary);
   background-color: var(--card-bg-color);
-  border-radius: 10px;
+  border: 1px solid rgb(255 255 255 / 7%);
+  border-radius: 11px;
   display: flex;
   flex-direction: column;
-  margin-bottom: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  margin-bottom: 11px;
+  overflow: hidden;
+  box-shadow: 0 8px 22px rgb(0 0 0 / 12%);
 }
 
 .capNumber {
-  font-size: 0.9em;
-  font-weight: bold;
-
+  min-height: 42px;
+  padding: 0 14px;
+  color: #e9e6eb;
+  font-size: .9rem;
+  font-weight: 700;
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 10px;
-  padding: 10px 0 5px 10px;
+  gap: 7px;
 }
 
-/* 1. Container pai sem recuo */
+.capNumber svg {
+  color: #ff8296;
+}
+
 .releasesGroup {
   padding-left: 0;
   position: relative;
@@ -45,24 +53,21 @@
 .releaseWrapper {
   position: relative;
   padding-left: 35px;
-  /* Adicione border-radius aqui para que ele também sofra a transição se necessário */
-  transition:
-    background-color 0.2s ease,
-    border-radius 0.2s ease;
+  transition: background-color 160ms ease, border-radius 160ms ease;
   cursor: pointer;
 }
 
-/* --- LÓGICA DE HOVER --- */
 .releaseWrapper:hover {
   background-color: #474a5d;
 }
 
 .releaseWrapper:hover::before,
-.releaseWrapper:hover::after {
+.releaseWrapper:hover::after,
+.releaseWrapper:focus-within::before,
+.releaseWrapper:focus-within::after {
   background-color: #c0c0c0;
 }
 
-/* LINHA VERTICAL (O Tronco) */
 .releaseWrapper::before {
   content: "";
   position: absolute;
@@ -70,30 +75,27 @@
   top: 0;
   width: 4px;
   background-color: #474a5d;
-  bottom: 15px;
-  border-radius: 4px;
+  bottom: 0;
+  border-radius: 0;
   transition: background-color 0.2s ease;
   z-index: 1;
 }
 
-/* LINHA HORIZONTAL (A Ramificação) */
 .releaseWrapper::after {
   content: "";
   position: absolute;
   left: 15px;
-  /* AUMENTADO: De 22px para 28px para o traço descer e alinhar no meio */
   top: 29px;
   width: 15px;
   height: 4px;
   background-color: #474a5d;
-  border-radius: 0 4px 4px 0;
+  border-radius: 0;
   transform: translateY(-50%);
   transition: background-color 0.2s ease;
   z-index: 1;
 }
 
 .releaseWrapper:last-child {
-  /* O arredondamento fica "em espera", invisível sem a cor de fundo */
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
 }
@@ -103,66 +105,57 @@
   border-bottom-right-radius: 10px;
 }
 
-/* O ajuste do ÚLTIMO ITEM: Aumentamos de 22px para 28px para ele descer */
 .releaseWrapper:last-child::before {
   bottom: auto;
   height: 28px;
 }
 
-/* ESTABILIZADOR: Garante que o conteúdo não mude de lugar */
 .capLine {
-  padding: 10px 0; /* Aumentei um pouco o respiro do título */
+  padding: 5px 13px 5px 0;
   width: 100%;
-  transition: all ease-in 0.15s;
 }
 
 .capLink {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 4px;
+  border-radius: 7px;
+  color: inherit;
+  text-decoration: none;
 }
 
-/* apenas o último capLine ganha borda inferior */
+.capLink:focus-visible {
+  outline: 2px solid #ff8296;
+  outline-offset: 3px;
+}
+
 .capContent > div:last-child .capLine:hover {
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
 }
 
 .capTitle {
-  font-weight: bold;
+  color: #f4f1f4;
+  font-size: .92rem;
+  font-weight: 650;
   line-height: 1.2;
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 10px;
-  padding-top: 10px;
+  gap: 9px;
+  padding-top: 5px;
 }
 
 .scanlator {
-  font-size: 0.9em;
+  color: #b7b3bd;
+  font-size: .8rem;
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 10px;
-  padding-bottom: 10px;
+  gap: 8px;
+  padding-bottom: 5px;
 }
 
-.hrFadded {
-  border: none;
-  height: 1px;
-  background: linear-gradient(to right, transparent, white, transparent);
-}
-
-/* HR Ajustado */
-.hrFadded {
-  border: none;
-  height: 1px;
-  background: linear-gradient(
-    to right,
-    rgba(255, 255, 255, 0.05),
-    rgba(255, 255, 255, 0.2),
-    transparent
-  );
-  margin: 0;
-  margin-left: 15px;
+.scanlator svg {
+  color: #aaa6b0;
 }

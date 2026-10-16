@@ -11,16 +11,15 @@ export const metadata: Metadata = {
 // Components
 import { Navbar } from "@/components/Navbar/page";
 import { Footer } from "@/components/Footer/page";
+import styles from "./layout.module.css";
 
 function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="pt-BR">
-      <body className={`antialiased`}>
-        <Navbar />
-        {children}
-        <Footer />
-      </body>
-    </html>
+    <div className={styles.shell}>
+      <Navbar />
+      <div className={styles.content}>{children}</div>
+      <Footer />
+    </div>
   );
 }
 

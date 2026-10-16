@@ -30,45 +30,54 @@
 }
 
 .btnAdd {
-  color: #00b4d8;
-  border: 2px solid #00b4d8;
+  color: #f0edf2;
+  border: 1px solid rgb(255 255 255 / 14%);
+  background: #292a34;
   margin-top: 10px;
+  cursor: pointer;
 }
 
 .btnRead {
-  color: #c1c1c1;
-  /* border: 2px solid #004f98; */
-  background-color: #004f98;
+  border: 1px solid #e63357;
+  color: #fff;
+  background: #e63357;
 }
 
 .btnAdd,
 .btnRead {
-  padding: 10px 0;
-  border-radius: 7px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
-
+  min-height: 42px;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font: inherit;
+  font-size: .84rem;
+  font-weight: 650;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  gap: 10px;
-  cursor: pointer;
-  transition: all ease-in 0.2s;
+  gap: 8px;
+  transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease;
 }
 
 .btnAdd:hover {
-  color: var(--text-primary);
-  background-color: #00b4d8;
+  border-color: rgb(240 74 104 / 48%);
+  background: rgb(240 74 104 / 9%);
+}
+
+.btnAdd:focus-visible {
+  outline: 2px solid #ff8296;
+  outline-offset: 3px;
 }
 
 .btnRead:hover {
-  color: var(--text-primary);
-  background-color: #0566c2;
+  border-color: #f04a68;
+  background: #f04a68;
 }
 
-.btnAdd:active,
-.btnRead:active {
-  transform: scaleX(0.97);
+.btnRead:focus-visible {
+  outline: 2px solid #ff8296;
+  outline-offset: 3px;
 }
 
 .mangaInfo {
@@ -101,112 +110,395 @@
   margin-bottom: 20px;
 }
 
+.statsContainer {
+  display: grid;
+  gap: 9px;
+  margin: 0 0 18px;
+  padding-top: 16px;
+  border-top: 1px solid rgb(255 255 255 / 8%);
+}
+
+.officialStatus {
+  display: grid;
+  gap: 9px;
+  margin-bottom: 18px;
+}
+
+.officialStatus h3 {
+  margin: 0;
+  color: #a6a2ad;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.officialStatus > div {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.officialStatus strong {
+  padding: 5px 9px;
+  border: 1px solid rgb(154 176 207 / 16%);
+  border-radius: 7px;
+  background: rgb(154 176 207 / 8%);
+  color: #c2cddd;
+  font-size: .74rem;
+  font-weight: 650;
+  line-height: 1.2;
+}
+
+.officialStatus span {
+  padding: 5px 9px;
+  border: 1px dashed rgb(255 255 255 / 20%);
+  border-radius: 7px;
+  background: rgb(255 255 255 / 3%);
+  color: #aaa6b0;
+  font-size: .74rem;
+  line-height: 1.2;
+}
+
+.officialStatus strong[data-status="COMPLETED"] {
+  border-color: rgb(112 186 143 / 18%);
+  background: rgb(112 186 143 / 9%);
+  color: #a9d3b8;
+}
+
+.officialStatus strong[data-status="PAUSED"],
+.officialStatus strong[data-status="HIATUS"] {
+  border-color: rgb(210 174 104 / 18%);
+  background: rgb(210 174 104 / 8%);
+  color: #d6bf91;
+}
+
+.translationsContainer {
+  display: grid;
+  gap: 9px;
+  margin-top: 18px;
+}
+
+.translationsContainer > h3 {
+  margin: 0;
+  color: #a6a2ad;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.translations {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.translations > a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: min(340px, 100%);
+  min-height: 58px;
+  gap: 12px;
+  padding: 9px 11px;
+  border: 1px solid rgb(255 255 255 / 7%);
+  border-radius: 10px;
+  background: rgb(255 255 255 / 3%);
+  color: #f2eff3;
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+
+.translations > a:hover {
+  border-color: rgb(240 74 104 / 28%);
+  background: rgb(255 255 255 / 5%);
+}
+
+.translations > a > span {
+  display: grid;
+  min-width: 0;
+  gap: 4px;
+}
+
+.translations strong {
+  overflow: hidden;
+  font-size: .84rem;
+  font-weight: 650;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.translations small {
+  color: #aaa6b0;
+  font-size: .72rem;
+}
+
+.translations b {
+  flex: none;
+  padding: 4px 8px;
+  border: 1px solid rgb(154 176 207 / 16%);
+  border-radius: 6px;
+  background: rgb(154 176 207 / 8%);
+  color: #c2cddd;
+  font-size: .66rem;
+  font-weight: 650;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.translations b[data-status="COMPLETED"] {
+  border-color: rgb(112 186 143 / 18%);
+  background: rgb(112 186 143 / 9%);
+  color: #a9d3b8;
+}
+
+.translations b[data-status="PAUSED"],
+.translations b[data-status="HIATUS"] {
+  border-color: rgb(210 174 104 / 18%);
+  background: rgb(210 174 104 / 8%);
+  color: #d6bf91;
+}
+
+.translations b[data-status="UNKNOWN"] {
+  border-color: rgb(255 255 255 / 8%);
+  background: rgb(255 255 255 / 4%);
+  color: #aaa6b0;
+}
+
+.statsContainer h3 {
+  margin: 0;
+  color: #a6a2ad;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.stat {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 9px;
+  border: 1px solid rgb(255 255 255 / 6%);
+  border-radius: 8px;
+  background: rgb(255 255 255 / 3%);
+  white-space: nowrap;
+  transition: background-color 160ms ease, border-color 160ms ease;
+}
+
+.stat:hover {
+  border-color: rgb(240 74 104 / 25%);
+  background: rgb(240 74 104 / 6%);
+}
+
+.statIcon {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  padding: 4px;
+  border-radius: 7px;
+  background: rgb(240 74 104 / 11%);
+  color: #ff8296;
+  font-size: 16px;
+}
+
+.statValue {
+  color: #f7f4f6;
+  font-size: .82rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.statLabel {
+  color: #aaa6b0;
+  font-size: .7rem;
+  line-height: 1;
+}
+
 .genderDemographicContainer {
   display: flex;
   flex-direction: row;
-  gap: 40px;
+  flex-wrap: wrap;
+  gap: 18px 32px;
 }
 
 .genderContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  margin-bottom: 15px;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  margin-bottom: 17px;
 }
 
 .genderTitle {
-  font-size: 14px;
-  font-weight: bold;
+  margin: 0;
+  color: #a6a2ad;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  line-height: 1.2;
+  text-transform: uppercase;
 }
 
 .genders {
   display: flex;
-  flex-direction: row;
-  gap: 5px;
+  flex-wrap: wrap;
+  gap: 7px;
 }
 
 .gender {
-  font-size: 12px;
-  font-weight: bold;
-  background-color: #023684;
-  border-radius: 5px;
-  padding: 2px 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
-  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border: 1px solid rgb(255 255 255 / 8%);
+  border-radius: 7px;
+  background: rgb(255 255 255 / 4%);
+  color: #d7d3db;
+  font-size: .76rem;
+  font-weight: 550;
+  line-height: 1.2;
+  text-decoration: none;
+  transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease;
+}
+
+.gender:hover,
+.mangaka:hover {
+  border-color: rgb(240 74 104 / 38%);
+  background: rgb(240 74 104 / 8%);
+  color: #fff;
+}
+
+.gender:focus-visible,
+.mangaka:focus-visible {
+  outline: 2px solid #ff8296;
+  outline-offset: 2px;
 }
 
 .demographicContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  margin-bottom: 15px;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  margin-bottom: 17px;
 }
 
 .demographicTitle {
-  font-size: 14px;
-  font-weight: bold;
+  margin: 0;
+  color: #a6a2ad;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  line-height: 1.2;
+  text-transform: uppercase;
 }
 
 .demographics {
   display: flex;
-  flex-direction: row;
-  gap: 5px;
+  flex-wrap: wrap;
+  gap: 7px;
 }
 
 .demographic {
-  font-size: 12px;
-  font-weight: bold;
-  background-color: #023684;
-  border-radius: 5px;
-  padding: 2px 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
-  cursor: pointer;
+  padding: 5px 10px;
+  border: 1px solid rgb(255 255 255 / 8%);
+  border-radius: 7px;
+  background: rgb(255 255 255 / 4%);
+  color: #d7d3db;
+  font-size: .76rem;
+  font-weight: 550;
+  line-height: 1.2;
 }
 
 .mangakaContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  margin-bottom: 15px;
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+  margin-bottom: 17px;
 }
 
 .mangakaTitle {
-  font-size: 14px;
-  font-weight: bold;
+  margin: 0;
+  color: #a6a2ad;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  line-height: 1.2;
+  text-transform: uppercase;
 }
 
 .mangakas {
   display: flex;
-  flex-direction: row;
-  gap: 5px;
+  flex-wrap: wrap;
+  gap: 7px;
 }
 
 .mangaka {
-  font-size: 12px;
-  font-weight: bold;
-  background-color: #023684;
-  border-radius: 5px;
-  padding: 2px 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
-  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border: 1px solid rgb(255 255 255 / 8%);
+  border-radius: 7px;
+  background: rgb(255 255 255 / 4%);
+  color: #d7d3db;
+  font-size: .76rem;
+  font-weight: 550;
+  line-height: 1.2;
+  text-decoration: none;
+  transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease;
 }
 
 .trackersContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  margin-bottom: 15px;
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+  margin-bottom: 17px;
 }
 
 .trackersTitle {
-  font-size: 14px;
-  font-weight: bold;
+  margin: 0;
+  color: #a6a2ad;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  line-height: 1.2;
+  text-transform: uppercase;
 }
 
 .trackers {
   display: flex;
   flex-direction: row;
-  gap: 5px;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.trackers a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 5px 10px;
+  border: 1px solid rgb(255 255 255 / 8%);
+  border-radius: 7px;
+  background: #292830;
+  color: #dedbe2;
+  font-size: .76rem;
+  font-weight: 600;
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+
+.trackers a:hover {
+  border-color: rgb(240 74 104 / 38%);
+  background: #302a31;
 }
 
 .otakulist {
@@ -247,6 +539,14 @@
   justify-content: center;
   align-items: center;
   cursor: pointer;
+}
+
+.animeplanet {
+  background-color: #ff7f00;
+}
+
+.anidb {
+  background-color: #345b86;
 }
 
 .aniplanet {

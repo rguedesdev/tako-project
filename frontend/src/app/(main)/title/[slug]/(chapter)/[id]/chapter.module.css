@@ -4,7 +4,17 @@
 }
 
 .chapterContainer {
-  max-width: 1280px;
-  margin-inline: auto;
-  padding-inline: 16px;
+  width: 100%;
+}
+
+.commentsContainer {
+  width: min(100% - 32px, 1100px);
+  margin: 72px auto 0;
+}
+
+@media (max-width: 600px) {
+  .commentsContainer {
+    width: min(100% - 24px, 1100px);
+    margin-top: 48px;
+  }
 }

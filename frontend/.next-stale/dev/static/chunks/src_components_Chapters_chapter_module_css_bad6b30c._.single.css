@@ -1,0 +1,139 @@
+/* [project]/src/components/Chapters/chapter.module.css [app-client] (css) */
+.chapter-module__84vojW__volNumber {
+  color: var(--text-primary);
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  display: flex;
+}
+
+.chapter-module__84vojW__volTitle {
+  font-size: 1.1em;
+  font-weight: 600;
+}
+
+.chapter-module__84vojW__capContent {
+  color: var(--text-primary);
+  background-color: var(--card-bg-color);
+  border-radius: 10px;
+  flex-direction: column;
+  margin-bottom: 10px;
+  display: flex;
+  box-shadow: 0 4px 10px #00000026;
+}
+
+.chapter-module__84vojW__capNumber {
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0 5px 10px;
+  font-size: .9em;
+  font-weight: bold;
+  display: flex;
+}
+
+.chapter-module__84vojW__releasesGroup {
+  flex-direction: column;
+  padding-left: 0;
+  display: flex;
+  position: relative;
+}
+
+.chapter-module__84vojW__releaseWrapper {
+  cursor: pointer;
+  padding-left: 35px;
+  transition: background-color .2s, border-radius .2s;
+  position: relative;
+}
+
+.chapter-module__84vojW__releaseWrapper:hover {
+  background-color: #474a5d;
+}
+
+.chapter-module__84vojW__releaseWrapper:hover:before, .chapter-module__84vojW__releaseWrapper:hover:after {
+  background-color: silver;
+}
+
+.chapter-module__84vojW__releaseWrapper:before {
+  content: "";
+  z-index: 1;
+  background-color: #474a5d;
+  border-radius: 4px;
+  width: 4px;
+  transition: background-color .2s;
+  position: absolute;
+  top: 0;
+  bottom: 15px;
+  left: 15px;
+}
+
+.chapter-module__84vojW__releaseWrapper:after {
+  content: "";
+  z-index: 1;
+  background-color: #474a5d;
+  border-radius: 0 4px 4px 0;
+  width: 15px;
+  height: 4px;
+  transition: background-color .2s;
+  position: absolute;
+  top: 29px;
+  left: 15px;
+  transform: translateY(-50%);
+}
+
+.chapter-module__84vojW__releaseWrapper:last-child, .chapter-module__84vojW__releaseWrapper:last-child:hover {
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+.chapter-module__84vojW__releaseWrapper:last-child:before {
+  height: 28px;
+  bottom: auto;
+}
+
+.chapter-module__84vojW__capLine {
+  width: 100%;
+  padding: 10px 0;
+  transition: all .15s ease-in;
+}
+
+.chapter-module__84vojW__capLink {
+  flex-direction: column;
+  gap: 5px;
+  display: flex;
+}
+
+.chapter-module__84vojW__capContent > div:last-child .chapter-module__84vojW__capLine:hover {
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+.chapter-module__84vojW__capTitle {
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  padding-top: 10px;
+  font-weight: bold;
+  line-height: 1.2;
+  display: flex;
+}
+
+.chapter-module__84vojW__scanlator {
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 10px;
+  font-size: .9em;
+  display: flex;
+}
+
+.chapter-module__84vojW__hrFadded {
+  background: linear-gradient(to right, #ffffff0d, #fff3, #0000);
+  border: none;
+  height: 1px;
+  margin: 0 0 0 15px;
+}
+
+/*# sourceMappingURL=src_components_Chapters_chapter_module_css_bad6b30c._.single.css.map*/

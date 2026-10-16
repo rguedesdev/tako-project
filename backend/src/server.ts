@@ -1,7 +1,9 @@
-import app from "./app";
-// import process from "node:process";
+import buildApp from "./app.js";
+
+const app = await buildApp();
 
 const port = Number(process.env.PORT);
 
-await app.listen({ port });
+// O frontend roda em outro container e precisa alcançar o backend pela rede.
+await app.listen({ port, host: "0.0.0.0" });
 console.log(`Servidor rodando na porta: ${port}`);

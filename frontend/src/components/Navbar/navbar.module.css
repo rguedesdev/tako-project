@@ -1,36 +1,50 @@
-.navbar {
-  display: flex;
-  justify-content: center;
-  padding: 20px 0;
-  background-color: #023684;
-  margin-bottom: 40px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); /* Light Mode */
-  /* box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);  Dark Mode */
+.header { position: relative; z-index: 30; margin-bottom: 40px; background: #023684; box-shadow: 0 2px 10px rgba(0, 0, 0, .16); }
+.navbar { display: flex; align-items: center; width: min(100%, 1280px); min-height: 74px; margin: 0 auto; padding: 10px 16px; gap: 28px; }
+.logoLink { flex: 0 0 auto; }
+.logo { display: block; width: 138px; height: auto; }
+.primaryLinks, .authLinks, .accountArea { display: flex; align-items: center; }
+.primaryLinks { gap: clamp(12px, 2.2vw, 28px); margin-left: auto; }
+.primaryLinks a, .authLinks a { display: flex; align-items: center; min-height: 42px; gap: 6px; border-radius: 8px; color: white; font-size: .9rem; text-decoration: none; transition: background 150ms ease; }
+.primaryLinks a:hover, .authLinks a:hover { background: rgba(255, 255, 255, .1); }
+.primaryLinks a { padding: 0 6px; }
+.accountArea { position: relative; min-width: 118px; justify-content: flex-end; }
+.authLinks { gap: 6px; }
+.authLinks a { padding: 0 10px; }
+.authLinks .signUpLink { background: #e63357; }
+.authLinks .signUpLink:hover { background: #f04464; }
+.notificationButton { display: grid; place-items: center; width: 40px; height: 40px; border: 0; border-radius: 50%; color: rgba(255,255,255,.58); background: transparent; }
+.userMenu { position: relative; }
+.userTrigger { display: flex; align-items: center; min-height: 48px; gap: 9px; padding: 4px 7px; border: 0; border-radius: 10px; color: white; background: transparent; cursor: pointer; }
+.userTrigger:hover { background: rgba(255,255,255,.09); }
+.userTrigger img, .avatarFallback { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
+.avatarFallback { background: linear-gradient(145deg, #f05a77, #bd2746); font-weight: 700; }
+.userIdentity { display: flex; min-width: 0; max-width: 145px; flex-direction: column; align-items: flex-start; line-height: 1.25; }
+.userIdentity strong, .userIdentity small { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.userIdentity strong { font-size: .86rem; }
+.userIdentity small { color: rgba(255,255,255,.68); font-size: .72rem; }
+.dropdown { position: absolute; top: calc(100% + 8px); right: 0; width: 210px; padding: 7px; border: 1px solid rgba(255,255,255,.11); border-radius: 10px; background: #252834; box-shadow: 0 15px 38px rgba(0,0,0,.34); }
+.dropdown button, .dropdown a { display: flex; align-items: center; width: 100%; min-height: 40px; gap: 9px; padding: 0 10px; border: 0; border-radius: 7px; color: #ececf0; background: transparent; cursor:pointer;text-align:left;text-decoration:none;font-size:.86rem }
+.dropdown button:hover:not(:disabled), .dropdown a:hover { background: rgba(255,255,255,.07); }
+.dropdown button:disabled { color: #888d99; cursor: default; }
+.dropdown button small { margin-left: auto; }
+.planBadge { width: fit-content; margin: 4px 7px 7px; padding: 3px 7px; border-radius: 999px; color: #ff9daf; background: rgba(230,51,87,.14); font-size: .65rem; font-weight: 800; letter-spacing: .08em; }
+.accountSkeleton { width: 112px; height: 38px; border-radius: 9px; background: rgba(255,255,255,.1); }
+@media (max-width: 860px) {
+  .navbar { gap: 14px; }
+  .primaryLinks span { display: none; }
+  .primaryLinks a { width: 40px; justify-content: center; }
+  .userIdentity { display: none; }
 }
-
-.logo {
-  width: 150px;
-  height: auto;
+@media (max-width: 600px) {
+  .header { margin-bottom: 24px; }
+  .navbar { min-height: 64px; padding-inline: 12px; }
+  .logo { width: 105px; }
+  .primaryLinks { gap: 1px; }
+  .primaryLinks a { width: 36px; }
+  .authLinks a { width: 40px; justify-content: center; padding: 0; }
+  .authLinks span, .notificationButton { display: none; }
+  .accountArea { min-width: auto; }
 }
-
-.navList {
-  width: 1280px;
-  padding: 0 16px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-.linksWapper {
-  color: var(--text-primary);
-  display: flex;
-  flex-direction: row;
-  gap: 30px;
-}
-
-.navLink {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 5px;
+@media (max-width: 390px) {
+  .primaryLinks a:first-child { display: none; }
 }

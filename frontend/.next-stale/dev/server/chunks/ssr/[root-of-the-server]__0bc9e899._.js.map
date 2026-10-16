@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 17, "column": 0}, "map": {"version":3,"sources":["turbopack:///[project]/src/app/(main)/home.module.css [app-rsc] (css module)"],"sourcesContent":["__turbopack_context__.v({\n  \"page\": \"home-module__pAMqAq__page\",\n});\n"],"names":[],"mappings":"AAAA;AACA;AACA"}},
+    {"offset": {"line": 24, "column": 0}, "map": {"version":3,"sources":["file:///app/src/app/%28main%29/page.tsx"],"sourcesContent":["// Style Sheet CSS\nimport styles from \"./home.module.css\";\n\nfunction HomePage() {\n  return (\n    <div className={styles.page}>\n      <main className={styles.homeContainer}>\n        <h1>Tako Project</h1>\n      </main>\n    </div>\n  );\n}\n\nexport default HomePage;\n"],"names":[],"mappings":";;;;;AAAA,kBAAkB;AAClB;;;AAEA,SAAS;IACP,qBACE,8OAAC;QAAI,WAAW,qJAAM,CAAC,IAAI;kBACzB,cAAA,8OAAC;YAAK,WAAW,qJAAM,CAAC,aAAa;sBACnC,cAAA,8OAAC;0BAAG;;;;;;;;;;;;;;;;AAIZ;uCAEe"}}]
+}

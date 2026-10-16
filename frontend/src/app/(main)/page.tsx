@@ -1,6 +1,3 @@
-// Imports Principais
-import Image from "next/image";
-
 // Style Sheet CSS
 import styles from "./home.module.css";
 

@@ -1,0 +1,19 @@
+/* [project]/src/app/(auth)/signup/signup.module.css [app-client] (css) */
+.signup-module__rERznW__page {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  display: flex;
+}
+
+.signup-module__rERznW__signUpContainer {
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1280px;
+  padding-inline: 16px;
+  display: flex;
+}
+
+/*# sourceMappingURL=src_app_%28auth%29_signup_signup_module_53d07e18.css.map*/

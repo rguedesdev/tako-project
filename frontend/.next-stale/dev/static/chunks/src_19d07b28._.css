@@ -1,0 +1,106 @@
+/* [project]/src/app/(auth)/signup/signup.module.css [app-client] (css) */
+.signup-module__rERznW__page {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  display: flex;
+}
+
+.signup-module__rERznW__signUpContainer {
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1280px;
+  padding-inline: 16px;
+  display: flex;
+}
+
+/* [project]/src/components/SignUpComponent/signupcomponent.module.css [app-client] (css) */
+.signupcomponent-module__uv5sAa__signUpBox {
+  background-color: #171e2d;
+  border-radius: 10px;
+  width: 600px;
+  min-height: 200px;
+  padding: 16px;
+  box-shadow: 0 2px 4px #0000001a;
+}
+
+.signupcomponent-module__uv5sAa__signUpTitle {
+  color: #fff;
+  text-align: center;
+  margin-bottom: 16px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.signupcomponent-module__uv5sAa__signUpBtn {
+  color: #fff;
+  cursor: pointer;
+  background-color: #0377b9;
+  border-radius: 10px;
+  width: 100%;
+  margin: 10px 0;
+  padding: 16px 0;
+  transition: transform .2s;
+  box-shadow: 0 2px 4px #0000001a;
+}
+
+.signupcomponent-module__uv5sAa__signUpBtn:active {
+  transform: scaleX(.97);
+}
+
+/* [project]/src/components/Input/input.module.css [app-client] (css) */
+.input-module__aX0dDG__inputContainer {
+  flex-direction: column;
+  margin-bottom: 10px;
+  display: flex;
+}
+
+.input-module__aX0dDG__fieldset {
+  background-color: var(--input-bg-color);
+  border: 1px solid #025d9266;
+  border-radius: 6px;
+  margin: 0;
+  padding: 0 8px;
+  transition: all .2s;
+  position: relative;
+}
+
+.input-module__aX0dDG__fieldset:focus-within {
+  border: 1px solid #0377b9;
+}
+
+.input-module__aX0dDG__fieldsetError {
+  border-color: #e95d74;
+}
+
+.input-module__aX0dDG__legend {
+  color: #0377b9;
+  margin-left: 8px;
+  padding: 0 2px;
+  font-size: 14px;
+}
+
+.input-module__aX0dDG__input {
+  width: 100%;
+  height: 40px;
+  color: var(--text-primary);
+  background: none;
+  border: none;
+  outline: none;
+  padding: 0 0 7px 5px;
+}
+
+.input-module__aX0dDG__input::placeholder {
+  color: #999;
+  font-size: 14px;
+}
+
+.input-module__aX0dDG__errorMessage {
+  color: #ff91a4;
+  margin-top: 5px;
+  font-size: 13px;
+}
+
+/*# sourceMappingURL=src_19d07b28._.css.map*/

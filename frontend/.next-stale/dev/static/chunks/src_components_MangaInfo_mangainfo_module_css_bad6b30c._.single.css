@@ -1,0 +1,451 @@
+/* [project]/src/components/MangaInfo/mangainfo.module.css [app-client] (css) */
+.mangainfo-module__6FJemW__mangaInfoContainer {
+  background-color: #343746;
+  border-radius: 12px;
+  flex-direction: row;
+  gap: 30px;
+  padding: 20px;
+  display: flex;
+  box-shadow: 0 4px 10px #00000026;
+}
+
+.mangainfo-module__6FJemW__mangaWrapper {
+  aspect-ratio: 2 / 3;
+  width: auto;
+  height: 350px;
+  position: relative;
+}
+
+.mangainfo-module__6FJemW__mangaCover {
+  object-fit: cover;
+  border-radius: 10px;
+  width: 100%;
+  height: 100%;
+  box-shadow: 0 4px 10px #00000026;
+}
+
+.mangainfo-module__6FJemW__btnWrapper {
+  flex-direction: column;
+  gap: 10px;
+  display: flex;
+}
+
+.mangainfo-module__6FJemW__btnAdd {
+  color: #00b4d8;
+  border: 2px solid #00b4d8;
+  margin-top: 10px;
+}
+
+.mangainfo-module__6FJemW__btnRead {
+  color: #c1c1c1;
+  background-color: #004f98;
+}
+
+.mangainfo-module__6FJemW__btnAdd, .mangainfo-module__6FJemW__btnRead {
+  cursor: pointer;
+  border-radius: 7px;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  transition: all .2s ease-in;
+  display: flex;
+  box-shadow: 0 2px 10px #00000026;
+}
+
+.mangainfo-module__6FJemW__btnAdd:hover {
+  color: var(--text-primary);
+  background-color: #00b4d8;
+}
+
+.mangainfo-module__6FJemW__btnRead:hover {
+  color: var(--text-primary);
+  background-color: #0566c2;
+}
+
+.mangainfo-module__6FJemW__btnAdd:active, .mangainfo-module__6FJemW__btnRead:active {
+  transform: scaleX(.97);
+}
+
+.mangainfo-module__6FJemW__mangaInfo {
+  color: var(--text-primary);
+}
+
+.mangainfo-module__6FJemW__mangaTitle {
+  margin-bottom: 10px;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.mangainfo-module__6FJemW__mangaTags {
+  flex-direction: row;
+  gap: 5px;
+  margin-bottom: 20px;
+  display: flex;
+}
+
+.mangainfo-module__6FJemW__tag {
+  background-color: #023684;
+  border-radius: 5px;
+  padding: 2px 10px;
+  font-size: .9em;
+  font-weight: bold;
+  box-shadow: 0 2px 10px #00000026;
+}
+
+.mangainfo-module__6FJemW__sinopse {
+  margin-bottom: 20px;
+}
+
+.mangainfo-module__6FJemW__statsContainer {
+  gap: 6px;
+  margin-bottom: 18px;
+  display: grid;
+}
+
+.mangainfo-module__6FJemW__officialStatus {
+  gap: 5px;
+  margin-bottom: 16px;
+  display: grid;
+}
+
+.mangainfo-module__6FJemW__officialStatus h3 {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.mangainfo-module__6FJemW__officialStatus > div {
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  display: flex;
+}
+
+.mangainfo-module__6FJemW__officialStatus strong {
+  color: #fff;
+  background-color: #164b91;
+  border-radius: 5px;
+  padding: 4px 10px;
+  font-size: 12px;
+  box-shadow: 0 2px 10px #00000026;
+}
+
+.mangainfo-module__6FJemW__officialStatus span {
+  color: #aeb3c1;
+  font-size: 12px;
+}
+
+.mangainfo-module__6FJemW__translationsContainer {
+  gap: 8px;
+  margin-top: 18px;
+  display: grid;
+}
+
+.mangainfo-module__6FJemW__translationsContainer > h3 {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.mangainfo-module__6FJemW__translations {
+  flex-wrap: wrap;
+  gap: 7px;
+  display: flex;
+}
+
+.mangainfo-module__6FJemW__translations > a {
+  color: #fff;
+  background: #2b2e3a;
+  border: 1px solid #ffffff16;
+  border-radius: 8px;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  width: min(320px, 100%);
+  padding: 10px 12px;
+  display: flex;
+}
+
+.mangainfo-module__6FJemW__translations > a > span {
+  gap: 3px;
+  min-width: 0;
+  display: grid;
+}
+
+.mangainfo-module__6FJemW__translations small {
+  color: #aeb3c1;
+}
+
+.mangainfo-module__6FJemW__translations b {
+  background: #174f8f;
+  border-radius: 99px;
+  flex: none;
+  padding: 4px 8px;
+  font-size: 11px;
+}
+
+.mangainfo-module__6FJemW__translations b[data-status="COMPLETED"] {
+  background: #246947;
+}
+
+.mangainfo-module__6FJemW__translations b[data-status="PAUSED"] {
+  background: #795b24;
+}
+
+.mangainfo-module__6FJemW__statsContainer h3 {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.mangainfo-module__6FJemW__stats {
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  display: flex;
+}
+
+.mangainfo-module__6FJemW__stats > span {
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  display: flex;
+}
+
+.mangainfo-module__6FJemW__genderDemographicContainer {
+  flex-direction: row;
+  gap: 40px;
+  display: flex;
+}
+
+.mangainfo-module__6FJemW__genderContainer {
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 15px;
+  display: flex;
+}
+
+.mangainfo-module__6FJemW__genderTitle {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.mangainfo-module__6FJemW__genders {
+  flex-direction: row;
+  gap: 5px;
+  display: flex;
+}
+
+.mangainfo-module__6FJemW__gender {
+  cursor: pointer;
+  background-color: #023684;
+  border-radius: 5px;
+  padding: 2px 10px;
+  font-size: 12px;
+  font-weight: bold;
+  box-shadow: 0 2px 10px #00000026;
+}
+
+.mangainfo-module__6FJemW__demographicContainer {
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 15px;
+  display: flex;
+}
+
+.mangainfo-module__6FJemW__demographicTitle {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.mangainfo-module__6FJemW__demographics {
+  flex-direction: row;
+  gap: 5px;
+  display: flex;
+}
+
+.mangainfo-module__6FJemW__demographic {
+  cursor: pointer;
+  background-color: #023684;
+  border-radius: 5px;
+  padding: 2px 10px;
+  font-size: 12px;
+  font-weight: bold;
+  box-shadow: 0 2px 10px #00000026;
+}
+
+.mangainfo-module__6FJemW__mangakaContainer {
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 15px;
+  display: flex;
+}
+
+.mangainfo-module__6FJemW__mangakaTitle {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.mangainfo-module__6FJemW__mangakas {
+  flex-direction: row;
+  gap: 5px;
+  display: flex;
+}
+
+.mangainfo-module__6FJemW__mangaka {
+  cursor: pointer;
+  background-color: #023684;
+  border-radius: 5px;
+  padding: 2px 10px;
+  font-size: 12px;
+  font-weight: bold;
+  box-shadow: 0 2px 10px #00000026;
+}
+
+.mangainfo-module__6FJemW__trackersContainer {
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 15px;
+  display: flex;
+}
+
+.mangainfo-module__6FJemW__trackersTitle {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.mangainfo-module__6FJemW__trackers {
+  flex-flow: wrap;
+  gap: 5px;
+  display: flex;
+}
+
+.mangainfo-module__6FJemW__trackers a {
+  color: #fff;
+  border-radius: 5px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 0 2px 10px #00000026;
+}
+
+.mangainfo-module__6FJemW__otakulist {
+  cursor: pointer;
+  background-color: #301d48;
+  border-radius: 5px;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 10px 2px;
+  display: flex;
+  box-shadow: 0 2px 10px #00000026;
+}
+
+.mangainfo-module__6FJemW__myanimelist {
+  cursor: pointer;
+  background-color: #2e51a2;
+  border-radius: 5px;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 2px 10px;
+  display: flex;
+  box-shadow: 0 2px 10px #00000026;
+}
+
+.mangainfo-module__6FJemW__anilist {
+  cursor: pointer;
+  background-color: #181f29;
+  border-radius: 5px;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 2px 10px;
+  display: flex;
+  box-shadow: 0 2px 10px #00000026;
+}
+
+.mangainfo-module__6FJemW__animeplanet {
+  background-color: #ff7f00;
+}
+
+.mangainfo-module__6FJemW__anidb {
+  background-color: #345b86;
+}
+
+.mangainfo-module__6FJemW__aniplanet {
+  cursor: pointer;
+  background-color: #fd5341;
+  border-radius: 5px;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 2px 10px;
+  display: flex;
+  box-shadow: 0 2px 10px #00000026;
+}
+
+.mangainfo-module__6FJemW__storesContainer {
+  flex-direction: column;
+  gap: 5px;
+  display: flex;
+}
+
+.mangainfo-module__6FJemW__storesTitle {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.mangainfo-module__6FJemW__stores {
+  flex-direction: row;
+  gap: 5px;
+  display: flex;
+}
+
+.mangainfo-module__6FJemW__otakuyasan {
+  cursor: pointer;
+  background-color: #00a8e1;
+  border-radius: 5px;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 2px 10px;
+  display: flex;
+  box-shadow: 0 2px 10px #00000026;
+}
+
+.mangainfo-module__6FJemW__amazon {
+  cursor: pointer;
+  background-color: #151d28;
+  border-radius: 5px;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 2px 10px;
+  display: flex;
+  box-shadow: 0 2px 10px #00000026;
+}
+
+.mangainfo-module__6FJemW__rakuten {
+  cursor: pointer;
+  background-color: #b00;
+  border-radius: 5px;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 2px 10px;
+  display: flex;
+  box-shadow: 0 2px 10px #00000026;
+}
+
+.mangainfo-module__6FJemW__cdjapan {
+  cursor: pointer;
+  background-color: #fff;
+  border-radius: 5px;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 2px 10px;
+  display: flex;
+  box-shadow: 0 2px 10px #00000026;
+}
+
+/*# sourceMappingURL=src_components_MangaInfo_mangainfo_module_css_bad6b30c._.single.css.map*/

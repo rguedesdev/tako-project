@@ -23,13 +23,7 @@
 }
 
 .fieldsetError {
-  border: solid 2px #d52f2f;
-  border-radius: 6px;
-  position: relative;
-
-  /* background-color: #ffffff; */
-  padding: 0 8px;
-  margin: 0;
+  border-color: #e95d74;
 }
 
 .legend {
@@ -49,6 +43,7 @@
   /* Ajuste aqui: */
   background: transparent;
   padding: 0 0 7px 5px;
+  color: var(--text-primary);
 }
 
 .input::placeholder {
@@ -58,6 +53,6 @@
 
 .errorMessage {
   margin-top: 5px;
-  color: #d52f2f;
+  color: #ff91a4;
   font-size: 13px;
 }

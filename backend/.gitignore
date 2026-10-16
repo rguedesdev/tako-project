@@ -2,4 +2,9 @@
 /node_modules
 
 # Variáveis de ambiente
-.env*
+.env
+.env.*
+!.env.example
+
+# Uploads locais são dados de runtime, não artefatos versionáveis
+/.uploads/

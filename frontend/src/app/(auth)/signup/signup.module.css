@@ -4,6 +4,7 @@
   flex-direction: column; /* Alinha os filhos em coluna */
   justify-content: center; /* Centraliza o conteúdo verticalmente */
   align-items: center; /* Centraliza o conteúdo horizontalmente */
+  padding: 32px 16px;
 }
 
 .signUpContainer {

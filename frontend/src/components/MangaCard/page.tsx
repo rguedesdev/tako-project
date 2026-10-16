@@ -1,64 +1,93 @@
-// Imports Principais
-import Image from "next/image";
-import Link from "next/link";
+"use client";
 
-// Style Sheet CSS
+import Link from "next/link";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { GiEvilBook } from "react-icons/gi";
+import { HiOutlineBookOpen } from "react-icons/hi2";
+import { RiQuillPenLine } from "react-icons/ri";
+import { TbProgressCheck } from "react-icons/tb";
+import { FiSearch } from "react-icons/fi";
+import { ImMakeGroup } from "react-icons/im";
+
+import type { GroupCard, MangaCardData, MangaTranslation } from "@/lib/catalog";
+import { MediaImage } from "@/components/MediaImage/page";
 import styles from "./mangacard.module.css";
 
-// Icons
-import { HiOutlineBookOpen } from "react-icons/hi2";
-import { GiEvilBook } from "react-icons/gi";
-import { FaPenNib } from "react-icons/fa";
-import { BiPen } from "react-icons/bi";
-import { RiQuillPenLine, RiQuillPenAiLine } from "react-icons/ri";
+function normalizeSearchText(value: string) {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLocaleLowerCase("pt-BR")
+    .trim();
+}
 
-// Imagens
-import Kanan from "../../../public/kanan.jpg";
-import Ruri from "../../../public/ruri-dragon.jpg";
-import Mato from "../../../public/mato-seihei.jpg";
-import Takamine from "../../../public/takamine.jpg";
-import BokuKokoro from "../../../public/boku-kokoro.jpg";
-import DrSlump from "../../../public/dr-slump.jpg";
+function MangaCard({ pageTitle, mangas, groups = [], translations = [], filterable = false, initialTitleQuery = "", initialGenres = [] }: { pageTitle: string; mangas: MangaCardData[]; groups?: GroupCard[]; translations?: MangaTranslation[]; filterable?: boolean; initialTitleQuery?: string; initialGenres?: string[] }) {
+  const [titleQuery, setTitleQuery] = useState(initialTitleQuery);
+  const [selectedGenres, setSelectedGenres] = useState<string[]>(initialGenres);
+  const [selectedDemographics, setSelectedDemographics] = useState<string[]>([]);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const genres = useMemo(
+    () => [...new Set(mangas.flatMap((manga) => manga.genders ?? []).filter(Boolean))]
+      .sort((a, b) => a.localeCompare(b, "pt-BR")),
+    [mangas],
+  );
+  const demographics = useMemo(
+    () => [...new Set(mangas.flatMap((manga) => manga.demographics ?? []).filter(Boolean))]
+      .sort((a, b) => a.localeCompare(b, "pt-BR")),
+    [mangas],
+  );
+  const filteredMangas = useMemo(() => {
+    const normalizedQuery = normalizeSearchText(titleQuery);
+    return mangas.filter((manga) => {
+      const matchesText = !normalizedQuery
+        || normalizeSearchText(manga.title).includes(normalizedQuery)
+        || normalizeSearchText(manga.mangaka).includes(normalizedQuery);
+      const matchesGenres = !selectedGenres.length
+        || (manga.genders ?? []).some((genre) => selectedGenres.includes(genre));
+      const matchesDemographics = !selectedDemographics.length
+        || (manga.demographics ?? []).some((demographic) => selectedDemographics.includes(demographic));
+      return matchesText && matchesGenres && matchesDemographics;
+    });
+  }, [mangas, selectedDemographics, selectedGenres, titleQuery]);
+  const filteredGroups = useMemo(() => {
+    const normalizedQuery = normalizeSearchText(titleQuery);
+    if (!normalizedQuery) return [];
+    return groups.filter((group) => normalizeSearchText(group.name).includes(normalizedQuery));
+  }, [groups, titleQuery]);
 
-function MangaCard({ pageTitle }) {
-  const mangas = [
-    {
-      id: 1,
-      mangaCover: Kanan,
-      mangaTitle: "Kanan-sama wa Akumade Choroi",
-      mangaka: "Nonco",
-    },
-    {
-      id: 2,
-      mangaCover: Ruri,
-      mangaTitle: "Ruri Dragon",
-      mangaka: "Shindou Masaoki",
-    },
-    {
-      id: 3,
-      mangaCover: Mato,
-      mangaTitle: "Mato Seihei no Slave",
-      mangaka: "Takemura Youhei e Takahiro",
-    },
-    {
-      id: 4,
-      mangaCover: Takamine,
-      mangaTitle: "Haite Kudasai, Takamine-san",
-      mangaka: "Hiiragi Yuuichi",
-    },
-    {
-      id: 5,
-      mangaCover: BokuKokoro,
-      mangaTitle: "Boku no Kokoro no Yabai Yatsu",
-      mangaka: "Sakurai Norio",
-    },
-    {
-      id: 6,
-      mangaCover: DrSlump,
-      mangaTitle: "Dr. Slump",
-      mangaka: "Akira Toriyama",
-    },
-  ];
+  function toggleSelection(value: string, selected: string[], update: (values: string[]) => void) {
+    update(selected.includes(value)
+      ? selected.filter((item) => item !== value)
+      : [...selected, value]);
+  }
+
+  function clearFilters() {
+    setTitleQuery("");
+    setSelectedGenres([]);
+    setSelectedDemographics([]);
+    if (filterable && typeof window !== "undefined") {
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+  }
+
+  const hasActiveFilters = Boolean(titleQuery || selectedGenres.length || selectedDemographics.length);
+
+  useEffect(() => {
+    if (!filterable) return;
+
+    function focusSearch(event: KeyboardEvent) {
+      const target = event.target;
+      const isTyping = target instanceof HTMLElement
+        && (target.isContentEditable || target.matches("input, textarea, select"));
+      if (event.key === "/" && !event.altKey && !event.ctrlKey && !event.metaKey && !isTyping) {
+        event.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    }
+
+    window.addEventListener("keydown", focusSearch);
+    return () => window.removeEventListener("keydown", focusSearch);
+  }, [filterable]);
 
   return (
     <section>
@@ -66,43 +95,116 @@ function MangaCard({ pageTitle }) {
         <HiOutlineBookOpen className={styles.sectionIcon} size={25} />
         <span className={styles.sectionTitle}>{pageTitle}</span>
       </h2>
-      <div className={styles.mangasGrid}>
-        {mangas.map((manga) => (
-          <Link
-            key={manga.id}
-            href={`/title/${manga.id}`}
-            className={styles.cardLink}
-          >
-            <article className={styles.mangaCard}>
-              <figure>
-                <div className={styles.mangaWraper}>
-                  <Image
-                    className={styles.mangaCover}
-                    src={manga.mangaCover}
-                    alt="Manga Cover"
-                    fill
-                    unoptimized
-                  />
-                </div>
-
-                <figcaption className={styles.mangaInfo}>
-                  <div className={styles.mangaInfoLine}>
-                    <GiEvilBook size={16} />
-                    <span>{manga.mangaTitle}</span>
-                  </div>
-
-                  <hr className={styles.hrFaded} />
-
-                  <div className={styles.mangaInfoLine}>
-                    <RiQuillPenLine size={16} />
-                    <span>{manga.mangaka}</span>
-                  </div>
-                </figcaption>
-              </figure>
-            </article>
-          </Link>
-        ))}
-      </div>
+      {filterable && (
+        <div className={styles.catalogFilters}>
+          <label className={styles.filterField}>
+            <div className={styles.searchInputWrap}>
+              <FiSearch className={styles.searchIcon} aria-hidden="true" />
+              <input
+                ref={searchInputRef}
+                type="search"
+                value={titleQuery}
+                onChange={(event) => setTitleQuery(event.target.value)}
+                aria-label="Buscar por nome"
+                placeholder="Buscar por nome da obra ou mangaka"
+                aria-keyshortcuts="/"
+              />
+              <kbd className={styles.searchShortcut} aria-hidden="true">/</kbd>
+            </div>
+          </label>
+          <div className={styles.filterGroups}>
+            <fieldset className={styles.filterGroup}>
+              <legend>Demografia{selectedDemographics.length ? ` · ${selectedDemographics.length} selecionada${selectedDemographics.length === 1 ? "" : "s"}` : ""}</legend>
+              <div className={styles.filterOptions}>
+                {demographics.length === 0 ? (
+                  <span className={styles.filterEmpty}>Dados de demografia ainda indisponíveis.</span>
+                ) : demographics.map((demographic) => {
+                  const checked = selectedDemographics.includes(demographic);
+                  return (
+                    <label className={`${styles.filterTag} ${checked ? styles.filterTagSelected : ""}`} key={demographic}>
+                      <input type="checkbox" checked={checked} onChange={() => toggleSelection(demographic, selectedDemographics, setSelectedDemographics)} />
+                      <span>{demographic}</span>
+                    </label>
+                  );
+                })}
+              </div>
+            </fieldset>
+            <fieldset className={styles.filterGroup}>
+              <legend>Gêneros{selectedGenres.length ? ` · ${selectedGenres.length} selecionado${selectedGenres.length === 1 ? "" : "s"}` : ""}</legend>
+              <div className={styles.filterOptions}>
+                {genres.map((genre) => {
+                  const checked = selectedGenres.includes(genre);
+                  return (
+                    <label className={`${styles.filterTag} ${checked ? styles.filterTagSelected : ""}`} key={genre}>
+                      <input type="checkbox" checked={checked} onChange={() => toggleSelection(genre, selectedGenres, setSelectedGenres)} />
+                      <span>{genre}</span>
+                    </label>
+                  );
+                })}
+              </div>
+            </fieldset>
+          </div>
+          {hasActiveFilters && (
+            <button className={styles.clearFilters} type="button" onClick={clearFilters}>
+              Limpar filtros
+            </button>
+          )}
+        </div>
+      )}
+      {filteredGroups.length > 0 && (
+        <section className={styles.groupResults}>
+          <h3 className={styles.groupResultsTitle}><ImMakeGroup aria-hidden="true" />Grupos encontrados</h3>
+          <div className={styles.groupResultsGrid}>
+            {filteredGroups.map((group) => (
+              <Link className={styles.groupResultCard} href={`/scan/${group.id}`} key={group.id}>
+                <MediaImage className={styles.groupResultImage} source={group.groupImage} fallback="/group-placeholder.svg" alt={`Imagem do grupo ${group.name}`} />
+                <span className={styles.groupResultInfo}>
+                  <strong>{group.name} <span title={group.country}>{group.countryFlag}</span></strong>
+                  <span>{group.description}</span>
+                </span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+      {filteredMangas.length > 0 ? (
+        <div className={styles.mangasGrid}>
+          {filteredMangas.map((manga) => {
+            const translation = translations.find((item) => item.mangaID === manga.id);
+            return (
+              <Link key={manga.id} href={`/title/${manga.id}`} className={styles.cardLink}>
+                <article className={styles.mangaCard}>
+                  <figure>
+                    <div className={styles.mangaWraper}>
+                      <MediaImage className={styles.mangaCover} source={manga.mangaCover} alt={`Capa de ${manga.title}`} />
+                    </div>
+                    <figcaption className={styles.mangaInfo}>
+                      <div className={styles.mangaInfoLine}><GiEvilBook size={16} /><span>{manga.title}{manga.isAdult ? " · +18" : ""}</span></div>
+                      <hr className={styles.hrFaded} />
+                      <div className={styles.mangaInfoLine}><RiQuillPenLine size={16} /><span>{manga.mangaka}</span></div>
+                      {translation && (
+                        <>
+                          <hr className={styles.hrFaded} />
+                          <div className={styles.mangaInfoLine}>
+                            <TbProgressCheck size={16} />
+                            <span>{translation.translationStatus === "COMPLETED" ? "Concluído" : translation.translationStatus === "PAUSED" ? "Pausado" : "Em andamento"}</span>
+                          </div>
+                        </>
+                      )}
+                    </figcaption>
+                  </figure>
+                </article>
+              </Link>
+            );
+          })}
+        </div>
+      ) : filteredGroups.length === 0 && (
+        <p>{!filterable
+          ? "Nenhuma obra com capítulos publicados até o momento."
+          : mangas.length === 0 && !titleQuery
+            ? "Nenhuma obra cadastrada."
+            : "Nenhuma obra ou grupo encontrado com esses filtros."}</p>
+      )}
     </section>
   );
 }

@@ -1,25 +1,41 @@
 .scansSectionTitle {
-  color: #ffffff;
-  font-size: 24px;
-  font-weight: 500;
-  margin-bottom: 20px;
-
   display: flex;
-  flex-direction: row;
   align-items: center;
-  gap: 10px;
+  gap: 9px;
+  margin: 0 0 12px;
+  color: #e7e8ed;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.scansSectionTitle svg {
+  color: #f0647d;
 }
 
 .scansGrid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr));
+  gap: 12px;
+}
+
+.scansGrid > a {
+  display: block;
+  min-width: 0;
+  border-radius: 10px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.scansGrid > a:focus-visible {
+  outline: 2px solid #ff8296;
+  outline-offset: 3px;
 }
 
 .scanCard {
   background-color: #343746;
-  padding: 10px;
-  border-radius: 8px;
+  padding: 12px;
+  border: 1px solid rgb(255 255 255 / 8%);
+  border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 
   transition:
@@ -44,32 +60,41 @@
   display: flex;
   flex-direction: row;
   gap: 16px;
+  width: 100%;
+  min-width: 0;
 }
 
 .scanPicture {
   width: 130px;
   height: 130px;
+  min-width: 130px;
+  max-width: 130px;
+  flex: 0 0 130px;
   border-radius: 6px;
+  object-fit: cover;
+  background: #262936;
+  display: block;
 }
 
 .scanInfo {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  min-width: 0;
 }
 
 .scanNameWrapper {
   display: flex;
   align-items: center;
-  gap: 5px;
-  margin-bottom: 10px;
+  gap: 7px;
+  margin-bottom: 8px;
 }
 
 .scanName {
-  color: #ffffff;
-  font-size: 18px;
-  font-weight: 500;
-  line-height: 1;
+  color: #f7f4f6;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.25;
 }
 
 .verifiedBadge {
@@ -78,31 +103,57 @@
 }
 
 .scanDescription {
-  color: #ffffff;
-  font-size: 14px;
+  color: #c4c1ca;
+  font-size: .84rem;
+  line-height: 1.45;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .scanMoreInfo {
-  color: #ffffff;
   display: flex;
-  flex-direction: row;
-  gap: 15px;
+  flex-wrap: wrap;
+  gap: 7px;
 }
 
 .scanManga {
-  font-size: 14px;
-  font-weight: 500;
-  display: flex;
-  flex-direction: row;
+  display: inline-flex;
   align-items: center;
-  gap: 3px;
+  gap: 6px;
+  min-height: 28px;
+  padding: 4px 8px;
+  border: 1px solid rgb(255 255 255 / 7%);
+  border-radius: 7px;
+  background: rgb(255 255 255 / 3%);
+  color: #aaa6b0;
+  font-size: .72rem;
+  font-weight: 600;
+  line-height: 1.2;
 }
 
 .scanMangaIcon {
-  color: #226fe4;
+  color: #ff8296;
+}
+
+.scanManga svg {
+  flex: 0 0 auto;
+  color: #ff8296;
+  font-size: 15px;
+}
+
+@media (max-width: 560px) {
+  .scanContent {
+    gap: 12px;
+  }
+
+  .scanPicture {
+    width: 96px;
+    height: 96px;
+    min-width: 96px;
+    max-width: 96px;
+    flex-basis: 96px;
+  }
 }

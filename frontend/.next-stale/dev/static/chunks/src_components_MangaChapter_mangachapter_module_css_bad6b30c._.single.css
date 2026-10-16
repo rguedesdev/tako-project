@@ -1,0 +1,538 @@
+/* [project]/src/components/MangaChapter/mangachapter.module.css [app-client] (css) */
+.mangachapter-module__4ps5eq__reader {
+  --reader-accent: #f04464;
+  --reader-surface: #20222c;
+  color: #f7f7f9;
+  background: #181a22;
+  border: 1px solid #ffffff14;
+  border-radius: 20px;
+  width: min(100% - 32px, 1440px);
+  margin-inline: auto;
+  overflow: clip;
+  box-shadow: 0 28px 80px #0000004d;
+}
+
+.mangachapter-module__4ps5eq__reader:fullscreen {
+  background: #111218;
+  border: 0;
+  border-radius: 0;
+  width: 100%;
+  max-width: none;
+  overflow-y: auto;
+}
+
+.mangachapter-module__4ps5eq__readerHeader {
+  background: radial-gradient(circle at 85% 0, #e6335733, #0000 34%), linear-gradient(135deg, #252835, #1d1f29);
+  padding: 24px clamp(20px, 4vw, 52px) 30px;
+  position: relative;
+  overflow: hidden;
+}
+
+.mangachapter-module__4ps5eq__readerHeader:after {
+  content: "";
+  border: 1px solid #ffffff0d;
+  border-radius: 50%;
+  width: 300px;
+  height: 300px;
+  position: absolute;
+  bottom: -130px;
+  right: -80px;
+}
+
+.mangachapter-module__4ps5eq__backLink {
+  z-index: 1;
+  color: #b5b8c4;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 28px;
+  font-size: .86rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color .15s, transform .15s;
+  display: inline-flex;
+  position: relative;
+}
+
+.mangachapter-module__4ps5eq__backLink:hover {
+  color: #fff;
+  transform: translateX(-3px);
+}
+
+.mangachapter-module__4ps5eq__titleBlock {
+  z-index: 1;
+  max-width: 850px;
+  position: relative;
+}
+
+.mangachapter-module__4ps5eq__eyebrow {
+  color: #ff7a94;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 9px;
+  font-size: .72rem;
+  font-weight: 800;
+  display: flex;
+}
+
+.mangachapter-module__4ps5eq__mangaTitle {
+  color: #b9bdc9;
+  width: fit-content;
+  margin-bottom: 5px;
+  font-size: clamp(.95rem, 2vw, 1.1rem);
+  font-weight: 600;
+  text-decoration: none;
+  display: block;
+}
+
+.mangachapter-module__4ps5eq__mangaTitle:hover {
+  color: #fff;
+}
+
+.mangachapter-module__4ps5eq__titleBlock h1 {
+  letter-spacing: -.035em;
+  font-size: clamp(1.7rem, 4vw, 2.85rem);
+  line-height: 1.12;
+}
+
+.mangachapter-module__4ps5eq__titleBlock h1 span {
+  color: #b8bbc6;
+  font-weight: 500;
+}
+
+.mangachapter-module__4ps5eq__metadata {
+  color: #979ba8;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  font-size: .8rem;
+  display: flex;
+}
+
+.mangachapter-module__4ps5eq__toolbar {
+  z-index: 20;
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  background: #1a1c24f0;
+  border-block: 1px solid #ffffff12;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 18px;
+  min-height: 70px;
+  padding: 10px clamp(14px, 3vw, 32px) 13px;
+  display: grid;
+  position: sticky;
+  top: 0;
+  box-shadow: 0 10px 30px #00000038;
+}
+
+.mangachapter-module__4ps5eq__pageNavigation, .mangachapter-module__4ps5eq__modeSelector, .mangachapter-module__4ps5eq__directionSelector, .mangachapter-module__4ps5eq__readerPreferences {
+  align-items: center;
+  display: flex;
+}
+
+.mangachapter-module__4ps5eq__pageNavigation {
+  gap: 7px;
+}
+
+.mangachapter-module__4ps5eq__pageNavigation > button, .mangachapter-module__4ps5eq__fullscreenButton {
+  color: #d9dbe2;
+  cursor: pointer;
+  background: #ffffff0a;
+  border: 1px solid #ffffff1a;
+  border-radius: 9px;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  display: grid;
+}
+
+.mangachapter-module__4ps5eq__pageNavigation > button:hover:not(:disabled), .mangachapter-module__4ps5eq__fullscreenButton:hover {
+  color: #fff;
+  background: #ffffff1a;
+}
+
+.mangachapter-module__4ps5eq__pageNavigation > button:disabled {
+  opacity: .3;
+  cursor: not-allowed;
+}
+
+.mangachapter-module__4ps5eq__pageSelector {
+  color: #999da9;
+  align-items: center;
+  gap: 6px;
+  font-size: .78rem;
+  display: flex;
+}
+
+.mangachapter-module__4ps5eq__pageSelector select {
+  color: #fff;
+  min-width: 46px;
+  height: 36px;
+  font: inherit;
+  text-align: center;
+  background: #292c37;
+  border: 1px solid #ffffff1a;
+  border-radius: 8px;
+  font-weight: 700;
+}
+
+.mangachapter-module__4ps5eq__readerPreferences {
+  justify-self: center;
+  gap: 8px;
+}
+
+.mangachapter-module__4ps5eq__modeSelector, .mangachapter-module__4ps5eq__directionSelector {
+  background: #13151b;
+  border: 1px solid #ffffff14;
+  border-radius: 11px;
+  padding: 4px;
+}
+
+.mangachapter-module__4ps5eq__modeSelector button, .mangachapter-module__4ps5eq__directionSelector button {
+  color: #9296a2;
+  min-height: 38px;
+  font: inherit;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  border-radius: 8px;
+  align-items: center;
+  gap: 7px;
+  padding: 0 14px;
+  font-size: .8rem;
+  font-weight: 700;
+  display: flex;
+}
+
+.mangachapter-module__4ps5eq__modeSelector button.mangachapter-module__4ps5eq__active, .mangachapter-module__4ps5eq__directionSelector button.mangachapter-module__4ps5eq__active {
+  color: #fff;
+  background: #343744;
+  box-shadow: 0 3px 12px #0003;
+}
+
+.mangachapter-module__4ps5eq__directionSelector button {
+  padding-inline: 11px;
+}
+
+.mangachapter-module__4ps5eq__directionSelector button svg {
+  color: #ff7891;
+  font-size: 1rem;
+}
+
+.mangachapter-module__4ps5eq__fullscreenButton {
+  width: auto;
+  font: inherit;
+  justify-self: end;
+  gap: 8px;
+  padding-inline: 12px;
+  font-size: .78rem;
+  font-weight: 700;
+  display: flex;
+}
+
+.mangachapter-module__4ps5eq__progressTrack {
+  background: #ffffff0d;
+  height: 3px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.mangachapter-module__4ps5eq__progressTrack span {
+  background: linear-gradient(90deg, #c82749, #ff6682);
+  border-radius: 0 99px 99px 0;
+  height: 100%;
+  transition: width .24s;
+  display: block;
+}
+
+.mangachapter-module__4ps5eq__canvas {
+  background: radial-gradient(circle at top, #ffffff09, #0000 38%), #111218;
+  min-height: 680px;
+  padding: clamp(22px, 4vw, 54px);
+}
+
+.mangachapter-module__4ps5eq__pageStage {
+  background: #fff;
+  border-radius: 3px;
+  width: fit-content;
+  max-width: min(100%, 900px);
+  margin-inline: auto;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 24px 65px #0000007a;
+}
+
+.mangachapter-module__4ps5eq__pageStage.mangachapter-module__4ps5eq__wideStage {
+  max-width: 100%;
+}
+
+.mangachapter-module__4ps5eq__mangaPage {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: none;
+  display: block;
+}
+
+.mangachapter-module__4ps5eq__turnPage {
+  color: #0000;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  width: 19%;
+  transition: color .16s, background .16s;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+
+.mangachapter-module__4ps5eq__turnPage svg {
+  filter: drop-shadow(0 2px 5px #0000008c);
+  width: 34px;
+  height: 34px;
+}
+
+.mangachapter-module__4ps5eq__turnPage:hover:not(:disabled) {
+  color: #fff;
+}
+
+.mangachapter-module__4ps5eq__turnPage:disabled {
+  cursor: default;
+}
+
+.mangachapter-module__4ps5eq__turnPrevious {
+  background: linear-gradient(90deg, #0000002e, #0000);
+  left: 0;
+}
+
+.mangachapter-module__4ps5eq__turnNext {
+  background: linear-gradient(-90deg, #0000002e, #0000);
+  right: 0;
+}
+
+.mangachapter-module__4ps5eq__turnPrevious:hover:not(:disabled) {
+  background: linear-gradient(90deg, #0000006b, #0000);
+}
+
+.mangachapter-module__4ps5eq__turnNext:hover:not(:disabled) {
+  background: linear-gradient(-90deg, #0000006b, #0000);
+}
+
+.mangachapter-module__4ps5eq__pageBadge {
+  color: #fff;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  background: #0a0b0fb8;
+  border-radius: 99px;
+  padding: 6px 10px;
+  font-size: .72rem;
+  font-weight: 700;
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+}
+
+.mangachapter-module__4ps5eq__continuousCanvas {
+  padding-inline: clamp(0px, 3vw, 40px);
+}
+
+.mangachapter-module__4ps5eq__pageStack {
+  width: min(100%, 920px);
+  margin-inline: auto;
+}
+
+.mangachapter-module__4ps5eq__scrollPage {
+  margin: 0 0 20px;
+  scroll-margin-top: 90px;
+  position: relative;
+}
+
+.mangachapter-module__4ps5eq__scrollPage > span {
+  z-index: 2;
+  color: #fff;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  background: #0f1016b3;
+  border-radius: 99px;
+  padding: 5px 9px;
+  font-size: .68rem;
+  font-weight: 700;
+  position: absolute;
+  top: 12px;
+  left: 12px;
+}
+
+.mangachapter-module__4ps5eq__scrollPage img {
+  width: 100%;
+  height: auto;
+  display: block;
+  box-shadow: 0 18px 45px #0006;
+}
+
+.mangachapter-module__4ps5eq__readerFooter {
+  background: var(--reader-surface);
+  border-top: 1px solid #ffffff12;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  padding: 28px clamp(20px, 4vw, 48px);
+  display: flex;
+}
+
+.mangachapter-module__4ps5eq__readerFooter div {
+  flex-direction: column;
+  gap: 4px;
+  display: flex;
+}
+
+.mangachapter-module__4ps5eq__readerFooter span {
+  color: #9094a1;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  font-size: .72rem;
+  font-weight: 700;
+}
+
+.mangachapter-module__4ps5eq__readerFooter strong {
+  font-size: 1.05rem;
+}
+
+.mangachapter-module__4ps5eq__readerFooter a {
+  color: #fff;
+  background: var(--reader-accent);
+  border-radius: 9px;
+  padding: 11px 16px;
+  font-size: .82rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.mangachapter-module__4ps5eq__readerFooter a:hover {
+  background: #ff5b79;
+}
+
+@media (max-width: 760px) {
+  .mangachapter-module__4ps5eq__reader {
+    border-radius: 14px;
+    width: min(100% - 20px, 1440px);
+  }
+
+  .mangachapter-module__4ps5eq__readerHeader {
+    padding: 20px 18px 24px;
+  }
+
+  .mangachapter-module__4ps5eq__backLink {
+    margin-bottom: 22px;
+  }
+
+  .mangachapter-module__4ps5eq__toolbar {
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+    padding-inline: 10px;
+  }
+
+  .mangachapter-module__4ps5eq__pageNavigation {
+    display: none;
+  }
+
+  .mangachapter-module__4ps5eq__readerPreferences {
+    scrollbar-width: none;
+    justify-content: flex-start;
+    justify-self: stretch;
+    min-width: 0;
+    overflow-x: auto;
+  }
+
+  .mangachapter-module__4ps5eq__readerPreferences::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mangachapter-module__4ps5eq__modeSelector, .mangachapter-module__4ps5eq__directionSelector {
+    flex: none;
+  }
+
+  .mangachapter-module__4ps5eq__fullscreenButton span {
+    display: none;
+  }
+
+  .mangachapter-module__4ps5eq__fullscreenButton {
+    width: 40px;
+    padding: 0;
+  }
+
+  .mangachapter-module__4ps5eq__canvas {
+    min-height: 400px;
+    padding: 16px 10px 28px;
+  }
+
+  .mangachapter-module__4ps5eq__continuousCanvas {
+    padding-inline: 0;
+  }
+
+  .mangachapter-module__4ps5eq__pageStage {
+    border-radius: 2px;
+  }
+
+  .mangachapter-module__4ps5eq__turnPage {
+    width: 24%;
+  }
+
+  .mangachapter-module__4ps5eq__readerFooter {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 24px 18px;
+  }
+
+  .mangachapter-module__4ps5eq__readerFooter a {
+    text-align: center;
+    width: 100%;
+  }
+}
+
+@media (max-width: 420px) {
+  .mangachapter-module__4ps5eq__reader {
+    border-inline: 0;
+    border-radius: 0;
+    width: 100%;
+  }
+
+  .mangachapter-module__4ps5eq__metadata span[aria-hidden="true"] {
+    display: none;
+  }
+
+  .mangachapter-module__4ps5eq__metadata {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .mangachapter-module__4ps5eq__modeSelector button {
+    padding-inline: 11px;
+  }
+
+  .mangachapter-module__4ps5eq__modeSelector button span, .mangachapter-module__4ps5eq__directionSelector button span {
+    font-size: .74rem;
+  }
+
+  .mangachapter-module__4ps5eq__pageBadge {
+    bottom: 8px;
+    right: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mangachapter-module__4ps5eq__backLink, .mangachapter-module__4ps5eq__progressTrack span {
+    transition: none;
+  }
+
+  .mangachapter-module__4ps5eq__backLink:hover {
+    transform: none;
+  }
+}
+
+/*# sourceMappingURL=src_components_MangaChapter_mangachapter_module_css_bad6b30c._.single.css.map*/

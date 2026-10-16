@@ -10,17 +10,57 @@ import { groupResolvers } from "./modules/group/resolver";
 import { mangaTypeDefs } from "./modules/manga/schema";
 import { mangaResolvers } from "./modules/manga/resolver";
 
-const schema = [userTypeDefs, groupTypeDefs, mangaTypeDefs];
+// Chapter GraphQL Configurations
+import { chapterTypeDefs } from "./modules/chapter/schema";
+import { chapterResolvers } from "./modules/chapter/resolver";
+
+// Comment GraphQL Configurations
+import { commentTypeDefs } from "./modules/comment/schema";
+import { commentResolvers } from "./modules/comment/resolver";
+import { mediaTypeDefs } from "./modules/media/schema";
+import { mediaResolvers } from "./modules/media/resolver";
+
+const schema = [
+  userTypeDefs,
+  groupTypeDefs,
+  mangaTypeDefs,
+  chapterTypeDefs,
+  commentTypeDefs,
+  mediaTypeDefs,
+];
 
 const resolvers = {
   Query: {
     ...userResolvers.Query,
+    ...groupResolvers.Query,
+    ...mangaResolvers.Query,
+    ...chapterResolvers.Query,
+    ...commentResolvers.Query,
+    ...mediaResolvers.Query,
   },
   Mutation: {
     ...userResolvers.Mutation,
     ...groupResolvers.Mutation,
     ...mangaResolvers.Mutation,
+    ...chapterResolvers.Mutation,
+    ...commentResolvers.Mutation,
   },
+  User: {
+    ...userResolvers.User,
+  },
+  Group: {
+    ...groupResolvers.Group,
+  },
+  Manga: {
+    ...mangaResolvers.Manga,
+  },
+  Chapter: {
+    ...chapterResolvers.Chapter,
+  },
+  CommentAuthor: {
+    ...commentResolvers.CommentAuthor,
+  },
+  Media: { ...mediaResolvers.Media },
 };
 
 export { schema, resolvers };

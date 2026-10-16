@@ -6,11 +6,11 @@ services:
     image: mongo:7
 
     # Nome fixo do container (evita mongo-1, mongo-2 etc)
-    container_name: mongo
+    container_name: takop-mongodb-development
 
     # Porta exposta para sua máquina
     ports:
-      - "27017:27017"
+      - "27018:27017"
 
     # Volume persistente (dados não somem ao reiniciar)
     volumes:

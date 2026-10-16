@@ -1,124 +1,389 @@
-.mangaTile {
-  color: #0e61dd;
-  font-size: 22px;
-  font-weight: 500;
-  text-align: center;
-  margin-bottom: 10px;
-
-  cursor: pointer;
-  transition: color 0.2s ease;
+.reader {
+  --reader-accent: #f04464;
+  --reader-surface: #20222c;
+  width: min(100% - 32px, 1440px);
+  margin-inline: auto;
+  overflow: clip;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  color: #f7f7f9;
+  background: #181a22;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.3);
 }
 
-.mangaTile:hover {
-  color: #307ff5;
+.reader:fullscreen {
+  width: 100%;
+  max-width: none;
+  overflow-y: auto;
+  border: 0;
+  border-radius: 0;
+  background: #111218;
 }
 
-.chapterTitle {
-  font-size: 18px;
-  text-align: center;
-  margin-top: 10px;
-  margin-bottom: 10px;
+.readerHeader {
+  position: relative;
+  padding: 24px clamp(20px, 4vw, 52px) 30px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 85% 0%, rgba(230, 51, 87, 0.2), transparent 34%),
+    linear-gradient(135deg, #252835, #1d1f29);
 }
 
-.navigationButtons {
+.readerHeader::after {
+  position: absolute;
+  right: -80px;
+  bottom: -130px;
+  width: 300px;
+  height: 300px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+  content: "";
+}
+
+.backLink {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 28px;
+  color: #b5b8c4;
+  font-size: 0.86rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 150ms ease, transform 150ms ease;
+}
+
+.backLink:hover {
+  color: white;
+  transform: translateX(-3px);
+}
+
+.titleBlock {
+  position: relative;
+  z-index: 1;
+  max-width: 850px;
+}
+
+.eyebrow {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 9px;
+  color: #ff7a94;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.mangaTitle {
+  display: block;
+  width: fit-content;
+  margin-bottom: 5px;
+  color: #b9bdc9;
+  font-size: clamp(0.95rem, 2vw, 1.1rem);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.mangaTitle:hover { color: white; }
+
+.titleBlock h1 {
+  font-size: clamp(1.7rem, 4vw, 2.85rem);
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+}
+
+.titleBlock h1 span { color: #b8bbc6; font-weight: 500; }
+
+.metadata {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
   margin-top: 16px;
-  margin-bottom: 20px;
+  color: #979ba8;
+  font-size: 0.8rem;
 }
 
-.prevBtn,
-.nextBtn {
-  background-color: crimson;
-  padding: 5px 20px;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: 10px;
-
-  cursor: pointer;
-  transition: background-color 0.2s ease-in;
+  min-height: 70px;
+  gap: 18px;
+  padding: 10px clamp(14px, 3vw, 32px) 13px;
+  border-block: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(26, 28, 36, 0.94);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(18px);
 }
 
-.prevBtn:hover,
-.nextBtn:hover {
-  background-color: rgb(235, 62, 97);
-}
-
-.ReadingButtons {
+.pageNavigation,
+.modeSelector,
+.directionSelector,
+.readerPreferences {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  align-items: center;
+}
+
+.pageNavigation { gap: 7px; }
+
+.pageNavigation > button,
+.fullscreenButton {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9px;
+  color: #d9dbe2;
+  background: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+}
+
+.pageNavigation > button:hover:not(:disabled),
+.fullscreenButton:hover { color: white; background: rgba(255, 255, 255, 0.1); }
+.pageNavigation > button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.pageSelector {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #999da9;
+  font-size: 0.78rem;
+}
+
+.pageSelector select {
+  min-width: 46px;
+  height: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: white;
+  background: #292c37;
+  font: inherit;
+  font-weight: 700;
+  text-align: center;
+}
+
+.readerPreferences {
+  justify-self: end;
   gap: 8px;
-  margin-top: 16px;
-  margin-inline: 170px;
-  margin-bottom: 20px;
 }
 
-.swapBtn,
-.scrollBtn {
-  color: crimson;
-  padding: 5px 20px;
-  border: 1px solid crimson;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.modeSelector,
+.directionSelector {
+  padding: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 11px;
+  background: #13151b;
+}
 
+.modeSelector button,
+.directionSelector button {
   display: flex;
-  flex-direction: row;
-  justify-content: center;
   align-items: center;
-  gap: 10px;
-
+  min-height: 38px;
+  gap: 7px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 8px;
+  color: #9296a2;
+  background: transparent;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s ease-in;
 }
 
-.swapBtn:hover,
-.scrollBtn:hover {
-  color: white;
-  background-color: crimson;
+.modeSelector button.active,
+.directionSelector button.active { color: white; background: #343744; box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2); }
+
+.directionSelector button { padding-inline: 11px; }
+.directionSelector button svg { color: #ff7891; font-size: 1rem; }
+
+.fullscreenButton {
+  justify-self: end;
+  display: flex;
+  width: auto;
+  gap: 8px;
+  padding-inline: 12px;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
 }
 
-.readerModeActiveBtn {
-  color: white;
-  background-color: crimson;
+.progressTrack {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.05);
 }
 
-.mangaWrapper {
-  width: 100%; /* 💥 importante */
+.progressTrack span {
+  display: block;
+  height: 100%;
+  border-radius: 0 99px 99px 0;
+  background: linear-gradient(90deg, #c82749, #ff6682);
+  transition: width 240ms ease;
 }
 
-/* padrão (2:3) */
+.canvas {
+  min-height: 680px;
+  padding: clamp(22px, 4vw, 54px);
+  background:
+    radial-gradient(circle at center top, rgba(255, 255, 255, 0.035), transparent 38%),
+    #111218;
+}
+
+.pageStage {
+  position: relative;
+  width: fit-content;
+  max-width: min(100%, 900px);
+  margin-inline: auto;
+  overflow: hidden;
+  border-radius: 3px;
+  background: white;
+  box-shadow: 0 24px 65px rgba(0, 0, 0, 0.48);
+}
+
+.pageStage.wideStage { max-width: 100%; }
+
 .mangaPage {
-  width: 100%;
-  max-width: 920px;
-  margin: 0 auto;
   display: block;
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* páginas largas */
-.widePage {
-  width: 100%;
+  width: auto;
   max-width: 100%;
+  height: auto;
+  max-height: none;
+}
+
+.turnPage {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 19%;
+  border: 0;
+  color: transparent;
+  background: transparent;
+  cursor: pointer;
+  transition: color 160ms ease, background 160ms ease;
+}
+
+.turnPage svg { width: 34px; height: 34px; filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.55)); }
+.turnPage:hover:not(:disabled) { color: white; }
+.turnPage:disabled { cursor: default; }
+.turnPrevious { left: 0; background: linear-gradient(90deg, rgba(0, 0, 0, 0.18), transparent); }
+.turnNext { right: 0; background: linear-gradient(-90deg, rgba(0, 0, 0, 0.18), transparent); }
+.turnPrevious:hover:not(:disabled) { background: linear-gradient(90deg, rgba(0, 0, 0, 0.42), transparent); }
+.turnNext:hover:not(:disabled) { background: linear-gradient(-90deg, rgba(0, 0, 0, 0.42), transparent); }
+
+.pageBadge {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  padding: 6px 10px;
+  border-radius: 99px;
+  color: white;
+  background: rgba(10, 11, 15, 0.72);
+  font-size: 0.72rem;
+  font-weight: 700;
+  backdrop-filter: blur(8px);
+}
+
+.continuousCanvas { padding-inline: clamp(0px, 3vw, 40px); }
+
+.pageStack {
+  width: min(100%, 920px);
+  margin-inline: auto;
+}
+
+.scrollPage {
+  position: relative;
+  margin: 0 0 20px;
+  scroll-margin-top: 90px;
+}
+
+.scrollPage > span {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+  padding: 5px 9px;
+  border-radius: 99px;
+  color: white;
+  background: rgba(15, 16, 22, 0.7);
+  font-size: 0.68rem;
+  font-weight: 700;
+  backdrop-filter: blur(8px);
+}
+
+.scrollPage img {
   display: block;
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.hrFadded {
-  border: none;
   width: 100%;
-  height: 1px;
-  background: linear-gradient(to right, transparent, white, transparent);
-  margin-bottom: 16px;
+  height: auto;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.4);
 }
 
-.hrFadded:last-child {
-  margin-top: 16px;
+.readerFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 28px clamp(20px, 4vw, 48px);
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  background: var(--reader-surface);
+}
+
+.readerFooter div { display: flex; flex-direction: column; gap: 4px; }
+.readerFooter span { color: #9094a1; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.readerFooter strong { font-size: 1.05rem; }
+.readerFooter a { padding: 11px 16px; border-radius: 9px; color: white; background: var(--reader-accent); font-size: 0.82rem; font-weight: 800; text-decoration: none; }
+.readerFooter a:hover { background: #ff5b79; }
+
+@media (max-width: 760px) {
+  .reader { width: min(100% - 20px, 1440px); border-radius: 14px; }
+  .readerHeader { padding: 20px 18px 24px; }
+  .backLink { margin-bottom: 22px; }
+  .toolbar { grid-template-columns: 1fr auto; gap: 8px; padding-inline: 10px; }
+  .pageNavigation { display: none; }
+  .readerPreferences {
+    justify-self: stretch;
+    justify-content: flex-start;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .readerPreferences::-webkit-scrollbar { display: none; }
+  .modeSelector,
+  .directionSelector { flex: 0 0 auto; }
+  .fullscreenButton span { display: none; }
+  .fullscreenButton { width: 40px; padding: 0; }
+  .canvas { min-height: 400px; padding: 16px 10px 28px; }
+  .continuousCanvas { padding-inline: 0; }
+  .pageStage { border-radius: 2px; }
+  .turnPage { width: 24%; }
+  .readerFooter { align-items: flex-start; flex-direction: column; padding: 24px 18px; }
+  .readerFooter a { width: 100%; text-align: center; }
+}
+
+@media (max-width: 420px) {
+  .reader { width: 100%; border-inline: 0; border-radius: 0; }
+  .metadata span[aria-hidden="true"] { display: none; }
+  .metadata { align-items: flex-start; flex-direction: column; gap: 4px; }
+  .modeSelector button { padding-inline: 11px; }
+  .modeSelector button span,
+  .directionSelector button span { font-size: 0.74rem; }
+  .pageBadge { right: 8px; bottom: 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backLink,
+  .progressTrack span { transition: none; }
+  .backLink:hover { transform: none; }
 }

@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 1, "column": 0}, "map": {"version":3,"sources":["turbopack:///[project]/src/app/(auth)/signup/signup.module.css"],"sourcesContent":[".page {\n  min-height: 100vh;\n  display: flex;\n  flex-direction: column; /* Alinha os filhos em coluna */\n  justify-content: center; /* Centraliza o conteúdo verticalmente */\n  align-items: center; /* Centraliza o conteúdo horizontalmente */\n  padding: 32px 16px;\n}\n\n.signUpContainer {\n  width: 100%; /* Obriga o container a ocupar a largura disponível */\n  max-width: 1280px; /* Limita a largura máxima em telas grandes */\n  padding-inline: 16px; /* Evita que o conteúdo cole nas bordas em telas pequenas */\n\n  /* Se o seu formulário interno precisar de centralização própria: */\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n}\n"],"names":[],"mappings":"AAAA;;;;;;;;;AASA"}}]
+}

@@ -1,5 +1,6 @@
 import { TakoProjectDB } from "../../../plugins/mongoose";
 import { Schema, Types } from "mongoose";
+import { COUNTRY_CODES } from "../../../config/countries";
 
 interface IStats {
   followers: number;
@@ -16,6 +17,8 @@ interface ILinks {
   x?: string;
   instagram?: string;
   facebook?: string;
+  youtube?: string;
+  tiktok?: string;
   bluesky?: string;
   orkkut?: string;
   email?: string;
@@ -24,6 +27,7 @@ interface ILinks {
 interface IGroup {
   ownerID: Types.ObjectId;
   groupImage: string;
+  groupImageID?: Types.ObjectId | null;
   name: string;
   description: string;
   country: string;
@@ -42,6 +46,7 @@ const groupSchema = new Schema<IGroup>(
       type: String,
       default: "",
     },
+    groupImageID: { type: Schema.Types.ObjectId, ref: "Media", default: null },
     name: {
       type: String,
       required: true,
@@ -56,6 +61,7 @@ const groupSchema = new Schema<IGroup>(
       type: String,
       required: true, // Adicionado o campo de país
       trim: true,
+      enum: COUNTRY_CODES,
     },
     // Mapeando o objeto aninhado de Stats
     stats: {
@@ -73,6 +79,8 @@ const groupSchema = new Schema<IGroup>(
       x: String,
       instagram: String,
       facebook: String,
+      youtube: String,
+      tiktok: String,
       bluesky: String,
       orkut: String,
       email: String,
