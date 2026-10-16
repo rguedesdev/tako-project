@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 1, "column": 0}, "map": {"version":3,"sources":["turbopack:///[project]/src/components/Input/input.module.css"],"sourcesContent":[".inputContainer {\n  display: flex;\n  flex-direction: column;\n  margin-bottom: 10px;\n}\n\n.fieldset {\n  border: 1px solid rgba(2, 93, 146, 0.4);\n  border-radius: 6px;\n  position: relative;\n\n  /* Adicione estas linhas: */\n  background-color: var(--input-bg-color);\n  padding: 0 8px;\n  margin: 0;\n\n  transition: all 0.2s ease;\n}\n\n.fieldset:focus-within {\n  border: 1px solid #0377b9;\n  /* box-shadow: 0 0 6px rgba(3, 119, 185, 0.5); */\n}\n\n.fieldsetError {\n  border-color: #e95d74;\n}\n\n.legend {\n  font-size: 14px;\n  padding: 0 2px;\n  color: #0377b9;\n  margin-left: 8px;\n  /* Se quiser que o fundo da legenda também seja branco para não cortar a linha: */\n}\n\n.input {\n  border: none;\n  outline: none;\n  width: 100%;\n  height: 40px;\n\n  /* Ajuste aqui: */\n  background: transparent;\n  padding: 0 0 7px 5px;\n  color: var(--text-primary);\n}\n\n.input::placeholder {\n  font-size: 14px;\n  color: #999;\n}\n\n.errorMessage {\n  margin-top: 5px;\n  color: #ff91a4;\n  font-size: 13px;\n}\n"],"names":[],"mappings":"AAAA;;;;;;AAMA;;;;;;;;;;AAaA;;;;AAKA;;;;AAIA;;;;;;;AAQA;;;;;;;;;;AAYA;;;;;AAKA"}}]
-}

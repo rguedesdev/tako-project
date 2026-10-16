@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 1, "column": 0}, "map": {"version":3,"sources":["turbopack:///[project]/src/components/ImageUploadField/upload.module.css"],"sourcesContent":[".field{display:grid;gap:8px;color:#d7d9e1;font-size:.88rem}.row{display:flex;align-items:center;gap:16px}.preview{flex:none;object-fit:cover;background:#282a36;border:1px solid #ffffff20}.circle{border-radius:50%}.square{width:96px;height:96px;aspect-ratio:1/1;border-radius:12px}.cover{border-radius:8px}.row>div{display:grid;justify-items:start;gap:8px}.row input{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}.button{padding:9px 13px;border:1px solid #ffffff2b;border-radius:8px;background:#292c38;color:#fff;cursor:pointer;font-weight:650}.button:hover{background:#303441}.button[aria-disabled=\"true\"]{opacity:.55;pointer-events:none}.row small{max-width:340px;color:#9da2b0;line-height:1.45}.error{color:#ff9daf;font-size:.82rem}\n"],"names":[],"mappings":"AAAA;;;;;;;AAA2D;;;;;;AAA8C;;;;;;;AAAkF;;;;AAA0B;;;;;;;AAAmE;;;;AAAyB;;;;;;AAAkD;;;;;;;;AAAqF;;;;;;;;;;AAAmI;;;;AAAiC;;;;;AAA8D;;;;;;AAA0D"}}]
-}

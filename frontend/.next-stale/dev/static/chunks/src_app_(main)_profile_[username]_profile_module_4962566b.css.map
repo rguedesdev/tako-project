@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 1, "column": 0}, "map": {"version":3,"sources":["file:///app/src/app/%28main%29/profile/%5Busername%5D/profile.module.css"],"sourcesContent":[".page{width:min(920px,calc(100% - 32px));margin:36px auto;min-height:70vh;color:#fff}.card{padding:28px;border-radius:14px;background:#343746;box-shadow:0 8px 28px #0003}.header{display:flex;align-items:center;gap:20px;padding-bottom:24px;border-bottom:1px solid #ffffff18}.header img{width:112px;height:112px;border-radius:50%;object-fit:cover;background:#262936}.header h1{font-size:1.7rem}.header p{color:#b9bdc9;margin:4px 0}.header span{display:inline-block;padding:3px 9px;border-radius:99px;background:#174f8f;font-size:.75rem}.form{display:grid;gap:18px;margin-top:24px}.form label{display:grid;gap:7px;color:#d7d9e1;font-size:.88rem}.form input{width:100%;padding:11px 12px;border:1px solid #ffffff24;border-radius:8px;background:#282a36;color:#fff}.form button{justify-self:start;padding:11px 18px;border:0;border-radius:8px;background:#e83e61;color:#fff;cursor:pointer}.form button:disabled{opacity:.55}\n"],"names":[],"mappings":"AAAA;;;;;;;AAAqF;;;;;;;AAAqF;;;;;;;;AAAuG;;;;;;;;AAA2F;;;;AAA4B;;;;;AAAqC;;;;;;;;AAAyG;;;;;;AAA4C;;;;;;;AAAgE;;;;;;;;;AAAoH;;;;;;;;;;AAA0H"}}]
-}
