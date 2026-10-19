@@ -51,6 +51,53 @@ const signInSchema = z
   })
   .strict();
 
+const PROFILE_LINK_DOMAINS: Record<string, string[]> = {
+  discord: ["discord.gg", "discord.com", "discordapp.com"],
+  telegram: ["t.me", "telegram.me", "telegram.org"],
+  x: ["x.com", "twitter.com"],
+  instagram: ["instagram.com"],
+  facebook: ["facebook.com", "fb.com"],
+  youtube: ["youtube.com", "youtu.be"],
+  tiktok: ["tiktok.com"],
+  bluesky: ["bsky.app"],
+};
+
+function profileUrl(label: string, domains?: string[]) {
+  return z.string().trim().max(500, `${label}: o link deve ter no máximo 500 caracteres.`)
+    .transform((value) => value || null)
+    .refine((value) => {
+      if (!value) return true;
+      try {
+        const url = new URL(value);
+        if (url.protocol !== "https:" || url.username || url.password) return false;
+        return !domains || domains.some((domain) => url.hostname === domain || url.hostname.endsWith(`.${domain}`));
+      } catch {
+        return false;
+      }
+    }, `${label}: informe uma URL HTTPS válida${domains ? " da plataforma" : ""}.`)
+    .optional()
+    .nullable();
+}
+
+const profileSocialMediasSchema = z.object({
+  site: profileUrl("Site"),
+  discord: profileUrl("Discord", PROFILE_LINK_DOMAINS.discord),
+  telegram: profileUrl("Telegram", PROFILE_LINK_DOMAINS.telegram),
+  x: profileUrl("X / Twitter", PROFILE_LINK_DOMAINS.x),
+  instagram: profileUrl("Instagram", PROFILE_LINK_DOMAINS.instagram),
+  facebook: profileUrl("Facebook", PROFILE_LINK_DOMAINS.facebook),
+  youtube: profileUrl("YouTube", PROFILE_LINK_DOMAINS.youtube),
+  tiktok: profileUrl("TikTok", PROFILE_LINK_DOMAINS.tiktok),
+  bluesky: profileUrl("Bluesky", PROFILE_LINK_DOMAINS.bluesky),
+}).strict();
+
+const profileTrackersSchema = z.object({
+  myanimelist: profileUrl("MyAnimeList", ["myanimelist.net"]),
+  anilist: profileUrl("AniList", ["anilist.co"]),
+  animeplanet: profileUrl("Anime-Planet", ["anime-planet.com"]),
+  anidb: profileUrl("AniDB", ["anidb.net"]),
+}).strict();
+
 function parseOrThrow<T>(schema: z.ZodType<T>, data: unknown): T {
   const result = schema.safeParse(data);
   if (!result.success) {
@@ -61,11 +108,15 @@ function parseOrThrow<T>(schema: z.ZodType<T>, data: unknown): T {
 
 const normalizeSignUp = (data: unknown) => parseOrThrow(signUpSchema, data);
 const normalizeSignIn = (data: unknown) => parseOrThrow(signInSchema, data);
+const normalizeProfileSocialMedias = (data: unknown) => parseOrThrow(profileSocialMediasSchema, data);
+const normalizeProfileTrackers = (data: unknown) => parseOrThrow(profileTrackersSchema, data);
 
 export {
   emailSchema,
   normalizeSignIn,
   normalizeSignUp,
+  normalizeProfileSocialMedias,
+  normalizeProfileTrackers,
   passwordSchema,
   signInSchema,
   signUpSchema,

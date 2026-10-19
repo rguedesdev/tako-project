@@ -60,7 +60,7 @@ async function makeUser(label: string, accountType: "MEMBER" | "AEGIS" = "MEMBER
   return { id: user._id.toString(), token: createUserToken(user) };
 }
 
-const description = "Descrição de integração suficientemente longa para satisfazer todas as validações do catálogo global de mangás sem depender de dados reais.";
+const description = "Descrição de integração suficientemente longa para satisfazer todas as validações do catálogo global de mangas sem depender de dados reais.";
 
 try {
   await app.ready();

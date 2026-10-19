@@ -1,5 +1,5 @@
 .reader {
-  --reader-accent: #f04464;
+  --reader-accent: #2563eb;
   --reader-surface: #20222c;
   width: min(100% - 32px, 1440px);
   margin-inline: auto;
@@ -11,13 +11,23 @@
   box-shadow: 0 28px 80px rgba(0, 0, 0, 0.3);
 }
 
-.reader:fullscreen {
+.reader.isFullscreen {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
   width: 100%;
+  height: 100vh;
+  height: 100dvh;
   max-width: none;
+  margin: 0;
   overflow-y: auto;
   border: 0;
   border-radius: 0;
   background: #111218;
+}
+
+.reader.isFullscreen .readerHeader {
+  display: none;
 }
 
 .readerHeader {
@@ -25,7 +35,7 @@
   padding: 24px clamp(20px, 4vw, 52px) 30px;
   overflow: hidden;
   background:
-    radial-gradient(circle at 85% 0%, rgba(230, 51, 87, 0.2), transparent 34%),
+    radial-gradient(circle at 85% 0%, rgba(59, 130, 246, 0.2), transparent 34%),
     linear-gradient(135deg, #252835, #1d1f29);
 }
 
@@ -70,7 +80,7 @@
   align-items: center;
   gap: 7px;
   margin-bottom: 9px;
-  color: #ff7a94;
+  color: #60a5fa;
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.12em;
@@ -204,7 +214,7 @@
 .directionSelector button.active { color: white; background: #343744; box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2); }
 
 .directionSelector button { padding-inline: 11px; }
-.directionSelector button svg { color: #ff7891; font-size: 1rem; }
+.directionSelector button svg { color: #60a5fa; font-size: 1rem; }
 
 .fullscreenButton {
   justify-self: end;
@@ -230,7 +240,7 @@
   display: block;
   height: 100%;
   border-radius: 0 99px 99px 0;
-  background: linear-gradient(90deg, #c82749, #ff6682);
+  background: linear-gradient(90deg, #1d4ed8, #60a5fa);
   transition: width 240ms ease;
 }
 
@@ -244,23 +254,52 @@
 
 .pageStage {
   position: relative;
-  width: fit-content;
+  width: min(100%, 900px);
   max-width: min(100%, 900px);
+  aspect-ratio: 0.72;
   margin-inline: auto;
   overflow: hidden;
   border-radius: 3px;
-  background: white;
+  background: #20232d;
   box-shadow: 0 24px 65px rgba(0, 0, 0, 0.48);
 }
 
 .pageStage.wideStage { max-width: 100%; }
 
+.pageStage::before,
+.scrollPage::before {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background: linear-gradient(100deg, #20232d 20%, #2b2f3b 38%, #20232d 56%);
+  background-size: 220% 100%;
+  content: "";
+  animation: pageSkeleton 1.35s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.pageStage:has(img[data-loaded="true"])::before,
+.scrollPage:has(img[data-loaded="true"])::before {
+  display: none;
+}
+
+@keyframes pageSkeleton {
+  to { background-position-x: -220%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pageStage::before,
+  .scrollPage::before { animation: none; }
+}
+
 .mangaPage {
+  position: absolute;
+  inset: 0;
   display: block;
-  width: auto;
+  width: 100%;
   max-width: 100%;
-  height: auto;
-  max-height: none;
+  height: 100%;
+  object-fit: contain;
 }
 
 .turnPage {
@@ -305,7 +344,12 @@
 
 .scrollPage {
   position: relative;
+  width: 100%;
+  aspect-ratio: 0.72;
   margin: 0 0 20px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: #20232d;
   scroll-margin-top: 90px;
 }
 
@@ -324,9 +368,12 @@
 }
 
 .scrollPage img {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: contain;
   box-shadow: 0 18px 45px rgba(0, 0, 0, 0.4);
 }
 
@@ -336,15 +383,19 @@
   justify-content: space-between;
   gap: 24px;
   padding: 28px clamp(20px, 4vw, 48px);
-  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  border-top: 1px solid transparent;
+  border-image: linear-gradient(to right, transparent, rgb(166 168 178 / 35%), transparent) 1;
   background: var(--reader-surface);
 }
 
 .readerFooter div { display: flex; flex-direction: column; gap: 4px; }
 .readerFooter span { color: #9094a1; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
 .readerFooter strong { font-size: 1.05rem; }
-.readerFooter a { padding: 11px 16px; border-radius: 9px; color: white; background: var(--reader-accent); font-size: 0.82rem; font-weight: 800; text-decoration: none; }
-.readerFooter a:hover { background: #ff5b79; }
+.chapterNavigation { display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
+.chapterNavigation a { display: inline-flex; align-items: center; gap: 8px; padding: 11px 16px; border-radius: 9px; color: white; background: var(--reader-accent); font-size: 0.82rem; font-weight: 800; line-height: 1; text-decoration: none; }
+.chapterNavigation a svg { display: block; width: 14px; height: 14px; flex: 0 0 14px; }
+.chapterNavigation a svg.chapterListIcon { width: 22px; height: 22px; flex-basis: 22px; }
+.chapterNavigation a:hover { background: #2563eb; }
 
 @media (max-width: 760px) {
   .reader { width: min(100% - 20px, 1440px); border-radius: 14px; }
@@ -369,7 +420,8 @@
   .pageStage { border-radius: 2px; }
   .turnPage { width: 24%; }
   .readerFooter { align-items: flex-start; flex-direction: column; padding: 24px 18px; }
-  .readerFooter a { width: 100%; text-align: center; }
+  .chapterNavigation { width: 100%; flex-direction: column-reverse; }
+  .chapterNavigation a { width: 100%; justify-content: center; text-align: center; }
 }
 
 @media (max-width: 420px) {

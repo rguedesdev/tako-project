@@ -8,6 +8,7 @@ import { RiQuillPenLine } from "react-icons/ri";
 import { TbProgressCheck } from "react-icons/tb";
 import { FiSearch } from "react-icons/fi";
 import { ImMakeGroup } from "react-icons/im";
+import { MdOutlineSearchOff } from "react-icons/md";
 
 import type { GroupCard, MangaCardData, MangaTranslation } from "@/lib/catalog";
 import { MediaImage } from "@/components/MediaImage/page";
@@ -21,10 +22,10 @@ function normalizeSearchText(value: string) {
     .trim();
 }
 
-function MangaCard({ pageTitle, mangas, groups = [], translations = [], filterable = false, initialTitleQuery = "", initialGenres = [] }: { pageTitle: string; mangas: MangaCardData[]; groups?: GroupCard[]; translations?: MangaTranslation[]; filterable?: boolean; initialTitleQuery?: string; initialGenres?: string[] }) {
+function MangaCard({ pageTitle, mangas, groups = [], translations = [], filterable = false, initialTitleQuery = "", initialGenres = [], initialDemographics = [], showSectionHeader = true, onRemove }: { pageTitle: string; mangas: MangaCardData[]; groups?: GroupCard[]; translations?: MangaTranslation[]; filterable?: boolean; initialTitleQuery?: string; initialGenres?: string[]; initialDemographics?: string[]; showSectionHeader?: boolean; onRemove?: (mangaID: string) => void }) {
   const [titleQuery, setTitleQuery] = useState(initialTitleQuery);
   const [selectedGenres, setSelectedGenres] = useState<string[]>(initialGenres);
-  const [selectedDemographics, setSelectedDemographics] = useState<string[]>([]);
+  const [selectedDemographics, setSelectedDemographics] = useState<string[]>(initialDemographics);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const genres = useMemo(
     () => [...new Set(mangas.flatMap((manga) => manga.genders ?? []).filter(Boolean))]
@@ -91,10 +92,10 @@ function MangaCard({ pageTitle, mangas, groups = [], translations = [], filterab
 
   return (
     <section>
-      <h2 className={styles.sectionTitleWrapper}>
+      {showSectionHeader && <h2 className={styles.sectionTitleWrapper}>
         <HiOutlineBookOpen className={styles.sectionIcon} size={25} />
         <span className={styles.sectionTitle}>{pageTitle}</span>
-      </h2>
+      </h2>}
       {filterable && (
         <div className={styles.catalogFilters}>
           <label className={styles.filterField}>
@@ -172,8 +173,8 @@ function MangaCard({ pageTitle, mangas, groups = [], translations = [], filterab
           {filteredMangas.map((manga) => {
             const translation = translations.find((item) => item.mangaID === manga.id);
             return (
-              <Link key={manga.id} href={`/title/${manga.id}`} className={styles.cardLink}>
-                <article className={styles.mangaCard}>
+              <article className={styles.mangaCard} key={manga.id}>
+                <Link href={`/title/${manga.id}`} className={styles.cardLink}>
                   <figure>
                     <div className={styles.mangaWraper}>
                       <MediaImage className={styles.mangaCover} source={manga.mangaCover} alt={`Capa de ${manga.title}`} />
@@ -193,17 +194,21 @@ function MangaCard({ pageTitle, mangas, groups = [], translations = [], filterab
                       )}
                     </figcaption>
                   </figure>
-                </article>
-              </Link>
+                </Link>
+                {onRemove && <button className={styles.removeFromLibrary} type="button" aria-label={`Remover ${manga.title} da biblioteca`} title="Remover da biblioteca" onClick={() => onRemove(manga.id)} />}
+              </article>
             );
           })}
         </div>
       ) : filteredGroups.length === 0 && (
-        <p>{!filterable
-          ? "Nenhuma obra com capítulos publicados até o momento."
-          : mangas.length === 0 && !titleQuery
-            ? "Nenhuma obra cadastrada."
-            : "Nenhuma obra ou grupo encontrado com esses filtros."}</p>
+        <div className={styles.emptyState} role="status">
+          <MdOutlineSearchOff aria-hidden="true" />
+          <p>{!filterable
+            ? "Nenhuma obra com capítulos publicados até o momento."
+            : mangas.length === 0 && !titleQuery
+              ? "Nenhuma obra cadastrada."
+              : "Nenhuma obra ou grupo encontrado com esses filtros."}</p>
+        </div>
       )}
     </section>
   );

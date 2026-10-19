@@ -55,6 +55,7 @@ export interface MangaCardData {
 }
 
 export interface Manga extends MangaCardData {
+  inMyLibrary?: boolean;
   description: string;
   genders: string[];
   trackers?: Trackers | null;
@@ -72,7 +73,7 @@ export interface GroupCard extends Pick<Group, "id" | "groupImage" | "name" | "d
 export interface MangaTranslation {
   mangaID: string;
   groupID: string;
-  group: Pick<Group, "id" | "name" | "country" | "countryFlag">;
+  group: Pick<Group, "id" | "name" | "groupImage" | "country" | "countryFlag">;
   language: string;
   latestMainChapter?: number | null;
   lastMainChapterPublishedAt?: string | null;
@@ -89,6 +90,7 @@ export interface Chapter {
   chapterTitle?: string | null;
   chapterNumber: number;
   pages: string[];
+  telegramPages: string[];
   views: number;
   createdAt: string;
   mangaInfo: Manga;
@@ -99,14 +101,25 @@ export interface ChapterListItem extends Pick<Chapter, "id" | "manga" | "group" 
   groupInfo: Pick<Group, "id" | "name" | "country" | "countryFlag">;
 }
 
-export interface ChapterDetail extends Pick<Chapter, "id" | "manga" | "group" | "chapterTitle" | "chapterNumber" | "pages"> {
+export interface ChapterDetail extends Pick<Chapter, "id" | "manga" | "group" | "chapterTitle" | "chapterNumber" | "pages" | "telegramPages"> {
   groupInfo: Pick<Group, "id" | "name" | "country" | "countryFlag">;
   mangaInfo: Pick<Manga, "id" | "title">;
 }
 
 export interface LatestChapter extends Pick<Chapter, "id" | "manga" | "group" | "chapterTitle" | "chapterNumber" | "createdAt"> {
+  firstChapterID?: string | null;
   groupInfo: Pick<Group, "id" | "name">;
-  mangaInfo: Pick<Manga, "id" | "title" | "mangaCover">;
+  mangaInfo: Pick<Manga, "id" | "title" | "mangaCover" | "description" | "genders">;
+}
+
+export interface MangaReadRanking {
+  manga: Pick<Manga, "id" | "title" | "mangaCover">;
+  reads: number;
+}
+
+export interface ReaderRanking {
+  user: { id: string; name: string; username: string; profilePicture?: string | null };
+  chaptersRead: number;
 }
 
 const GROUP_FIELDS = `
@@ -121,7 +134,7 @@ const GROUP_CARD_FIELDS = `
 `;
 
 const MANGA_FIELDS = `
-  id mangaCover title description mangaka genders demographics isAdult
+  id mangaCover title description mangaka genders demographics isAdult inMyLibrary
   trackers { myanimelist anilist animeplanet anidb }
 `;
 
@@ -133,7 +146,7 @@ const MANGA_STATUS_FIELDS = `
   translations {
     mangaID groupID language latestMainChapter lastMainChapterPublishedAt
     translationStatus calculatedTranslationStatus translationStatusOverride overridden
-    group { id name country countryFlag }
+    group { id name groupImage country countryFlag }
   }
 `;
 
@@ -186,10 +199,32 @@ export async function recordChapterView(chapterID: string) {
   return data.recordChapterView;
 }
 
+export async function recordChapterRead(chapterID: string, token: string) {
+  const data = await graphqlRequest<{ recordChapterRead: boolean }>(
+    `mutation RecordChapterRead($chapterID: ID!) {
+      recordChapterRead(chapterID: $chapterID)
+    }`,
+    { chapterID },
+    token,
+  );
+  return data.recordChapterRead;
+}
+
+export async function reportChapterPagesToReaderNode(chapterID: string, pageIndexes: number[], token: string) {
+  const data = await graphqlRequest<{ reportChapterPagesToReaderNode: number }>(
+    `mutation ReportChapterPagesToReaderNode($chapterID: ID!, $pageIndexes: [Int!]!) {
+      reportChapterPagesToReaderNode(chapterID: $chapterID, pageIndexes: $pageIndexes)
+    }`,
+    { chapterID, pageIndexes },
+    token,
+  );
+  return data.reportChapterPagesToReaderNode;
+}
+
 export async function getChapter(id: string) {
   const data = await graphqlRequest<{ chapter: ChapterDetail | null }>(`query Chapter($id: ID!) {
     chapter(id: $id) {
-      id manga group chapterTitle chapterNumber pages
+      id manga group chapterTitle chapterNumber pages telegramPages
       groupInfo { id name country countryFlag }
       mangaInfo { id title }
     }
@@ -200,12 +235,19 @@ export async function getChapter(id: string) {
 export async function getLatestChapters(limit = 40) {
   const data = await graphqlRequest<{ latestChapters: LatestChapter[] }>(`query LatestChapters($limit: Int!) {
     latestChapters(limit: $limit) {
-      id manga group chapterTitle chapterNumber createdAt
+      id manga group chapterTitle chapterNumber createdAt firstChapterID
       groupInfo { id name }
-      mangaInfo { id title mangaCover }
+      mangaInfo { id title mangaCover description genders }
     }
   }`, { limit });
   return data.latestChapters;
+}
+
+export async function getRankings() {
+  return graphqlRequest<{ weeklyMostReadMangas: MangaReadRanking[]; topReaders: ReaderRanking[] }>(`query Rankings {
+    weeklyMostReadMangas(limit: 10) { reads manga { id title mangaCover } }
+    topReaders(period: ALL_TIME, limit: 10) { chaptersRead user { id name username profilePicture } }
+  }`);
 }
 
 export function mediaUrl(value?: string | null) {

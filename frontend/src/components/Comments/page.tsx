@@ -3,10 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
+import { BiChat } from "react-icons/bi";
 import { FiHeart, FiLoader, FiMessageCircle, FiMoreHorizontal } from "react-icons/fi";
 
 import { useUser } from "@/context/UserContext";
+import { useShopInventory } from "@/hooks/useShopInventory";
 import { graphqlRequest } from "@/lib/graphql";
+import { SHOP_ITEMS } from "@/lib/otamart";
 import styles from "./comments.module.css";
 
 const COMMENT_FIELDS = `
@@ -74,13 +77,13 @@ function initials(user?: User | null) {
     .toUpperCase();
 }
 
-function Avatar({ user, size = "normal" }: { user?: User | null; size?: "normal" | "small" }) {
+function Avatar({ user, size = "normal", frame }: { user?: User | null; size?: "normal" | "small"; frame?: string }) {
   return user?.profilePicture ? (
     // User-uploaded URLs are runtime data, so a regular img avoids coupling to Next image hosts.
     // eslint-disable-next-line @next/next/no-img-element
-    <img className={`${styles.avatar} ${styles[size]}`} src={user.profilePicture} alt="" />
+    <img className={`${styles.avatar} ${styles[size]}`} data-frame={frame} src={user.profilePicture} alt="" />
   ) : (
-    <span className={`${styles.avatar} ${styles.avatarFallback} ${styles[size]}`} aria-hidden="true">
+    <span className={`${styles.avatar} ${styles.avatarFallback} ${styles[size]}`} data-frame={frame} aria-hidden="true">
       {initials(user)}
     </span>
   );
@@ -88,18 +91,22 @@ function Avatar({ user, size = "normal" }: { user?: User | null; size?: "normal"
 
 function Composer({
   user,
+  frame,
   autoFocus = false,
   initialValue = "",
   placeholder = "Escreva um comentário…",
   submitLabel = "Comentar",
+  animated = false,
   onCancel,
   onSubmit,
 }: {
   user: User;
+  frame?: string;
   autoFocus?: boolean;
   initialValue?: string;
   placeholder?: string;
   submitLabel?: string;
+  animated?: boolean;
   onCancel?: () => void;
   onSubmit: (content: string) => Promise<void>;
 }) {
@@ -124,8 +131,8 @@ function Composer({
   }
 
   return (
-    <form className={styles.composer} onSubmit={submit}>
-      <Avatar user={user} size="small" />
+    <form className={`${styles.composer} ${animated ? styles.composerEnter : ""}`} onSubmit={submit}>
+      <Avatar user={user} size="small" frame={frame} />
       <div className={styles.composerBody}>
         <textarea
           autoFocus={autoFocus}
@@ -164,6 +171,8 @@ function CommentItem({
   isReply = false,
   rootCommentId,
   onDeleted,
+  equippedFrame,
+  equippedFont,
 }: {
   comment: Comment;
   chapterId: string;
@@ -172,6 +181,8 @@ function CommentItem({
   isReply?: boolean;
   rootCommentId?: string;
   onDeleted?: (comment: Comment) => void;
+  equippedFrame?: string;
+  equippedFont?: string;
 }) {
   const [comment, setComment] = useState(initialComment);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -184,6 +195,9 @@ function CommentItem({
   const [repliesLoading, setRepliesLoading] = useState(false);
   const [repliesError, setRepliesError] = useState("");
   const isOwner = currentUser?.id === comment.author.id;
+  const isCurrentAuthor = currentUser?.id === comment.author.id;
+  const authorFrame = isCurrentAuthor ? equippedFrame : undefined;
+  const authorFont = isCurrentAuthor ? equippedFont : undefined;
   const replyParentId = rootCommentId ?? comment.id;
 
   useEffect(() => setComment(initialComment), [initialComment]);
@@ -308,11 +322,13 @@ function CommentItem({
 
   return (
     <article className={`${styles.comment} ${isReply ? styles.reply : ""}`}>
-      <Avatar user={comment.author} size={isReply ? "small" : "normal"} />
+      <Avatar user={comment.author} size={isReply ? "small" : "normal"} frame={authorFrame} />
       <div className={styles.commentBody}>
         <header className={styles.commentHeader}>
           <div className={styles.identity}>
-            <strong>{comment.author.name}</strong>
+            <strong><Link className={styles.identityName} data-font={authorFont} href={`/reader/${encodeURIComponent(comment.author.username)}`} aria-label={`Ver perfil de ${comment.author.name}`}>
+              {comment.author.name}
+            </Link></strong>
             <div className={styles.identityMeta}>
               {comment.author.username && <span>@{comment.author.username}</span>}
               <span aria-hidden="true">·</span>
@@ -352,8 +368,8 @@ function CommentItem({
               <span>{comment.likeCount || "Curtir"}</span>
             </button>
             {currentUser && (
-              <button onClick={() => setReplying((open) => !open)}>
-                <FiMessageCircle aria-hidden="true" />
+              <button className={styles.replyAction} onClick={() => setReplying((open) => !open)}>
+                <BiChat aria-hidden="true" />
                 <span>Responder</span>
               </button>
             )}
@@ -364,6 +380,7 @@ function CommentItem({
           <Composer
             user={currentUser}
             autoFocus
+            animated
             placeholder={`Responder a @${comment.author.username}…`}
             onCancel={() => setReplying(false)}
             onSubmit={(content) => addReply(isReply ? `@${comment.author.username} ${content}` : content)}
@@ -393,6 +410,8 @@ function CommentItem({
                     currentUser={currentUser}
                     token={token}
                     isReply
+                    equippedFrame={equippedFrame}
+                    equippedFont={equippedFont}
                     rootCommentId={comment.id}
                     onDeleted={(result) => {
                       if (result.id === reply.id) {
@@ -420,6 +439,9 @@ export function Comments({ chapterId }: { chapterId: string }) {
   const pathname = usePathname();
   const { authenticatedUser, authLoading, authToken: token } = useUser();
   const currentUser: User | null = authenticatedUser;
+  const { inventory } = useShopInventory(authenticatedUser?.id ?? "demo", authenticatedUser?.username);
+  const equippedFrame = SHOP_ITEMS.find((item) => item.id === inventory.equipped.frame)?.className;
+  const equippedFont = SHOP_ITEMS.find((item) => item.id === inventory.equipped.font)?.className;
   const [comments, setComments] = useState<Comment[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [nextOffset, setNextOffset] = useState<number | null>(null);
@@ -494,11 +516,11 @@ export function Comments({ chapterId }: { chapterId: string }) {
           <p>Verificando sua sessão…</p>
         </div>
       ) : currentUser ? (
-        <Composer user={currentUser} onSubmit={createComment} />
+        <Composer user={currentUser} frame={equippedFrame} onSubmit={createComment} />
       ) : (
         <div className={styles.signInPrompt}>
-          <span className={`${styles.avatar} ${styles.avatarFallback} ${styles.small}`}>?</span>
-          <p><Link href={`/signin?next=${encodeURIComponent(pathname)}`}>Entre na sua conta</Link> para participar da conversa.</p>
+          <span className={`${styles.avatar} ${styles.avatarFallback} ${styles.small} ${styles.signInIcon}`} aria-hidden="true"><BiChat /></span>
+          <p><Link href={`/signin?next=${encodeURIComponent(pathname)}`}>Acesse sua conta</Link> para participar da conversa.</p>
         </div>
       )}
 
@@ -527,6 +549,8 @@ export function Comments({ chapterId }: { chapterId: string }) {
               chapterId={chapterId}
               currentUser={currentUser}
               token={token}
+              equippedFrame={equippedFrame}
+              equippedFont={equippedFont}
               onDeleted={() => {
                 setComments((current) => current.filter((item) => item.id !== comment.id));
                 setTotalCount((count) => Math.max(0, count - 1));

@@ -7,17 +7,17 @@
   background: linear-gradient(145deg, rgba(52, 55, 70, 0.98), rgba(38, 40, 52, 0.98));
   box-shadow: 0 18px 55px rgba(0, 0, 0, 0.22);
 }
-.eyebrow { display: flex; align-items: center; justify-content: center; gap: 7px; color: #ff718c; font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+.eyebrow { display: flex; align-items: center; justify-content: center; gap: 7px; color: #60a5fa; font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
 .signUpTitle { margin-top: 10px; color: white; font-size: clamp(1.7rem, 5vw, 2.15rem); text-align: center; }
 .subtitle { margin: 8px 0 26px; color: #aeb1bd; text-align: center; line-height: 1.5; }
 .passwordGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.signUpBtn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 48px; margin-top: 16px; border: 0; border-radius: 9px; color: white; background: #e63357; font: inherit; font-weight: 700; cursor: pointer; transition: background 160ms ease, transform 160ms ease; }
-.signUpBtn:hover:not(:disabled) { background: #f04464; }
+.signUpBtn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 48px; margin-top: 16px; border: 0; border-radius: 9px; color: white; background: #3b82f6; font: inherit; font-weight: 700; cursor: pointer; transition: background 160ms ease, transform 160ms ease; }
+.signUpBtn:hover:not(:disabled) { background: #2563eb; }
 .signUpBtn:active:not(:disabled) { transform: scale(.985); }
 .signUpBtn:disabled { opacity: .62; cursor: wait; }
-.errorMessage { margin: 10px 0 0; padding: 10px 12px; border-radius: 7px; color: #ffc0cb; background: rgba(230, 51, 87, .12); font-size: .86rem; }
+.errorMessage { margin: 10px 0 0; padding: 10px 12px; border-radius: 7px; color: #ffc0cb; background: rgba(59, 130, 246, .12); font-size: .86rem; }
 .switchAuth { margin-top: 22px; color: #aeb1bd; font-size: .88rem; text-align: center; }
-.switchAuth a { color: #ff718c; font-weight: 700; text-decoration: none; }
+.switchAuth a { color: #60a5fa; font-weight: 700; text-decoration: none; }
 .switchAuth a:hover { text-decoration: underline; }
 .spinner { animation: spin 800ms linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }

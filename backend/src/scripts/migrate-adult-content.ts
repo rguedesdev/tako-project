@@ -10,5 +10,5 @@ const [mangas, users] = await Promise.all([
     { $set: { "preferences.showAdultContent": false } },
   ),
 ]);
-console.log(`${mangas.modifiedCount} mangá(s) e ${users.modifiedCount} usuário(s) receberam padrões +18 seguros.`);
+console.log(`${mangas.modifiedCount} manga(s) e ${users.modifiedCount} usuário(s) receberam padrões +18 seguros.`);
 await TakoProjectDB.close();

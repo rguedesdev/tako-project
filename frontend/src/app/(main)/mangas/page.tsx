@@ -4,8 +4,8 @@ import styles from "./mangas.module.css";
 import { MangaCard } from "@/components/MangaCard/page";
 import { getGroups, getMangas } from "@/lib/catalog";
 
-async function MangasPage({ searchParams }: { searchParams: Promise<{ genero?: string; mangaka?: string }> }) {
-  const { genero, mangaka } = await searchParams;
+async function MangasPage({ searchParams }: { searchParams: Promise<{ genero?: string; demografia?: string; mangaka?: string }> }) {
+  const { genero, demografia, mangaka } = await searchParams;
   const [mangas, groups] = await Promise.all([
     getMangas().catch((error) => {
       console.error("Falha ao carregar mangas:", error);
@@ -26,6 +26,7 @@ async function MangasPage({ searchParams }: { searchParams: Promise<{ genero?: s
           filterable
           initialTitleQuery={mangaka ?? ""}
           initialGenres={genero ? [genero] : []}
+          initialDemographics={demografia ? [demografia] : []}
         />
       </main>
     </div>

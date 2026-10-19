@@ -17,3 +17,17 @@ body {
   background-color: var(--bg-color);
 }
 
+.appToast { position: fixed; z-index: 2000; top: auto; right: auto; bottom: 24px; left: 50%; display: grid; grid-template-columns: 34px minmax(0, 1fr) 28px; align-items: center; gap: 12px; width: min(440px, calc(100vw - 32px)); padding: 14px 16px; border: 1px solid #ffffff20; border-radius: 13px; background: #252833; color: #f5f6fa; box-shadow: 0 16px 48px #0008; transform: translateX(-50%); animation: appToastIn .2s ease-out; }
+.appToastIcon { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; font-size: .95rem; font-weight: 800; }
+.appToast p { color: #d4d6df; font-size: .9rem; line-height: 1.45; overflow-wrap: anywhere; }
+.appToast button { width: 28px; height: 28px; border: 0; border-radius: 7px; background: transparent; color: #b9bdc9; font-size: 1.35rem; line-height: 1; cursor: pointer; }
+.appToast button:hover { background: #ffffff12; color: #fff; }
+.appToastsuccess { border-color: #63d6a455; }
+.appToastsuccess .appToastIcon { background: #63d6a422; color: #75dfb0; }
+.appToasterror { border-color: #ff718866; }
+.appToasterror .appToastIcon { background: #ff718822; color: #ff8298; }
+.appToastinfo .appToastIcon { background: #7daeff22; color: #9bc0ff; }
+@keyframes appToastIn { from { opacity: 0; transform: translate(-50%, 8px); } to { opacity: 1; transform: translate(-50%, 0); } }
+@media (max-width: 600px) { .appToast { bottom: 16px; width: calc(100vw - 32px); } }
+@media (prefers-reduced-motion: reduce) { .appToast { animation: none; } }
+

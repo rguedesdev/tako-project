@@ -27,6 +27,25 @@ interface IUserSubscription {
   source?: string | null;
 }
 
+interface IUserSocialMedias {
+  site?: string | null;
+  discord?: string | null;
+  telegram?: string | null;
+  x?: string | null;
+  instagram?: string | null;
+  facebook?: string | null;
+  youtube?: string | null;
+  tiktok?: string | null;
+  bluesky?: string | null;
+}
+
+interface IUserTrackers {
+  myanimelist?: string | null;
+  anilist?: string | null;
+  animeplanet?: string | null;
+  anidb?: string | null;
+}
+
 interface IUser {
   accountType: AccountType;
   profilePicture?: string | null;
@@ -39,6 +58,8 @@ interface IUser {
   password?: string;
   subscription: IUserSubscription;
   preferences: { showAdultContent: boolean };
+  socialMedias: IUserSocialMedias;
+  trackers: IUserTrackers;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -58,6 +79,31 @@ const subscriptionSchema = new Schema<IUserSubscription>(
 
 const preferencesSchema = new Schema(
   { showAdultContent: { type: Boolean, default: false } },
+  { _id: false },
+);
+
+const socialMediasSchema = new Schema<IUserSocialMedias>(
+  {
+    site: { type: String, trim: true, maxlength: 500 },
+    discord: { type: String, trim: true, maxlength: 500 },
+    telegram: { type: String, trim: true, maxlength: 500 },
+    x: { type: String, trim: true, maxlength: 500 },
+    instagram: { type: String, trim: true, maxlength: 500 },
+    facebook: { type: String, trim: true, maxlength: 500 },
+    youtube: { type: String, trim: true, maxlength: 500 },
+    tiktok: { type: String, trim: true, maxlength: 500 },
+    bluesky: { type: String, trim: true, maxlength: 500 },
+  },
+  { _id: false },
+);
+
+const trackersSchema = new Schema<IUserTrackers>(
+  {
+    myanimelist: { type: String, trim: true, maxlength: 500 },
+    anilist: { type: String, trim: true, maxlength: 500 },
+    animeplanet: { type: String, trim: true, maxlength: 500 },
+    anidb: { type: String, trim: true, maxlength: 500 },
+  },
   { _id: false },
 );
 
@@ -116,17 +162,36 @@ const userSchema = new Schema<IUser>(
       default: () => ({}),
     },
     preferences: { type: preferencesSchema, default: () => ({ showAdultContent: false }) },
+    socialMedias: { type: socialMediasSchema, default: () => ({}) },
+    trackers: { type: trackersSchema, default: () => ({}) },
   },
   { timestamps: true },
 );
 
 const UserModel = TakoProjectDB.model<IUser>("User", userSchema);
 
+interface IUserFollow {
+  follower: Types.ObjectId;
+  following: Types.ObjectId;
+  createdAt: Date;
+}
+const userFollowSchema = new Schema<IUserFollow>(
+  {
+    follower: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    following: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  },
+  { timestamps: { createdAt: true, updatedAt: false } },
+);
+userFollowSchema.index({ follower: 1, following: 1 }, { unique: true });
+userFollowSchema.index({ following: 1, follower: 1 });
+const UserFollowModel = TakoProjectDB.model<IUserFollow>("UserFollow", userFollowSchema);
+
 export {
   ACCOUNT_TYPES,
   PLAN_TYPES,
   SUBSCRIPTION_STATUSES,
   UserModel,
+  UserFollowModel,
 };
 export type {
   AccountType,

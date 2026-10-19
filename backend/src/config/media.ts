@@ -7,5 +7,5 @@ export const IMAGE_LIMITS = {
 } as const;
 export const ALLOWED_IMAGE_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"];
 export const ALLOWED_IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".webp"];
-export const MAX_UPLOAD_BYTES = 8 * 1024 * 1024;
+export const MAX_UPLOAD_BYTES = 2 * 1024 * 1024;
 export const orphanMediaMaxAgeMs = () => Number(process.env.MEDIA_ORPHAN_MAX_AGE_HOURS ?? 168) * 3600000;

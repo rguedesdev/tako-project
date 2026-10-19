@@ -1,0 +1,206 @@
+@font-face {
+  font-family: "Berkshire Swash";
+  src: url("/fonts/BerkshireSwash-Regular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+.page {
+  width: min(100% - 32px, 1248px);
+  min-height: 100vh;
+  margin: 36px auto 72px;
+  color: #f5f5f7;
+}
+
+.card {
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 8%);
+  border-radius: 16px;
+  background: #303342;
+  box-shadow: 0 12px 36px #0003;
+}
+
+.header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  min-height: 220px;
+  padding: 34px;
+  background: linear-gradient(125deg, #373a4b, #292c39 72%);
+}
+
+.header::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  background: rgb(255 255 255 / 9%);
+  content: "";
+}
+
+.avatarFrame {
+  position: relative;
+  width: 136px;
+  height: 136px;
+  flex: 0 0 136px;
+  padding: 6px;
+  border: 4px solid transparent;
+  border-radius: 50%;
+  background: linear-gradient(#212752, #212752) padding-box,
+    linear-gradient(135deg, #5865f2, #8b5cf6, #00a8fc) border-box;
+  box-shadow: 0 0 0 4px rgb(88 101 242 / 14%), 0 0 22px rgb(88 101 242 / 25%);
+}
+.avatarFrame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #242631;
+}
+.avatarFrame::before,
+.avatarFrame::after {
+  position: absolute;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  content: "";
+  pointer-events: none;
+}
+.avatarFrame::before {
+  inset: -8px;
+  border-top-color: #5865f2;
+  border-right-color: #8b5cf6;
+  animation: frameOrbit 14s linear infinite;
+}
+.avatarFrame::after {
+  inset: -14px;
+  border-bottom-color: #00a8fc;
+  border-left-color: #8b5cf6;
+  opacity: 0.7;
+  animation: frameOrbit 24s linear infinite reverse;
+}
+.avatarFrame[data-frame="aurora"] { --shop-frame-primary: #78e6cf; --shop-frame-secondary: #27a9c6; background: linear-gradient(#212752, #212752) padding-box, linear-gradient(135deg, #78e6cf, #27a9c6) border-box; box-shadow: 0 0 0 4px #78e6cf24, 0 0 22px #78e6cf55; }
+.avatarFrame[data-frame="starlight"] { --shop-frame-primary: #f2c66d; --shop-frame-secondary: #d67a4f; background: linear-gradient(#212752, #212752) padding-box, linear-gradient(135deg, #f2c66d, #d67a4f) border-box; box-shadow: 0 0 0 4px #f2c66d24, 0 0 22px #f2c66d55; }
+.avatarFrame[data-frame="sakura"] { --shop-frame-primary: #ff91b5; --shop-frame-secondary: #bd77ef; background: linear-gradient(#212752, #212752) padding-box, linear-gradient(135deg, #ff91b5, #bd77ef) border-box; box-shadow: 0 0 0 4px #ff91b524, 0 0 22px #ff91b555; }
+.avatarFrame[data-frame]::before { border-top-color: var(--shop-frame-primary); border-right-color: var(--shop-frame-secondary); }
+.avatarFrame[data-frame]::after { border-bottom-color: var(--shop-frame-secondary); border-left-color: var(--shop-frame-primary); }
+@keyframes frameOrbit { to { transform: rotate(360deg); } }
+
+.identity { display: grid; justify-items: start; min-width: 0; }
+.nameLine { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; min-width: 0; }
+.nameIcon { display: block; width: 28px; height: 28px; flex: 0 0 28px; overflow: visible; }
+.identity h1 {
+  margin: 0;
+  color: #60a5fa;
+  background: linear-gradient(90deg, #60a5fa, #ffc371);
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-family: "Berkshire Swash", cursive;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  line-height: 1.15;
+  padding-bottom: 0.12em;
+  overflow-wrap: anywhere;
+  animation: nameGradient 4s ease-in-out infinite alternate;
+}
+.identity h1[data-font="swash"] { font-family: "Berkshire Swash", cursive; }
+.identity h1[data-font="urban"] { font-family: Arial, sans-serif; font-weight: 900; letter-spacing: -.05em; }
+.identity h1[data-font="pixel"] { font-family: monospace; letter-spacing: -.04em; }
+@keyframes nameGradient {
+  from { background-position: 0% 50%; }
+  to { background-position: 100% 50%; }
+}
+.identity p { margin: 7px 0 13px; color: #b9bdc9; }
+.identity > p { margin: 2px 0 14px; }
+.identity .aboutSection { margin: 6px 0 8px; }
+.identity .aboutSection h2 { margin: 0 0 2px; color: #a6a2ad; font-size: 0.66rem; font-weight: 700; letter-spacing: 0.1em; line-height: 1.2; text-transform: uppercase; }
+.identity .aboutSection p { margin: 0; color: #c4c5ce; font-size: 0.8rem; }
+.planBadge { padding: 5px 11px; border: 1px solid rgb(59 130 246 / 32%); border-radius: 8px; color: #bfdbfe; background: rgb(59 130 246 / 13%); font-size: 0.74rem; font-weight: 700; }
+.followRow { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 12px; }
+.followButton { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 32px; padding: 6px 12px; border: 1px solid #3b82f6; border-radius: 7px; background: #3b82f6; color: #fff; font: inherit; font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: background-color 150ms ease, border-color 150ms ease; }
+.followButton:hover { border-color: #60a5fa; background: #2563eb; }
+.followButton:disabled { opacity: 0.6; cursor: wait; }
+.followButton.following { border-color: rgb(255 255 255 / 20%); background: rgb(255 255 255 / 7%); color: #e1e2e8; }
+.followButton svg { font-size: 15px; }
+.followError { color: #ff9bad; }
+
+.publicInfo { padding: 28px 34px 34px; }
+.publicInfo h2 { margin: 0 0 7px; font-size: 1.12rem; }
+.publicInfo h2:not(:first-child) { margin-top: 26px; }
+.publicInfo > p { margin: 0; color: #aeb3c1; font-size: 0.9rem; }
+.aboutSection { margin-bottom: 22px; }
+.aboutSection p { margin: 0; color: #aeb3c1; font-size: 0.9rem; }
+.statsContainer { display: flex; flex-direction: column; gap: 9px; margin: 0 0 20px; }
+.statsTitle { margin: 0 !important; color: #a6a2ad; font-size: 0.72rem !important; font-weight: 700; letter-spacing: 0.12em; line-height: 1.2; text-transform: uppercase; }
+.stats { display: flex; flex-wrap: wrap; gap: 7px; }
+.stat { display: inline-flex; min-height: 34px; align-items: center; gap: 6px; padding: 5px 9px; border: 1px solid rgb(255 255 255 / 6%); border-radius: 8px; background: rgb(255 255 255 / 3%); white-space: nowrap; transition: background-color 160ms ease, border-color 160ms ease; }
+.stat:hover { border-color: rgb(59 130 246 / 25%); background: rgb(59 130 246 / 6%); }
+.statIcon { display: grid; width: 24px; height: 24px; place-items: center; padding: 4px; border-radius: 7px; background: rgb(59 130 246 / 11%); color: #93c5fd; font-size: 16px; }
+.statValue { min-width: 0; color: #f7f4f6; font-size: 0.82rem; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1; }
+.statLabel { color: #aaa6b0; font-size: 0.7rem; line-height: 1; }
+.profileLinkTitle { margin: 0 !important; color: #a6a2ad; font-size: 0.72rem !important; font-weight: 700; letter-spacing: 0.12em; line-height: 1.2; text-transform: uppercase; }
+.mediasContainer, .trackersContainer { display: grid; justify-items: start; gap: 8px; margin-bottom: 17px; }
+.medias, .trackers { display: flex; flex-wrap: wrap; gap: 7px; }
+.media, .tracker { display: inline-flex; min-height: 30px; align-items: center; gap: 7px; padding: 5px 10px; border: 1px solid rgb(255 255 255 / 8%); border-radius: 7px; background: #292830; color: #dedbe2; font-size: 0.76rem; font-weight: 600; line-height: 1.2; text-decoration: none; transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease; }
+.media svg { flex: 0 0 auto; font-size: 15px; }
+.tracker svg { flex: 0 0 auto; font-size: 30px; }
+.trackerIconOnly { min-width: 70px; justify-content: center; padding-block: 0; }
+.trackerAniDB { min-width: 70px; }
+.aniListLogo { display: block; width: 64px; height: auto; flex: 0 0 auto; }
+.myAnimeListLogo { display: block; width: 72px; height: auto; flex: 0 0 auto; }
+.aniDbLogo { display: block; width: 48px; height: auto; flex: 0 0 auto; }
+.animePlanetLogo { display: block; width: 96px; height: auto; flex: 0 0 auto; }
+.media:hover, .tracker:hover { border-color: rgb(59 130 246 / 38%); background: #302a31; color: #fff; }
+.media:focus-visible, .tracker:focus-visible { outline: 2px solid #93c5fd; outline-offset: 2px; }
+.recentCard { margin-top: 16px; }
+.recentSection { display: grid; gap: 10px; padding: 25px 34px; }
+.recentHeading { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; }
+.demoLabel { padding: 3px 7px; border: 1px solid rgb(255 255 255 / 9%); border-radius: 5px; color: #aeb3c1; font-size: 0.64rem; font-weight: 600; }
+.showMoreButton { justify-self: center; min-height: 34px; margin-top: 4px; padding: 7px 16px; border: 1px solid rgb(255 255 255 / 13%); border-radius: 7px; background: rgb(255 255 255 / 4%); color: #e1e2e8; font: inherit; font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: border-color 150ms ease, background-color 150ms ease; }
+.showMoreButton:hover { border-color: rgb(59 130 246 / 40%); background: rgb(59 130 246 / 8%); }
+.showMoreButton:disabled { opacity: 0.6; cursor: wait; }
+.recentError { margin: 0; color: #ff9bad; font-size: 0.78rem; }
+.recentMangas { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 9px; }
+.recentManga { display: flex; min-width: 0; align-items: center; gap: 10px; padding: 8px; border: 1px solid rgb(255 255 255 / 8%); border-radius: 9px; background: rgb(255 255 255 / 3%); color: inherit; cursor: pointer; text-decoration: none; transition: border-color 150ms ease, background-color 150ms ease; }
+.recentManga:hover { border-color: rgb(59 130 246 / 35%); background: rgb(255 255 255 / 5%); }
+.recentCover { width: 42px; height: 56px; flex: 0 0 42px; border-radius: 5px; object-fit: cover; background: #242631; }
+.recentMangaInfo { display: grid; min-width: 0; gap: 5px; }
+.recentMangaInfo strong { overflow: hidden; font-size: 0.8rem; text-overflow: ellipsis; white-space: nowrap; }
+.recentMangaInfo small { color: #aeb3c1; font-size: 0.69rem; }
+.backLink { display: inline-block; margin-top: 16px; color: #bfdbfe; font-weight: 700; text-decoration: none; }
+.backLink:hover { text-decoration: underline; }
+
+.form { display: grid; gap: 18px; margin: 0; padding: 28px 34px 34px; }
+.form label { display: grid; gap: 7px; color: #d7d9e1; font-size: 0.88rem; }
+.form input { width: 100%; padding: 11px 12px; border: 1px solid #ffffff24; border-radius: 8px; background: #282a36; color: #fff; }
+.form button { justify-self: start; padding: 11px 18px; border: 0; border-radius: 8px; background: #3b82f6; color: #fff; cursor: pointer; }
+.form button:disabled { opacity: 0.55; }
+.form .toggle { display: flex; align-items: flex-start; gap: 11px; padding: 14px; border: 1px solid #ffffff18; border-radius: 9px; background: #292c38; }
+.form .toggle input { width: 18px; height: 18px; margin-top: 2px; accent-color: #3b82f6; }
+.toggle span { display: grid; gap: 4px; }
+.toggle small { color: #9da2b0; line-height: 1.4; }
+.form .toggle input[type="checkbox"] { appearance: none; -webkit-appearance: none; display: grid; flex: 0 0 20px; place-content: center; width: 20px; height: 20px; margin: 1px 0 0; padding: 0; border: 1px solid #8991a3; border-radius: 5px; background: #20222d; cursor: pointer; }
+.form .toggle input[type="checkbox"]::after { display: block; width: 12px; height: 9px; background: #fff; clip-path: polygon(14% 43%, 0 59%, 39% 100%, 100% 19%, 84% 5%, 38% 65%); content: ""; opacity: 0; transform: scale(0.75); transition: opacity 0.12s ease, transform 0.16s cubic-bezier(0.2, 0.7, 0.3, 1); }
+.form .toggle input[type="checkbox"]:checked { border-color: #3b82f6; background: #3b82f6; }
+.form .toggle input[type="checkbox"]:checked::after { opacity: 1; transform: scale(1); }
+.form .toggle input[type="checkbox"]:focus-visible { outline: 2px solid #60a5fa; outline-offset: 3px; }
+.form .toggle:has(input:checked) { border-color: #3b82f6; background: #3b82f612; }
+
+@media (max-width: 560px) {
+  .page { margin-top: 20px; }
+  .header { min-height: 0; align-items: flex-start; gap: 17px; padding: 26px 20px; }
+  .avatarFrame { width: 98px; height: 98px; flex-basis: 98px; }
+  .publicInfo, .form { padding: 24px 20px; }
+  .recentSection { padding: 22px 20px; }
+  .stats { gap: 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .form .toggle input[type="checkbox"]::after { transition: none; }
+  .identity h1 { animation: none; }
+  .nameIcon animate { display: none; }
+  .avatarFrame::before, .avatarFrame::after { animation: none; }
+}

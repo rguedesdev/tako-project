@@ -5,6 +5,7 @@ import { FormEvent, useState } from "react";
 import { FiLoader, FiUserPlus } from "react-icons/fi";
 
 import { useUser } from "@/context/UserContext";
+import { useToast } from "@/context/ToastContext";
 import { InputComponent } from "../Input/page";
 import styles from "./signupcomponent.module.css";
 
@@ -24,9 +25,9 @@ function validate(data: Record<string, string>) {
 
 function SignUpComponent({ pageTitle }: { pageTitle: string }) {
   const { signUp } = useUser();
+  const { showError } = useToast();
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<FieldErrors>({});
-  const [serverError, setServerError] = useState("");
 
   async function handleSignUp(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -44,11 +45,10 @@ function SignUpComponent({ pageTitle }: { pageTitle: string }) {
     if (Object.keys(validationErrors).length) return;
 
     setSubmitting(true);
-    setServerError("");
     try {
       await signUp(data, "/");
     } catch (error) {
-      setServerError(error instanceof Error ? error.message : "Não foi possível criar sua conta.");
+      showError(error, "Não foi possível criar sua conta. Confira os dados e tente novamente.");
       setSubmitting(false);
     }
   }
@@ -69,7 +69,6 @@ function SignUpComponent({ pageTitle }: { pageTitle: string }) {
             <InputComponent inputLabel="Confirmar senha" inputType="password" inputName="confirmPassword" inputID="confirm-password" autoComplete="new-password" inputPlaceholder="Repita sua senha" minLength={8} maxLength={120} error={errors.confirmPassword} required />
           </div>
 
-          {serverError && <p className={styles.errorMessage} role="alert">{serverError}</p>}
           <button className={styles.signUpBtn} disabled={submitting}>
             {submitting && <FiLoader className={styles.spinner} aria-hidden="true" />}
             {submitting ? "Criando conta…" : "Criar minha conta"}

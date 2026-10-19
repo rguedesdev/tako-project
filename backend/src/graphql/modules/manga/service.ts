@@ -153,7 +153,7 @@ class MangaService {
       return newManga;
     } catch (error: any) {
       if (error?.code === 11000) {
-        throw graphQLError("Este mangá já existe no catálogo global.", "CONFLICT");
+        throw graphQLError("Este manga já existe no catálogo global.", "CONFLICT");
       }
       throw error;
     }
@@ -163,7 +163,7 @@ class MangaService {
     const group = await GroupModel.findOne({ _id: groupID, ownerID: userID });
     if (!group) throw graphQLError("Sem permissão para administrar este grupo.", "FORBIDDEN");
     const manga = await MangaModel.findOne({ _id: mangaID, ...(showAdultContent ? {} : { isAdult: { $ne: true } }) });
-    if (!manga) throw graphQLError("Mangá não encontrado.", "NOT_FOUND");
+    if (!manga) throw graphQLError("Manga não encontrado.", "NOT_FOUND");
     await GroupMangaModel.updateOne(
       { group: groupID, manga: mangaID },
       { $setOnInsert: { addedByUserID: userID, translationLanguage: translationLanguage?.trim().slice(0, 80) || group.country } },
@@ -177,7 +177,7 @@ class MangaService {
       MangaModel.findById(id).lean(),
       UserModel.findById(userID).select("accountType").lean(),
     ]);
-    if (!current) throw graphQLError("Mangá não encontrado.", "NOT_FOUND");
+    if (!current) throw graphQLError("Manga não encontrado.", "NOT_FOUND");
 
     if (user?.accountType !== "AEGIS") {
       throw graphQLError("Somente a autoridade AEGIS pode editar metadados globais.", "FORBIDDEN");
@@ -250,7 +250,7 @@ class MangaService {
     ]);
     if (!group) throw graphQLError("Grupo não encontrado ou sem permissão.", "FORBIDDEN");
     if (!relation) throw graphQLError("Esta obra não está relacionada ao grupo.", "NOT_FOUND");
-    if (!current) throw graphQLError("Mangá não encontrado.", "NOT_FOUND");
+    if (!current) throw graphQLError("Manga não encontrado.", "NOT_FOUND");
 
     const data = MangaValidation.updateManga(rawData);
     const updates: Record<string, unknown> = {};
@@ -309,8 +309,8 @@ class MangaService {
   static async syncExternalMetadata(mangaID: string, throwOnFailure = true) {
     const manga = await MangaModel.findById(mangaID).lean();
     const malId = manga?.externalMetadata?.malId;
-    if (!manga) throw graphQLError("Mangá não encontrado.", "NOT_FOUND");
-    if (!malId) throw graphQLError("Este mangá ainda não está associado ao MyAnimeList.", "BAD_USER_INPUT");
+    if (!manga) throw graphQLError("Manga não encontrado.", "NOT_FOUND");
+    if (!malId) throw graphQLError("Este manga ainda não está associado ao MyAnimeList.", "BAD_USER_INPUT");
     try {
       const response = await jikanService.getManga(
         malId,
@@ -352,7 +352,7 @@ class MangaService {
     if (user?.accountType !== "AEGIS") throw graphQLError("Somente administradores podem vincular uma obra ao MyAnimeList.", "FORBIDDEN");
     if (!Number.isSafeInteger(malId) || malId <= 0) throw graphQLError("Identificador do MyAnimeList inválido.", "BAD_USER_INPUT");
     const current = await MangaModel.findById(mangaID).lean();
-    if (!current) throw graphQLError("Mangá não encontrado.", "NOT_FOUND");
+    if (!current) throw graphQLError("Manga não encontrado.", "NOT_FOUND");
 
     const response = await jikanService.getManga(malId);
     if (!response.data || response.data.malId !== malId) throw graphQLError("A Jikan não retornou os dados da obra selecionada.", "SERVICE_UNAVAILABLE");
@@ -371,7 +371,7 @@ class MangaService {
         },
       }, { returnDocument: "after", runValidators: true });
     } catch (error: any) {
-      if (error?.code === 11000) throw graphQLError("Esta obra do MyAnimeList já está vinculada a outro mangá.", "CONFLICT");
+      if (error?.code === 11000) throw graphQLError("Esta obra do MyAnimeList já está vinculada a outro manga.", "CONFLICT");
       throw error;
     }
   }
@@ -533,7 +533,7 @@ class MangaService {
       { $set: { translationStatusOverride: value, statusOverrideByUserID: userID, statusOverrideAt: new Date() } },
       { returnDocument: "after", runValidators: true },
     );
-    if (!relation) throw graphQLError("Relação entre grupo e mangá não encontrada.", "NOT_FOUND");
+    if (!relation) throw graphQLError("Relação entre grupo e manga não encontrada.", "NOT_FOUND");
     return (await this.getTranslations(mangaID)).find((translation) => translation.groupID === groupID);
   }
 }

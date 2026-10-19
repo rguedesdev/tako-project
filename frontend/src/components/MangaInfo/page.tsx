@@ -1,11 +1,17 @@
+"use client";
+
+import { useState } from "react";
 import { CiPlay1 } from "react-icons/ci";
 import Link from "next/link";
 import { BiHash, BiLike } from "react-icons/bi";
 import { FaArrowTrendUp } from "react-icons/fa6";
+import { MdOutlineDeleteForever } from "react-icons/md";
 import { LuSquareLibrary } from "react-icons/lu";
 
 import type { Manga } from "@/lib/catalog";
 import { MediaImage } from "@/components/MediaImage/page";
+import { useUser } from "@/context/UserContext";
+import { graphqlRequest } from "@/lib/graphql";
 import styles from "./mangainfo.module.css";
 
 function MangaInfo({
@@ -15,6 +21,10 @@ function MangaInfo({
   manga: Manga;
   firstChapterId?: string;
 }) {
+  const { authenticatedUser, authToken } = useUser();
+  const [inLibrary, setInLibrary] = useState(manga.inMyLibrary === true);
+  const [libraryBusy, setLibraryBusy] = useState(false);
+  const [libraryError, setLibraryError] = useState("");
   const trackers = Object.entries(manga.trackers ?? {}).filter(
     ([, url]) => url,
   );
@@ -32,6 +42,26 @@ function MangaInfo({
     PAUSED: "Pausado",
   } as const;
 
+  async function toggleLibrary() {
+    if (!authenticatedUser || !authToken || libraryBusy) return;
+    setLibraryBusy(true);
+    setLibraryError("");
+    try {
+      const { setMangaInLibrary } = await graphqlRequest<{ setMangaInLibrary: boolean }>(
+        `mutation SetMangaInLibrary($mangaID: ID!, $inLibrary: Boolean!) {
+          setMangaInLibrary(mangaID: $mangaID, inLibrary: $inLibrary)
+        }`,
+        { mangaID: manga.id, inLibrary: !inLibrary },
+        authToken,
+      );
+      setInLibrary(setMangaInLibrary);
+    } catch (error) {
+      setLibraryError(error instanceof Error ? error.message : "Não foi possível atualizar sua biblioteca.");
+    } finally {
+      setLibraryBusy(false);
+    }
+  }
+
   return (
     <section className={styles.mangaInfoContainer}>
       <div>
@@ -43,10 +73,12 @@ function MangaInfo({
           />
         </div>
         <div className={styles.btnWrapper}>
-          <button className={styles.btnAdd} type="button">
-            <LuSquareLibrary size={20} />
-            <span>Adicionar à Biblioteca</span>
+          <button className={styles.btnAdd} type="button" onClick={() => void toggleLibrary()} disabled={!authenticatedUser || libraryBusy} aria-pressed={inLibrary}>
+            {inLibrary ? <MdOutlineDeleteForever size={20} /> : <LuSquareLibrary size={20} />}
+            <span>{libraryBusy ? "Atualizando…" : inLibrary ? "Remover da Biblioteca" : "Adicionar à Biblioteca"}</span>
           </button>
+          {libraryError && <p className={styles.libraryError} role="status">{libraryError}</p>}
+          {!authenticatedUser && <Link className={styles.libraryLogin} href="/signin">Entre para usar sua biblioteca</Link>}
           {firstChapterId && (
             <a
               className={styles.btnRead}
@@ -61,9 +93,9 @@ function MangaInfo({
       <div className={styles.mangaInfo}>
         <h1 className={styles.mangaTitle}>
           {manga.title}
-          {manga.isAdult && <small> +18</small>}
         </h1>
         <p className={styles.sinopse}>{manga.description}</p>
+        <div className={styles.statsDivider} aria-hidden="true" />
         <div className={styles.officialStatus}>
           <h3>Status da obra</h3>
           <div>
@@ -111,7 +143,9 @@ function MangaInfo({
               <h3 className={styles.demographicTitle}>Demografia</h3>
               <div className={styles.demographics}>
                 {manga.demographics.map((demographic) => (
-                  <span className={styles.demographic} key={demographic}>{demographic}</span>
+                  <Link className={styles.gender} href={`/mangas?demografia=${encodeURIComponent(demographic)}`} key={demographic}>
+                    {demographic}
+                  </Link>
                 ))}
               </div>
             </div>
@@ -129,13 +163,15 @@ function MangaInfo({
             <div className={styles.trackers}>
               {trackers.map(([name, url]) => (
                 <a
-                  className={styles[name]}
+                  className={`${styles.tracker} ${styles.trackerIconOnly}`}
                   href={String(url)}
                   key={name}
                   target="_blank"
                   rel="noreferrer"
+                  aria-label={trackerLabels[name] ?? name}
+                  title={trackerLabels[name] ?? name}
                 >
-                  {trackerLabels[name] ?? name}
+                  {name === "myanimelist" ? <MediaImage className={styles.myAnimeListLogo} source="/icons/myanimelist-mark.png" alt="" /> : name === "anilist" ? <MediaImage className={styles.aniListLogo} source="/icons/anilist-mark.png" alt="" /> : name === "animeplanet" ? <MediaImage className={styles.animePlanetLogo} source="/icons/animeplanet-mark.png" alt="" /> : name === "anidb" ? <MediaImage className={styles.aniDbLogo} source="/icons/anidb-mark.png" alt="" /> : trackerLabels[name] ?? name}
                 </a>
               ))}
             </div>
@@ -150,15 +186,18 @@ function MangaInfo({
                   href={`/scan/${translation.groupID}`}
                   key={translation.groupID}
                 >
+                  <MediaImage
+                    className={styles.translationImage}
+                    source={translation.group.groupImage}
+                    alt=""
+                    fallback="/image-placeholder.svg"
+                  />
                   <span>
                     <strong>{translation.group.name}</strong>
-                    <small>
-                      {translation.group.countryFlag} {translation.language}
-                    </small>
+                    <b data-status={translation.translationStatus}>
+                      {statusLabels[translation.translationStatus]}
+                    </b>
                   </span>
-                  <b data-status={translation.translationStatus}>
-                    {statusLabels[translation.translationStatus]}
-                  </b>
                 </a>
               ))}
             </div>

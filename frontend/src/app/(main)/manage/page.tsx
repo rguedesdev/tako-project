@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import ImageUploadField from "@/components/ImageUploadField/page";
 import { useUser } from "@/context/UserContext";
+import { useToast } from "@/context/ToastContext";
 import { graphqlRequest } from "@/lib/graphql";
 import { discardImage, uploadImage, type UploadedMedia } from "@/lib/upload";
 import styles from "./manage.module.css";
@@ -39,6 +40,7 @@ function trackerForm(values?: Manga["trackers"]): Trackers {
 
 export default function ManagePage() {
   const { authToken, authenticatedUser, authLoading } = useUser();
+  const { showToast } = useToast();
   const [area, setArea] = useState<Area>("group");
   const [groups, setGroups] = useState<Group[]>([]);
   const [countries, setCountries] = useState<Country[]>([]);
@@ -96,16 +98,24 @@ export default function ManagePage() {
     }
     setSearching(true);
     const timer = window.setTimeout(async () => {
-      let externalAttempted = false;
       try {
-        const { searchMangas } = await graphqlRequest<{ searchMangas: Manga[] }>(
+        const searchLocalCatalog = () => graphqlRequest<{ searchMangas: Manga[] }>(
           `query($query:String!){searchMangas(query:$query){${MANGA_ADMIN_FIELDS}}}`,
           { query },
           authToken,
         );
+        let localResults: Manga[];
+        try {
+          ({ searchMangas: localResults } = await searchLocalCatalog());
+        } catch {
+          // Retry a transient first-request failure without making the user retype.
+          await new Promise((resolve) => window.setTimeout(resolve, 250));
+          if (cancelled) return;
+          ({ searchMangas: localResults } = await searchLocalCatalog());
+        }
         if (cancelled) return;
-        setMatches(searchMangas);
-        if (searchMangas.length > 0 && !localSearchBypassed) {
+        setMatches(localResults);
+        if (localResults.length > 0 && !localSearchBypassed) {
           setJikanMatches([]);
           setExternalSearchState("idle");
           if (!editingMangaID) {
@@ -113,7 +123,6 @@ export default function ManagePage() {
             setManualMode(false);
           }
         } else {
-          externalAttempted = true;
           setExternalSearchState("loading");
           const { searchJikanMangas } = await graphqlRequest<{ searchJikanMangas: JikanCandidate[] }>(
             `query($query:String!){searchJikanMangas(query:$query){malId title titleEnglish titleJapanese aliases synopsis totalChapters publicationStatus rawStatus authors genres demographics imageUrl malUrl type year}}`,
@@ -124,11 +133,10 @@ export default function ManagePage() {
           setJikanMatches(searchJikanMangas);
           setExternalSearchState(searchJikanMangas.length ? "results" : "empty");
         }
-      } catch (error) {
+      } catch {
         if (cancelled) return;
         setJikanMatches([]);
-        setExternalSearchState(externalAttempted ? "error" : "idle");
-        setMessage(error instanceof Error ? `${externalAttempted ? "Consulta externa indisponível" : "Falha ao consultar o catálogo local"}: ${error.message}` : "Falha na busca.");
+        setExternalSearchState("error");
       } finally {
         if (!cancelled) setSearching(false);
       }
@@ -166,10 +174,21 @@ export default function ManagePage() {
       const saved = result.createGroup ?? result.updateGroup;
       if (saved) await loadGroups(saved.id);
       setGroupImage(null);
-      setMessage(groupID === "new" ? "Grupo criado." : "Grupo atualizado.");
+      showToast(groupID === "new" ? "Grupo criado com sucesso." : "Dados do grupo atualizados.", "success");
     } catch (error) {
       if (uploaded) await discardImage(uploaded.id).catch(() => undefined);
-      setMessage(error instanceof Error ? error.message : "Falha ao salvar o grupo.");
+      const raw = error instanceof Error ? error.message : "";
+      let detail = raw;
+      try {
+        const parsed = JSON.parse(raw);
+        detail = parsed?.response?.errors?.[0]?.message ?? parsed?.errors?.[0]?.message ?? raw;
+      } catch { /* Keep the regular Error message. */ }
+      const text = /discord/i.test(detail) && /url|válid|plataforma/i.test(detail)
+        ? "O link do Discord precisa ser um endereço do Discord. Use, por exemplo, https://discord.gg/seu-convite."
+        : /https|plataforma|url válida/i.test(detail)
+          ? "Confira os links das redes sociais: cada campo precisa do endereço HTTPS da própria plataforma."
+          : detail || "Não foi possível salvar os dados do grupo. Tente novamente.";
+      showToast(text, "error");
     } finally {
       setBusy(false);
     }
@@ -351,12 +370,22 @@ export default function ManagePage() {
         <section className={styles.content}>
           {area === "group" ? (
             <form className={styles.form} onSubmit={saveGroup}>
-              <div className={styles.sectionTitle}><div><h2>{selectedGroup ? "Dados do grupo" : "Criar grupo"}</h2><p>Informações públicas da sua scan.</p></div><select value={groupID} onChange={(event) => setGroupID(event.target.value)}><option value="new">Novo grupo</option>{groups.map((group) => <option value={group.id} key={group.id}>{group.name}</option>)}</select></div>
-              <ImageUploadField label="Imagem do grupo" purpose="GROUP_IMAGE" shape="square" currentUrl={selectedGroup?.groupImage} value={groupImage} onChange={setGroupImage} disabled={busy} />
+              <div className={styles.sectionTitle}><div><h2>{selectedGroup ? "Dados do grupo" : "Criar grupo"}</h2><p>Selecione uma scan para editar ou comece um novo cadastro.</p></div></div>
+              <fieldset className={styles.groupPicker}>
+                <legend>Grupo</legend>
+                <div className={styles.groupCards}>
+                  <button type="button" className={`${styles.groupCard} ${groupID === "new" ? styles.groupCardSelected : ""}`} aria-pressed={groupID === "new"} onClick={() => setGroupID("new")}>
+                    <strong>Novo grupo</strong><span>Começar um cadastro</span><small>{groupID === "new" ? "Selecionado" : "Criar grupo"}</small>
+                  </button>
+                  {groups.map((group) => <button type="button" key={group.id} className={`${styles.groupCard} ${groupID === group.id ? styles.groupCardSelected : ""}`} aria-pressed={groupID === group.id} onClick={() => setGroupID(group.id)}>
+                    <strong>{group.name}</strong><span>{group.countryFlag} {group.country}</span><small>{groupID === group.id ? "Selecionado para edição" : "Editar informações"}</small>
+                  </button>)}
+                </div>
+              </fieldset>
               <label>Nome<input required maxLength={120} value={groupForm.name} onChange={(event) => setGroupForm({ ...groupForm, name: event.target.value })} /></label>
               <label>Descrição<textarea required maxLength={1200} value={groupForm.description} onChange={(event) => setGroupForm({ ...groupForm, description: event.target.value })} /></label>
               <label>País<select required value={groupForm.countryCode} onChange={(event) => setGroupForm({ ...groupForm, countryCode: event.target.value })}><option value="" disabled>Selecione um país</option>{countries.map((country) => <option key={country.code} value={country.code}>{country.flag} {country.name}</option>)}</select></label>
-              <fieldset style={{display:"grid",gap:14,padding:18,border:"1px solid #ffffff18",borderRadius:10}}><legend style={{padding:"0 7px",fontWeight:700}}>Redes sociais</legend><p style={{color:"#aeb3c1",fontSize:".84rem"}}>Todos os links são opcionais e devem usar HTTPS.</p>
+              <fieldset className={styles.socialFieldset}><legend>Redes sociais</legend><p>Todos os links são opcionais e devem usar HTTPS.</p>
                 <label>Website<input type="url" maxLength={500} placeholder="https://seusite.com" value={socialMedias.site} onChange={(event) => setSocialMedias({ ...socialMedias, site: event.target.value })} /></label>
                 <label>Discord<input type="url" maxLength={500} placeholder="https://discord.gg/..." value={socialMedias.discord} onChange={(event) => setSocialMedias({ ...socialMedias, discord: event.target.value })} /></label>
                 <label>X / Twitter<input type="url" maxLength={500} placeholder="https://x.com/..." value={socialMedias.x} onChange={(event) => setSocialMedias({ ...socialMedias, x: event.target.value })} /></label>
@@ -365,6 +394,7 @@ export default function ManagePage() {
                 <label>YouTube<input type="url" maxLength={500} placeholder="https://youtube.com/@..." value={socialMedias.youtube} onChange={(event) => setSocialMedias({ ...socialMedias, youtube: event.target.value })} /></label>
                 <label>TikTok<input type="url" maxLength={500} placeholder="https://tiktok.com/@..." value={socialMedias.tiktok} onChange={(event) => setSocialMedias({ ...socialMedias, tiktok: event.target.value })} /></label>
               </fieldset>
+              <ImageUploadField label="Imagem do grupo" purpose="GROUP_IMAGE" shape="square" currentUrl={selectedGroup?.groupImage} value={groupImage} onChange={setGroupImage} disabled={busy} />
               <button className={styles.primary} disabled={busy}>{busy ? "Salvando…" : selectedGroup ? "Salvar grupo" : "Criar grupo"}</button>
             </form>
           ) : (
@@ -377,7 +407,7 @@ export default function ManagePage() {
                 {matches.length > 0 && <div className={styles.results}>{matches.map((manga) => <div key={manga.id}><span><strong>{manga.title}</strong><small>{manga.mangaka}{manga.isAdult ? " · +18" : ""}</small></span><div className={styles.actions}><button disabled={busy} onClick={() => void addExisting(manga.id)}>Usar existente</button>{isAegis && <button onClick={() => editManga(manga)}>Editar metadados</button>}</div></div>)}</div>}
                 {matches.length > 0 && !localSearchBypassed && <button type="button" className={styles.secondaryAction} onClick={() => setLocalSearchBypassed(true)}>Nenhuma dessas obras corresponde — buscar no MyAnimeList</button>}
                 {jikanMatches.length > 0 && <div className={styles.results}><h3 className={styles.externalResultsTitle}>MyAnimeList (Jikan)</h3>{jikanMatches.map((candidate) => <div key={candidate.malId}>{candidate.imageUrl && <span className={styles.externalCover} style={{backgroundImage:`url(${candidate.imageUrl})`}} role="img" aria-label={`Capa de referência de ${candidate.title}`} />}<span><strong>{candidate.title}</strong><small>{[candidate.titleEnglish !== candidate.title ? candidate.titleEnglish : null, candidate.titleJapanese, candidate.authors.join(", "), candidate.type, candidate.year, candidate.rawStatus].filter(Boolean).join(" · ")}</small></span><button type="button" disabled={busy} onClick={() => void selectJikanManga(candidate)}>{selectedMalId === candidate.malId ? "Selecionado" : busy ? "Carregando…" : "Selecionar obra"}</button></div>)}</div>}
-                {externalSearchState === "error" && <div className={styles.externalNotice}><p>Não foi possível consultar o MyAnimeList. Isso não significa que a obra não exista.</p><button type="button" onClick={() => setSearchNonce((value) => value + 1)}>Tentar novamente</button></div>}
+                {externalSearchState === "error" && <div className={styles.externalNotice}><p>Não foi possível concluir a busca agora. O título continua preenchido; tente novamente.</p><button type="button" onClick={() => setSearchNonce((value) => value + 1)}>Tentar novamente</button></div>}
                 {externalSearchState === "empty" && !manualMode && <div className={styles.externalNotice}><p>Nenhuma obra foi encontrada no catálogo local nem no MyAnimeList.</p><button type="button" onClick={startManualRegistration}>Cadastrar manualmente</button></div>}
                 {externalSearchState === "results" && !selectedMalId && !manualMode && <button type="button" className={styles.secondaryAction} onClick={startManualRegistration}>Não encontrou a obra correta? Cadastrar manualmente</button>}
                 {(editingMangaID || manualMode || selectedMalId) && <form className={`${styles.form} ${styles.stepForm}`} onSubmit={saveManga}><fieldset className={styles.stepPanel}>

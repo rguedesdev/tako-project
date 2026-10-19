@@ -10,6 +10,7 @@ const userTypeDefs = /* GraphQL */ `
     signUp(data: SignUpInput!): AuthPayload!
     signIn(data: SignInInput!): AuthPayload!
     updateMyProfile(data: UpdateProfileInput!): User!
+    toggleUserFollow(userID: ID!): UserFollowResult!
   }
 
   enum UserPlan {
@@ -43,6 +44,32 @@ const userTypeDefs = /* GraphQL */ `
   }
 
   type UserPreferences { showAdultContent: Boolean! }
+  type UserProfileStats {
+    mangasRead: Int!
+    chaptersRead: Int!
+    comments: Int!
+    likes: Int!
+    followers: Int!
+  }
+  type UserFollowResult { followed: Boolean! followers: Int! }
+  type UserRecentReadManga { id: ID!, title: String!, mangaCover: String, lastReadAt: String! }
+  type UserSocialMedias {
+    site: String
+    discord: String
+    telegram: String
+    x: String
+    instagram: String
+    facebook: String
+    youtube: String
+    tiktok: String
+    bluesky: String
+  }
+  type UserTrackers {
+    myanimelist: String
+    anilist: String
+    animeplanet: String
+    anidb: String
+  }
 
   type User {
     id: ID!
@@ -54,6 +81,11 @@ const userTypeDefs = /* GraphQL */ `
     accountType: AccountType!
     subscription: UserSubscription!
     preferences: UserPreferences!
+    profileStats: UserProfileStats!
+    socialMedias: UserSocialMedias!
+    trackers: UserTrackers!
+    followedByMe: Boolean!
+    recentReadMangas(limit: Int = 6): [UserRecentReadManga!]!
     groups: [Group!]!
   }
 
@@ -74,7 +106,27 @@ const userTypeDefs = /* GraphQL */ `
     login: String!
     password: String!
   }
-  input UpdateProfileInput { name: String email: String profilePictureID: ID removeProfilePicture: Boolean showAdultContent: Boolean }
+  input UserSocialMediasInput {
+    site: String
+    discord: String
+    telegram: String
+    x: String
+    instagram: String
+    facebook: String
+    youtube: String
+    tiktok: String
+    bluesky: String
+  }
+  input UserTrackersInput { myanimelist: String anilist: String animeplanet: String anidb: String }
+  input UpdateProfileInput {
+    name: String
+    email: String
+    profilePictureID: ID
+    removeProfilePicture: Boolean
+    showAdultContent: Boolean
+    socialMedias: UserSocialMediasInput
+    trackers: UserTrackersInput
+  }
 `;
 
 export { userTypeDefs };

@@ -8,6 +8,7 @@ const mangaTypeDefs = /* GraphQL */ `
     searchJikanMangas(query: String!, limit: Int = 8): [JikanMangaCandidate!]!
     jikanManga(malId: Int!): JikanMangaCandidate!
     chaptersByManga(mangaId: ID!, groupId: ID): [Chapter!]!
+    myLibrary: [Manga!]!
   }
 
   extend type Mutation {
@@ -18,6 +19,7 @@ const mangaTypeDefs = /* GraphQL */ `
     linkMangaExternalMetadata(mangaID: ID!, malId: Int!): Manga!
     syncMangaExternalMetadata(mangaID: ID!): Manga!
     setTranslationStatusOverride(mangaID: ID!, groupID: ID!, status: TranslationStatus): MangaTranslation!
+    setMangaInLibrary(mangaID: ID!, inLibrary: Boolean!): Boolean!
   }
 
   ### MAIN TYPES ###
@@ -38,6 +40,7 @@ const mangaTypeDefs = /* GraphQL */ `
     externalMetadata: MangaExternalMetadata
     translations: [MangaTranslation!]!
     isAdult: Boolean!
+    inMyLibrary: Boolean!
     chapters: [Chapter!]!
   }
 

@@ -1,5 +1,13 @@
+@font-face {
+  font-family: "Berkshire Swash";
+  src: url("/fonts/BerkshireSwash-Regular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
 .commentsSection {
-  --accent: #f04464;
+  --accent: #2563eb;
   --surface: #303342;
   --surface-soft: rgba(255, 255, 255, 0.045);
   --border: rgba(255, 255, 255, 0.11);
@@ -7,7 +15,8 @@
   width: min(100%, 920px);
   margin: 48px auto 72px;
   padding-top: 28px;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid transparent;
+  border-image: linear-gradient(to right, transparent, rgb(166 168 178 / 35%), transparent) 1;
   color: var(--text-primary);
 }
 
@@ -56,6 +65,11 @@
   width: 100%;
   margin: 2px 0 22px;
 }
+.composerEnter { animation: composerEnter 220ms ease-out both; }
+@keyframes composerEnter {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
 .composerBody {
   min-width: 0;
@@ -81,7 +95,7 @@
 .composer textarea::placeholder { color: #858a97; }
 .composer textarea:focus {
   border-color: color-mix(in srgb, var(--accent) 72%, white);
-  box-shadow: 0 0 0 3px rgba(240, 68, 100, 0.12);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
 }
 
 .composerFooter {
@@ -123,7 +137,7 @@
   background: var(--accent);
 }
 
-.primaryButton:hover:not(:disabled) { background: #fa5472; }
+.primaryButton:hover:not(:disabled) { background: #2563eb; }
 .primaryButton:disabled { opacity: 0.45; cursor: not-allowed; }
 
 .textButton {
@@ -149,7 +163,14 @@
   font-weight: 700;
   letter-spacing: 0.02em;
 }
+.avatar[data-frame="aurora"],
+.avatarFallback[data-frame="aurora"] { border: 2px solid #78e6cf; box-shadow: 0 0 0 3px #78e6cf2b, 0 0 14px #78e6cf66; }
+.avatar[data-frame="starlight"],
+.avatarFallback[data-frame="starlight"] { border: 2px solid #f2c66d; box-shadow: 0 0 0 3px #f2c66d2b, 0 0 14px #f2c66d66; }
+.avatar[data-frame="sakura"],
+.avatarFallback[data-frame="sakura"] { border: 2px solid #ff91b5; box-shadow: 0 0 0 3px #ff91b52b, 0 0 14px #ff91b566; }
 .small { width: 34px; height: 34px; font-size: 0.68rem; }
+.signInIcon svg { width: 20px; height: 20px; }
 .normal { width: 42px; height: 42px; }
 
 .signInPrompt {
@@ -164,16 +185,20 @@
   background: var(--surface-soft);
   font-size: 0.9rem;
 }
-.signInPrompt a { color: #ff7890; font-weight: 600; text-decoration: none; }
+.signInPrompt a { color: #60a5fa; font-weight: 600; text-decoration: none; }
 .signInPrompt a:hover { text-decoration: underline; }
 
-.commentList { border-top: 1px solid var(--border); }
+.commentList {
+  border-top: 1px solid transparent;
+  border-image: linear-gradient(to right, transparent, rgb(166 168 178 / 35%), transparent) 1;
+}
 .comment {
   display: flex;
   align-items: flex-start;
   gap: 12px;
   padding: 20px 0;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid transparent;
+  border-image: linear-gradient(to right, transparent, rgb(166 168 178 / 35%), transparent) 1;
 }
 .commentBody { min-width: 0; flex: 1; }
 .commentHeader {
@@ -192,7 +217,32 @@
   min-width: 0;
   line-height: 1.35;
 }
-.identity strong { color: #f5f5f7; font-size: 0.92rem; font-weight: 600; }
+.identity strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #ffc371;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+.identityName {
+  font-family: "Berkshire Swash", cursive;
+  color: #60a5fa;
+  background: linear-gradient(90deg, #60a5fa, #ffc371);
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: nameGradient 4s ease-in-out infinite alternate;
+  text-decoration: none;
+}
+.identityName[data-font="swash"] { font-family: "Berkshire Swash", cursive; }
+.identityName[data-font="urban"] { font-family: Arial, sans-serif; font-weight: 900; letter-spacing: -.04em; }
+.identityName[data-font="pixel"] { font-family: monospace; }
+.identityName:focus-visible { border-radius: 2px; outline: 2px solid #bfdbfe; outline-offset: 3px; }
+@keyframes nameGradient {
+  from { background-position: 0% 50%; }
+  to { background-position: 100% 50%; }
+}
 .identityMeta {
   display: flex;
   flex-wrap: wrap;
@@ -242,8 +292,9 @@
 .actions button:hover:not(:disabled),
 .repliesToggle:hover { color: white; background: var(--surface-soft); }
 .actions button:disabled { cursor: default; opacity: 0.7; }
-.actions .liked { color: #ff6b86; }
+.actions .liked { color: #60a5fa; }
 .actions .liked svg { fill: currentColor; }
+.replyAction svg { width: calc(0.8rem + 2px); height: calc(0.8rem + 2px); }
 
 .menuWrap { position: relative; flex: 0 0 auto; }
 .iconButton {
@@ -292,7 +343,7 @@
 .repliesBlock { margin-top: 3px; }
 .repliesToggle {
   padding-left: 0;
-  color: #ff7890;
+  color: #60a5fa;
   font-weight: 600;
 }
 .repliesToggle:hover { padding-left: 9px; }
@@ -331,7 +382,8 @@
   flex-direction: column;
   align-items: center;
   padding: 44px 16px;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid transparent;
+  border-image: linear-gradient(to right, transparent, rgb(166 168 178 / 35%), transparent) 1;
   color: var(--muted);
   text-align: center;
 }
@@ -344,13 +396,22 @@
 
 .inlineError {
   margin-top: 7px;
-  color: #ff9bad;
+  color: #bfdbfe;
   font-size: 0.8rem;
 }
 .inlineError button { border: 0; color: inherit; background: none; text-decoration: underline; cursor: pointer; }
 
-.skeletonList { border-top: 1px solid var(--border); }
-.skeleton { display: flex; gap: 12px; padding: 20px 0; border-bottom: 1px solid var(--border); }
+.skeletonList {
+  border-top: 1px solid transparent;
+  border-image: linear-gradient(to right, transparent, rgb(166 168 178 / 35%), transparent) 1;
+}
+.skeleton {
+  display: flex;
+  gap: 12px;
+  padding: 20px 0;
+  border-bottom: 1px solid transparent;
+  border-image: linear-gradient(to right, transparent, rgb(166 168 178 / 35%), transparent) 1;
+}
 .skeleton > span,
 .skeleton i,
 .skeleton b {
@@ -393,4 +454,5 @@
 
 @media (prefers-reduced-motion: reduce) {
   .spinner, .skeleton > span, .skeleton i, .skeleton b { animation: none; }
+  .composerEnter, .identityName { animation: none; }
 }

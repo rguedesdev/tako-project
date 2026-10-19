@@ -29,7 +29,7 @@ const trackersSchema = z.object({
 }).strict();
 
 const mangaSchema = z.object({
-  title: z.string().trim().min(1, "O título do mangá é obrigatório.").max(180),
+  title: z.string().trim().min(1, "O título do manga é obrigatório.").max(180),
   aliases: z.array(z.string().trim().min(1).max(180)).max(30).optional(),
   description: z.string().trim().min(120, "A descrição deve ter ao menos 120 caracteres.").max(600),
   mangaka: z.string().trim().min(1, "O nome do mangaká é obrigatório.").max(180),
@@ -46,7 +46,7 @@ class MangaValidation {
   static createManga(data: unknown) {
     const result = mangaSchema.safeParse(data);
     if (!result.success) {
-      throw graphQLError(result.error.issues[0]?.message ?? "Dados do mangá inválidos.", "BAD_USER_INPUT");
+      throw graphQLError(result.error.issues[0]?.message ?? "Dados do manga inválidos.", "BAD_USER_INPUT");
     }
     return result.data;
   }
@@ -54,7 +54,7 @@ class MangaValidation {
   static updateManga(data: unknown) {
     const result = mangaSchema.partial().safeParse(data);
     if (!result.success) {
-      throw graphQLError(result.error.issues[0]?.message ?? "Dados do mangá inválidos.", "BAD_USER_INPUT");
+      throw graphQLError(result.error.issues[0]?.message ?? "Dados do manga inválidos.", "BAD_USER_INPUT");
     }
     return result.data;
   }

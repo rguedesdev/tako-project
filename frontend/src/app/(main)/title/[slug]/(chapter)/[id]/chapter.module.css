@@ -5,16 +5,29 @@
 
 .chapterContainer {
   width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.adContainer {
+  width: min(100% - 32px, 1440px);
+  margin-inline: auto;
+  padding-top: 26px;
 }
 
 .commentsContainer {
   width: min(100% - 32px, 1100px);
-  margin: 72px auto 0;
+  margin: 24px auto 0;
 }
 
 @media (max-width: 600px) {
   .commentsContainer {
     width: min(100% - 24px, 1100px);
-    margin-top: 48px;
+    margin-top: 20px;
   }
+  .adContainer { width: min(100% - 20px, 1440px); }
+}
+
+@media (max-width: 420px) {
+  .adContainer { width: 100%; }
 }

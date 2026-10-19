@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import "./globals.css";
 import { UserProvider } from "@/context/UserContext";
+import { ToastProvider } from "@/context/ToastContext";
+import { NavigationLoading } from "@/components/NavigationLoading/page";
+import { AdBlockNotice } from "@/components/AdBlockNotice/page";
+import { BackToTop } from "@/components/BackToTop/page";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -21,7 +25,7 @@ function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="pt-BR">
       <body className={`${roboto.variable} antialiased`}>
-        <UserProvider>{children}</UserProvider>
+        <ToastProvider><UserProvider><NavigationLoading /><AdBlockNotice /><BackToTop />{children}</UserProvider></ToastProvider>
       </body>
     </html>
   );

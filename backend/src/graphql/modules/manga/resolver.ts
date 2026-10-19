@@ -1,12 +1,18 @@
 import MangaService from "./service";
 import { requireAuthenticated } from "../../../services/auth/authorization";
 import MediaService from "../media/service";
+import { GroupMangaModel } from "./group-manga-model";
 import { getViewerAccess } from "../../../services/auth/viewer-access";
 import { selectionHasField } from "../../selection";
+import MangaLibraryService from "../user/library-service";
 
 const mangaResolvers = {
   Query: {
     mangas: async (_:unknown,__:unknown,context:any) => MangaService.getMangas((await getViewerAccess(context)).showAdultContent),
+    myLibrary: async (_: unknown, __: unknown, context: any) => {
+      const access = await getViewerAccess(context);
+      return MangaLibraryService.list(requireAuthenticated(context), access.showAdultContent);
+    },
     manga: async (_: any, { id }: any, context:any) => MangaService.getManga(id,(await getViewerAccess(context)).showAdultContent),
     searchMangas: async (_: unknown, args: any, context:any) => MangaService.search(args.query, args.limit,(await getViewerAccess(context)).showAdultContent),
     searchJikanMangas: (_: unknown, args: any, context: any) => {
@@ -47,9 +53,13 @@ const mangaResolvers = {
       MangaService.syncExternalMetadataAsAdmin(mangaID, requireAuthenticated(context)),
     setTranslationStatusOverride: (_: unknown, args: any, context: any) =>
       MangaService.setTranslationStatusOverride(args.mangaID, args.groupID, args.status ?? null, requireAuthenticated(context)),
+    setMangaInLibrary: (_: unknown, { mangaID, inLibrary }: any, context: any) =>
+      MangaLibraryService.set(requireAuthenticated(context), mangaID, inLibrary),
   },
   Manga: {
     id: (manga: any) => String(manga.id ?? manga._id),
+    inMyLibrary: (manga: any, _: unknown, context: any) =>
+      context.user?.id ? MangaLibraryService.contains(context.user.id, String(manga.id ?? manga._id)) : false,
     chapters: async (manga: any,_:unknown,context:any,info:any) =>
       MangaService.getByMangaAndGroup(manga.id ?? manga._id, undefined, {
         includePages: selectionHasField(info, "pages"),
@@ -61,8 +71,25 @@ const mangaResolvers = {
     demographics: (manga: any) => manga.demographics ?? [],
     officialPublicationStatus: (manga: any) => manga.officialPublicationStatus ?? "UNKNOWN",
     isAdult: (manga:any)=>manga.isAdult===true,
-    mangaCover: async (manga:any)=>manga.mangaCoverID?(await MediaService.getReady(manga.mangaCoverID))?.url:manga.mangaCover||null,
-    mangaCoverMedia: (manga:any)=>manga.mangaCoverID?MediaService.getReady(manga.mangaCoverID):null,
+    mangaCover: async (manga:any)=>{
+      if (manga.mangaCoverID) return (await MediaService.getReady(manga.mangaCoverID))?.url ?? null;
+      if (manga.mangaCover) return manga.mangaCover;
+      const relation = await GroupMangaModel.findOne({ manga: manga._id ?? manga.id, mangaCoverIDOverride: { $ne: null } })
+        .sort({ updatedAt: -1 })
+        .select("mangaCoverIDOverride")
+        .lean();
+      return relation?.mangaCoverIDOverride
+        ? (await MediaService.getReady(relation.mangaCoverIDOverride))?.url ?? null
+        : null;
+    },
+    mangaCoverMedia: async (manga:any)=>{
+      if (manga.mangaCoverID) return MediaService.getReady(manga.mangaCoverID);
+      const relation = await GroupMangaModel.findOne({ manga: manga._id ?? manga.id, mangaCoverIDOverride: { $ne: null } })
+        .sort({ updatedAt: -1 })
+        .select("mangaCoverIDOverride")
+        .lean();
+      return relation?.mangaCoverIDOverride ? MediaService.getReady(relation.mangaCoverIDOverride) : null;
+    },
   },
 };
 

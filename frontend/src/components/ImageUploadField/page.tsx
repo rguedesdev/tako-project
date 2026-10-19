@@ -48,11 +48,11 @@ export default function ImageUploadField({ label, purpose, currentUrl, shape = "
   return (
     <div className={styles.field}>
       <span>{label}</span>
-      {shape === "cover" || shape === "circle" ? (
-        <label className={`${styles.coverPicker} ${shape === "circle" ? styles.circlePicker : ""}`} htmlFor={inputID} aria-disabled={disabled}>
+      {shape === "cover" || shape === "circle" || shape === "square" ? (
+        <label className={`${styles.coverPicker} ${shape === "circle" ? styles.circlePicker : shape === "square" ? styles.squarePicker : ""}`} htmlFor={inputID} aria-disabled={disabled}>
           <input id={inputID} type="file" accept="image/jpeg,image/png,image/webp" disabled={disabled} onChange={(event) => select(event.target.files?.[0])} />
-          {(previewUrl || currentUrl) ? <Image className={styles.coverPickerImage} src={previewUrl || currentUrl!} alt={shape === "circle" ? "Prévia da foto de perfil" : "Prévia da capa"} width={shape === "circle" ? 112 : 144} height={shape === "circle" ? 112 : 216} unoptimized /> : <span className={styles.coverPickerEmpty}><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="2.5"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m20.5 15-5-5L5 20.5"/></svg><strong>{shape === "circle" ? "Selecionar foto" : "Selecionar capa"}</strong><small>JPG, PNG ou WebP</small></span>}
-          {(previewUrl || currentUrl) && <span className={styles.coverPickerAction}>{shape === "circle" ? "Trocar foto" : "Trocar capa"}</span>}
+          {(previewUrl || currentUrl) ? <Image className={styles.coverPickerImage} src={previewUrl || currentUrl!} alt={shape === "circle" ? "Prévia da foto de perfil" : shape === "square" ? "Prévia da imagem" : "Prévia da capa"} width={shape === "circle" ? 112 : 144} height={shape === "cover" ? 216 : 144} unoptimized /> : <span className={styles.coverPickerEmpty}><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="2.5"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m20.5 15-5-5L5 20.5"/></svg><strong>{shape === "circle" ? "Selecionar foto" : shape === "square" ? "Selecionar imagem" : "Selecionar capa"}</strong><small>JPG, PNG ou WebP</small></span>}
+          {(previewUrl || currentUrl) && <span className={styles.coverPickerAction}>{shape === "circle" ? "Trocar foto" : shape === "square" ? "Trocar imagem" : "Trocar capa"}</span>}
         </label>
       ) : <div className={styles.row}>
         {showPreview && <Image className={`${styles.preview} ${styles[shape]}`} src={previewUrl || currentUrl || fallback} alt="Prévia da imagem" width={shape === "cover" ? 112 : 96} height={shape === "cover" ? 168 : 96} unoptimized />}

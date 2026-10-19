@@ -1,11 +1,18 @@
 import bcrypt from "bcrypt";
+import { Types } from "mongoose";
 
 import { createUserToken } from "../../../services/auth/create-user-token";
 import { graphQLError } from "../../errors";
-import { UserModel } from "./model";
+import { UserFollowModel, UserModel } from "./model";
+import { MangaModel } from "../manga/model";
+import { GroupMangaModel } from "../manga/group-manga-model";
 import MediaService from "../media/service";
+import { CommentLikeModel, CommentModel } from "../comment/model";
+import { UserChapterReadModel } from "../chapter/read-model";
 import {
   emailSchema,
+  normalizeProfileSocialMedias,
+  normalizeProfileTrackers,
   normalizeSignIn,
   normalizeSignUp,
   usernameSchema,
@@ -44,6 +51,8 @@ const serializeUser = (user: any) => {
       source: subscription.source ?? null,
     },
     preferences: { showAdultContent: user.preferences?.showAdultContent === true },
+    socialMedias: user.socialMedias ?? {},
+    trackers: user.trackers ?? {},
   };
 };
 
@@ -130,6 +139,83 @@ class UserService {
     return serializeUser(user);
   }
   static async getByUsername(username: string) { const user = await UserModel.findOne({ username: username.trim().toLowerCase() }).lean(); if(!user)return null;const {email: _privateEmail,...publicUser}=serializeUser(user);return publicUser; }
+  static async getProfileStats(userID: string) {
+    const userObjectID = new Types.ObjectId(userID);
+    const [chaptersRead, mangaIDs, comments, likesReceived, followers] = await Promise.all([
+      UserChapterReadModel.countDocuments({ user: userObjectID }),
+      UserChapterReadModel.distinct("manga", { user: userObjectID }),
+      CommentModel.countDocuments({ author: userObjectID, deletedAt: null }),
+      CommentLikeModel.aggregate([
+        { $lookup: { from: CommentModel.collection.name, localField: "comment", foreignField: "_id", as: "comment" } },
+        { $unwind: "$comment" },
+        { $match: { "comment.author": userObjectID, "comment.deletedAt": null } },
+        { $count: "total" },
+      ]),
+      UserFollowModel.countDocuments({ following: userObjectID }),
+    ]);
+    return {
+      mangasRead: mangaIDs.length,
+      chaptersRead,
+      comments,
+      likes: likesReceived[0]?.total ?? 0,
+      followers,
+    };
+  }
+  static async getRecentReadMangas(userID: string, requestedLimit = 6) {
+    const limit = Math.min(100, Math.max(1, Math.trunc(requestedLimit || 6)));
+    const rows = await UserChapterReadModel.aggregate([
+      { $match: { user: new Types.ObjectId(userID) } },
+      { $sort: { createdAt: -1 } },
+      { $group: { _id: "$manga", lastReadAt: { $first: "$createdAt" } } },
+      { $sort: { lastReadAt: -1 } },
+      { $limit: limit },
+    ]);
+    const mangaIDs = rows.map((row: any) => row._id);
+    const [mangas, groupCoverRelations] = await Promise.all([
+      MangaModel.find({ _id: { $in: mangaIDs } }).select("title mangaCover mangaCoverID").lean(),
+      GroupMangaModel.find({ manga: { $in: mangaIDs }, mangaCoverIDOverride: { $ne: null } })
+        .sort({ updatedAt: -1 })
+        .select("manga mangaCoverIDOverride")
+        .lean(),
+    ]);
+    const byID = new Map(mangas.map((manga: any) => [String(manga._id), manga]));
+    const coverByManga = new Map<string, string>();
+    for (const relation of groupCoverRelations as any[]) {
+      const key = String(relation.manga);
+      if (!coverByManga.has(key) && relation.mangaCoverIDOverride) coverByManga.set(key, String(relation.mangaCoverIDOverride));
+    }
+    const recentMangas = await Promise.all(rows.map(async (row: any) => {
+      const manga: any = byID.get(String(row._id));
+      if (!manga) return null;
+      const groupCoverID = coverByManga.get(String(manga._id));
+      const mangaCover = manga.mangaCoverID
+        ? (await MediaService.getReady(manga.mangaCoverID))?.url ?? null
+        : manga.mangaCover || (groupCoverID
+          ? (await MediaService.getReady(groupCoverID))?.url ?? null
+          : null);
+      return {
+        id: String(manga._id),
+        title: manga.title,
+        mangaCover,
+        lastReadAt: new Date(row.lastReadAt).toISOString(),
+      };
+    }));
+    return recentMangas.filter(Boolean);
+  }
+  static async isFollowedBy(userID: string, followerID: string | null) {
+    return followerID ? Boolean(await UserFollowModel.exists({ following: userID, follower: followerID })) : false;
+  }
+  static async toggleFollow(userID: string, followerID: string) {
+    if (userID === followerID) throw graphQLError("Você não pode seguir a si mesmo.", "BAD_USER_INPUT");
+    if (!(await UserModel.exists({ _id: userID }))) throw graphQLError("Leitor não encontrado.", "NOT_FOUND");
+    const removed = await UserFollowModel.findOneAndDelete({ following: userID, follower: followerID });
+    let followed = false;
+    if (!removed) {
+      try { await UserFollowModel.create({ following: userID, follower: followerID }); followed = true; }
+      catch (error: any) { if (error?.code !== 11000) throw error; followed = true; }
+    }
+    return { followed, followers: await UserFollowModel.countDocuments({ following: userID }) };
+  }
   static async updateProfile(userID: string, data: any) {
     const current = await UserModel.findById(userID).lean();
     if (!current) throw graphQLError("Usuário não encontrado.", "NOT_FOUND");
@@ -164,6 +250,12 @@ class UserService {
         throw graphQLError("Preferência de conteúdo adulto inválida.", "BAD_USER_INPUT");
       }
       updates["preferences.showAdultContent"] = data.showAdultContent;
+    }
+    if (data.socialMedias !== undefined) {
+      updates.socialMedias = { ...(current.socialMedias ?? {}), ...normalizeProfileSocialMedias(data.socialMedias) };
+    }
+    if (data.trackers !== undefined) {
+      updates.trackers = { ...(current.trackers ?? {}), ...normalizeProfileTrackers(data.trackers) };
     }
 
     const nextProfilePictureID = data.removeProfilePicture

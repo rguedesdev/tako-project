@@ -38,9 +38,9 @@
 }
 
 .btnRead {
-  border: 1px solid #e63357;
+  border: 1px solid #3b82f6;
   color: #fff;
-  background: #e63357;
+  background: #3b82f6;
 }
 
 .btnAdd,
@@ -61,22 +61,27 @@
 }
 
 .btnAdd:hover {
-  border-color: rgb(240 74 104 / 48%);
-  background: rgb(240 74 104 / 9%);
+  border-color: rgb(59 130 246 / 48%);
+  background: rgb(59 130 246 / 9%);
 }
 
 .btnAdd:focus-visible {
-  outline: 2px solid #ff8296;
+  outline: 2px solid #93c5fd;
   outline-offset: 3px;
 }
 
+.btnAdd:disabled { cursor: wait; opacity: .7; }
+.libraryError { margin: 6px 0 0; color: #ff9daf; font-size: .76rem; line-height: 1.4; }
+.libraryLogin { display: block; margin-top: 8px; color: #bfdbfe; font-size: .75rem; text-align: center; text-decoration: none; }
+.libraryLogin:hover { color: #fff; text-decoration: underline; }
+
 .btnRead:hover {
-  border-color: #f04a68;
-  background: #f04a68;
+  border-color: #2563eb;
+  background: #2563eb;
 }
 
 .btnRead:focus-visible {
-  outline: 2px solid #ff8296;
+  outline: 2px solid #93c5fd;
   outline-offset: 3px;
 }
 
@@ -110,12 +115,17 @@
   margin-bottom: 20px;
 }
 
+.statsDivider {
+  height: 1px;
+  margin-bottom: 16px;
+  background: linear-gradient(to right, transparent, #a6a8b2, transparent);
+  opacity: 0.35;
+}
+
 .statsContainer {
   display: grid;
   gap: 9px;
   margin: 0 0 18px;
-  padding-top: 16px;
-  border-top: 1px solid rgb(255 255 255 / 8%);
 }
 
 .officialStatus {
@@ -200,11 +210,12 @@
 .translations > a {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   width: min(340px, 100%);
-  min-height: 58px;
-  gap: 12px;
-  padding: 9px 11px;
+  min-width: min(240px, 100%);
+  min-height: 66px;
+  gap: 8px;
+  padding: 8px 10px;
   border: 1px solid rgb(255 255 255 / 7%);
   border-radius: 10px;
   background: rgb(255 255 255 / 3%);
@@ -213,14 +224,23 @@
 }
 
 .translations > a:hover {
-  border-color: rgb(240 74 104 / 28%);
+  border-color: rgb(59 130 246 / 28%);
   background: rgb(255 255 255 / 5%);
 }
 
 .translations > a > span {
   display: grid;
+  align-self: flex-start;
   min-width: 0;
   gap: 4px;
+}
+
+.translationImage {
+  width: 46px;
+  height: 46px;
+  flex: 0 0 auto;
+  border-radius: 7px;
+  object-fit: cover;
 }
 
 .translations strong {
@@ -231,13 +251,9 @@
   white-space: nowrap;
 }
 
-.translations small {
-  color: #aaa6b0;
-  font-size: .72rem;
-}
-
 .translations b {
   flex: none;
+  justify-self: start;
   padding: 4px 8px;
   border: 1px solid rgb(154 176 207 / 16%);
   border-radius: 6px;
@@ -298,8 +314,8 @@
 }
 
 .stat:hover {
-  border-color: rgb(240 74 104 / 25%);
-  background: rgb(240 74 104 / 6%);
+  border-color: rgb(59 130 246 / 25%);
+  background: rgb(59 130 246 / 6%);
 }
 
 .statIcon {
@@ -309,8 +325,8 @@
   place-items: center;
   padding: 4px;
   border-radius: 7px;
-  background: rgb(240 74 104 / 11%);
-  color: #ff8296;
+  background: rgb(59 130 246 / 11%);
+  color: #93c5fd;
   font-size: 16px;
 }
 
@@ -375,14 +391,14 @@
 
 .gender:hover,
 .mangaka:hover {
-  border-color: rgb(240 74 104 / 38%);
-  background: rgb(240 74 104 / 8%);
+  border-color: rgb(59 130 246 / 38%);
+  background: rgb(59 130 246 / 8%);
   color: #fff;
 }
 
 .gender:focus-visible,
 .mangaka:focus-visible {
-  outline: 2px solid #ff8296;
+  outline: 2px solid #93c5fd;
   outline-offset: 2px;
 }
 
@@ -484,8 +500,9 @@
 
 .trackers a {
   display: inline-flex;
-  align-items: center;
   min-height: 30px;
+  align-items: center;
+  gap: 7px;
   padding: 5px 10px;
   border: 1px solid rgb(255 255 255 / 8%);
   border-radius: 7px;
@@ -493,13 +510,27 @@
   color: #dedbe2;
   font-size: .76rem;
   font-weight: 600;
-  transition: border-color 160ms ease, background-color 160ms ease;
+  line-height: 1.2;
+  text-decoration: none;
+  transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease;
 }
 
 .trackers a:hover {
-  border-color: rgb(240 74 104 / 38%);
+  border-color: rgb(59 130 246 / 38%);
   background: #302a31;
+  color: #fff;
 }
+
+.trackers a.trackerIconOnly {
+  min-width: 70px;
+  justify-content: center;
+  padding-block: 0;
+}
+
+.myAnimeListLogo { display: block; width: 72px; height: auto; flex: 0 0 auto; }
+.aniListLogo { display: block; width: 64px; height: auto; flex: 0 0 auto; }
+.animePlanetLogo { display: block; width: 96px; height: auto; flex: 0 0 auto; }
+.aniDbLogo { display: block; width: 48px; height: auto; flex: 0 0 auto; }
 
 .otakulist {
   background-color: #301d48;

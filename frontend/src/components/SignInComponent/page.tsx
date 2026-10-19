@@ -5,13 +5,14 @@ import { FormEvent, useState } from "react";
 import { FiLoader, FiLogIn } from "react-icons/fi";
 
 import { useUser } from "@/context/UserContext";
+import { useToast } from "@/context/ToastContext";
 import { InputComponent } from "../Input/page";
 import styles from "./signincomponent.module.css";
 
 function SignInComponent({ pageTitle }: { pageTitle: string }) {
   const { signIn } = useUser();
+  const { showToast, showError } = useToast();
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState("");
 
   async function handleSignIn(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -20,12 +21,11 @@ function SignInComponent({ pageTitle }: { pageTitle: string }) {
     const login = String(data.get("login") ?? "").trim();
     const password = String(data.get("password") ?? "");
     if (!login || !password) {
-      setError("Informe seu username ou e-mail e sua senha.");
+      showToast("Informe seu username ou e-mail e sua senha.", "error");
       return;
     }
 
     setSubmitting(true);
-    setError("");
     try {
       const requestedNext = new URLSearchParams(window.location.search).get("next");
       const next = requestedNext?.startsWith("/") && !requestedNext.startsWith("//")
@@ -33,7 +33,7 @@ function SignInComponent({ pageTitle }: { pageTitle: string }) {
         : "/";
       await signIn(login, password, next);
     } catch (signInError) {
-      setError(signInError instanceof Error ? signInError.message : "Não foi possível entrar.");
+      showError(signInError, "Não foi possível entrar. Confira seus dados e tente novamente.");
       setSubmitting(false);
     }
   }
@@ -65,7 +65,6 @@ function SignInComponent({ pageTitle }: { pageTitle: string }) {
             required
           />
 
-          {error && <p className={styles.errorMessage} role="alert">{error}</p>}
           <button className={styles.signInBtn} disabled={submitting}>
             {submitting && <FiLoader className={styles.spinner} aria-hidden="true" />}
             {submitting ? "Entrando…" : "Entrar"}

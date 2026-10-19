@@ -1,12 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { MdArrowBackIosNew, MdArrowForwardIos, MdList } from "react-icons/md";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   FiArrowLeft,
   FiBookOpen,
-  FiChevronLeft,
-  FiChevronRight,
   FiMaximize2,
   FiMinimize2,
 } from "react-icons/fi";
@@ -16,21 +15,37 @@ import {
   TbArrowAutofitRight,
 } from "react-icons/tb";
 
-import { recordChapterView, type ChapterDetail } from "@/lib/catalog";
-import { MediaImage } from "@/components/MediaImage/page";
+import { useUser } from "@/context/UserContext";
+import { recordChapterRead, recordChapterView, reportChapterPagesToReaderNode, type ChapterDetail } from "@/lib/catalog";
+import { buildMediaCandidates, MediaImage } from "@/components/MediaImage/page";
 import styles from "./mangachapter.module.css";
 
 type ReaderMode = "swap" | "scroll";
 type ReadingDirection = "rtl" | "ltr";
 
-function MangaChapter({ chapter }: { chapter: ChapterDetail }) {
+function MangaChapter({
+  chapter,
+  previousChapterId,
+  nextChapterId,
+}: {
+  chapter: ChapterDetail;
+  previousChapterId: string | null;
+  nextChapterId: string | null;
+}) {
   const pages = useMemo(
     () => chapter.pages.filter(Boolean),
     [chapter.pages],
   );
   const recordedChapterID = useRef<string | null>(null);
+  const recordedReadKey = useRef<string | null>(null);
+  const reportedReaderPages = useRef(new Set<string>());
+  const readerRetryTimers = useRef(new Set<ReturnType<typeof setTimeout>>());
+  const preloadImages = useRef<HTMLImageElement[]>([]);
   const readerRef = useRef<HTMLElement>(null);
+  const { authToken, authenticatedUser } = useUser();
+  const readerUserID = authenticatedUser?.id;
   const [isWide, setIsWide] = useState(false);
+  const [pageAspectRatio, setPageAspectRatio] = useState(0.72);
   const [currentPage, setCurrentPage] = useState(0);
   const [mode, setMode] = useState<ReaderMode>("swap");
   const [direction, setDirection] = useState<ReadingDirection>("rtl");
@@ -38,11 +53,122 @@ function MangaChapter({ chapter }: { chapter: ChapterDetail }) {
   const titleHref = `/title/${chapter.manga}`;
   const progress = ((currentPage + 1) / pages.length) * 100;
 
+  const reportPagesToReaderNode = useCallback((pageIndexes: number[]) => {
+    if (!authToken || !readerUserID || pageIndexes.length === 0) return;
+    const keys = pageIndexes
+      .filter((index) => Number.isInteger(index) && index >= 0 && index < pages.length)
+      .map((index) => `${readerUserID}:${chapter.id}:${index}`)
+      .filter((key) => !reportedReaderPages.current.has(key));
+    if (keys.length === 0) return;
+    keys.forEach((key) => reportedReaderPages.current.add(key));
+    const indexes = keys.map((key) => Number(key.slice(key.lastIndexOf(":") + 1)));
+    const retry = (retryIndexes: number[]) => {
+      keys.filter((key) => retryIndexes.includes(Number(key.slice(key.lastIndexOf(":") + 1))))
+        .forEach((key) => reportedReaderPages.current.delete(key));
+      if (retryIndexes.length === 0) return;
+      const timer = setTimeout(() => {
+        readerRetryTimers.current.delete(timer);
+        reportPagesToReaderNode(retryIndexes);
+      }, 15_000);
+      readerRetryTimers.current.add(timer);
+    };
+    void (async () => {
+      try {
+        for (let offset = 0; offset < indexes.length; offset += 100) {
+          const batch = indexes.slice(offset, offset + 100);
+          const accepted = await reportChapterPagesToReaderNode(chapter.id, batch, authToken);
+          if (accepted < batch.length) {
+            retry(batch);
+          }
+        }
+      } catch {
+        retry(indexes);
+      }
+    })();
+  }, [authToken, chapter.id, pages.length, readerUserID]);
+
+  useEffect(() => () => {
+    readerRetryTimers.current.forEach(clearTimeout);
+    readerRetryTimers.current.clear();
+    reportedReaderPages.current.clear();
+  }, [chapter.id]);
+
   useEffect(() => {
     if (recordedChapterID.current === chapter.id) return;
     recordedChapterID.current = chapter.id;
     void recordChapterView(chapter.id).catch(() => undefined);
   }, [chapter.id]);
+
+  useEffect(() => {
+    const primaryUrls = pages.map((page, index) =>
+      buildMediaCandidates(page, "/ipfs-unavailable.svg", chapter.telegramPages?.[index])[0],
+    );
+    const backupUrls = pages.map((_, index) => chapter.telegramPages?.[index] ?? null);
+    const pageByUrl = new Map<string, number>();
+    primaryUrls.forEach((url, index) => { if (url) pageByUrl.set(url, index); });
+    backupUrls.forEach((url, index) => { if (url) pageByUrl.set(url, index); });
+    const urls = [...primaryUrls.slice(0, 1), ...backupUrls.slice(0, 1), ...primaryUrls.slice(1), ...backupUrls.slice(1)]
+      .filter((url): url is string => Boolean(url));
+    let nextIndex = 0;
+    let cancelled = false;
+    let submitted = false;
+    const active = new Set<HTMLImageElement>();
+    const loadedPages = new Set<number>();
+    preloadImages.current = [];
+
+    function submitLoadedPagesWhenReady() {
+      if (cancelled || submitted || nextIndex < urls.length || active.size > 0 || loadedPages.size === 0) return;
+      submitted = true;
+      reportPagesToReaderNode([...loadedPages]);
+    }
+
+    function startNext() {
+      while (!cancelled && active.size < 6 && nextIndex < urls.length) {
+        const image = new Image();
+        const url = urls[nextIndex++];
+        image.decoding = "async";
+        active.add(image);
+        preloadImages.current.push(image);
+        const finished = () => {
+          active.delete(image);
+          if (!cancelled) {
+            startNext();
+            submitLoadedPagesWhenReady();
+          }
+        };
+        image.onload = () => {
+          const pageIndex = pageByUrl.get(url);
+          if (pageIndex != null) loadedPages.add(pageIndex);
+          finished();
+        };
+        image.onerror = finished;
+        image.src = url;
+      }
+      submitLoadedPagesWhenReady();
+    }
+
+    startNext();
+    return () => {
+      cancelled = true;
+      active.forEach((image) => {
+        image.onload = null;
+        image.onerror = null;
+        image.removeAttribute("src");
+      });
+      active.clear();
+      preloadImages.current = [];
+    };
+  }, [chapter.id, chapter.telegramPages, pages, reportPagesToReaderNode]);
+
+  useEffect(() => {
+    if (!authToken || !readerUserID || !pages.length || currentPage < pages.length - 1) return;
+    const readKey = `${readerUserID}:${chapter.id}`;
+    if (recordedReadKey.current === readKey) return;
+    recordedReadKey.current = readKey;
+    void recordChapterRead(chapter.id, authToken).catch(() => {
+      if (recordedReadKey.current === readKey) recordedReadKey.current = null;
+    });
+  }, [chapter.id, authToken, readerUserID, currentPage, pages.length]);
 
   useEffect(() => {
     const saved = localStorage.getItem("readerMode");
@@ -59,12 +185,13 @@ function MangaChapter({ chapter }: { chapter: ChapterDetail }) {
   }, []);
 
   useEffect(() => {
-    function handleFullscreenChange() {
-      setIsFullscreen(document.fullscreenElement === readerRef.current);
+    if (!isFullscreen) return;
+    function handleFullscreenKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") setIsFullscreen(false);
     }
-    document.addEventListener("fullscreenchange", handleFullscreenChange);
-    return () => document.removeEventListener("fullscreenchange", handleFullscreenChange);
-  }, []);
+    window.addEventListener("keydown", handleFullscreenKeyDown);
+    return () => window.removeEventListener("keydown", handleFullscreenKeyDown);
+  }, [isFullscreen]);
 
   useEffect(() => {
     if (mode !== "scroll" || !readerRef.current) return;
@@ -81,9 +208,14 @@ function MangaChapter({ chapter }: { chapter: ChapterDetail }) {
   }, [mode]);
 
   const nextPage = useCallback(() => {
+    if (mode === "swap" && pages.length > 0 && currentPage === pages.length - 1) {
+      const adSlot = document.getElementById("tako-ad-slot");
+      adSlot?.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
     setIsWide(false);
     setCurrentPage((page) => Math.min(page + 1, pages.length - 1));
-  }, [pages.length]);
+  }, [currentPage, mode, pages.length]);
 
   const previousPage = useCallback(() => {
     setIsWide(false);
@@ -137,13 +269,12 @@ function MangaChapter({ chapter }: { chapter: ChapterDetail }) {
     }
   }
 
-  async function toggleFullscreen() {
-    if (!document.fullscreenElement) await readerRef.current?.requestFullscreen();
-    else await document.exitFullscreen();
+  function toggleFullscreen() {
+    setIsFullscreen((fullscreen) => !fullscreen);
   }
 
   return (
-    <section className={styles.reader} ref={readerRef} aria-labelledby="chapter-heading">
+    <section className={`${styles.reader} ${isFullscreen ? styles.isFullscreen : ""}`} ref={readerRef} aria-labelledby="chapter-heading">
       <header className={styles.readerHeader}>
         <Link className={styles.backLink} href={titleHref}>
           <FiArrowLeft aria-hidden="true" />
@@ -168,9 +299,6 @@ function MangaChapter({ chapter }: { chapter: ChapterDetail }) {
 
       <div className={styles.toolbar}>
         <div className={styles.pageNavigation}>
-          <button onClick={turnLeft} disabled={mode === "scroll" || leftTurnDisabled} aria-label={direction === "rtl" ? "Avançar página" : "Página anterior"}>
-            <FiChevronLeft />
-          </button>
           <label className={styles.pageSelector}>
             <span>Página</span>
             <select value={currentPage} onChange={(event) => goToPage(Number(event.target.value))}>
@@ -178,9 +306,6 @@ function MangaChapter({ chapter }: { chapter: ChapterDetail }) {
             </select>
             <span>de {pages.length}</span>
           </label>
-          <button onClick={turnRight} disabled={mode === "scroll" || rightTurnDisabled} aria-label={direction === "rtl" ? "Página anterior" : "Avançar página"}>
-            <FiChevronRight />
-          </button>
         </div>
 
         <div className={styles.readerPreferences}>
@@ -215,21 +340,24 @@ function MangaChapter({ chapter }: { chapter: ChapterDetail }) {
 
       <div className={`${styles.canvas} ${mode === "scroll" ? styles.continuousCanvas : ""}`}>
         {mode === "swap" ? (
-          <div className={`${styles.pageStage} ${isWide ? styles.wideStage : ""}`}>
+          <div
+            className={`${styles.pageStage} ${isWide ? styles.wideStage : ""}`}
+            style={{ aspectRatio: `${pageAspectRatio}` }}
+          >
             <MediaImage
               key={pages[currentPage]}
               className={styles.mangaPage}
               fallback="/ipfs-unavailable.svg"
-              onLoad={(event) => setIsWide(event.currentTarget.naturalWidth / event.currentTarget.naturalHeight > 0.8)}
+              onLoad={(event) => {
+                if (!event.currentTarget.currentSrc.includes("ipfs-unavailable.svg")) reportPagesToReaderNode([currentPage]);
+                const ratio = event.currentTarget.naturalWidth / event.currentTarget.naturalHeight;
+                setPageAspectRatio(ratio);
+                setIsWide(ratio > 0.8);
+              }}
               source={pages[currentPage]}
+              backupSource={chapter.telegramPages?.[currentPage]}
               alt={`Página ${currentPage + 1} do capítulo ${chapter.chapterNumber}`}
             />
-            <button className={`${styles.turnPage} ${styles.turnPrevious}`} onClick={turnLeft} disabled={leftTurnDisabled} aria-label={direction === "rtl" ? "Avançar página" : "Página anterior"}>
-              <FiChevronLeft />
-            </button>
-            <button className={`${styles.turnPage} ${styles.turnNext}`} onClick={turnRight} disabled={rightTurnDisabled} aria-label={direction === "rtl" ? "Página anterior" : "Avançar página"}>
-              <FiChevronRight />
-            </button>
             <span className={styles.pageBadge}>{currentPage + 1} / {pages.length}</span>
           </div>
         ) : (
@@ -237,7 +365,7 @@ function MangaChapter({ chapter }: { chapter: ChapterDetail }) {
             {pages.map((page, index) => (
               <figure className={styles.scrollPage} data-reader-page={index} key={page}>
                 <span>Página {index + 1}</span>
-                <MediaImage source={page} fallback="/ipfs-unavailable.svg" alt={`Página ${index + 1} do capítulo ${chapter.chapterNumber}`} />
+                <MediaImage source={page} backupSource={chapter.telegramPages?.[index]} fallback="/ipfs-unavailable.svg" onLoad={(event) => { if (!event.currentTarget.currentSrc.includes("ipfs-unavailable.svg")) reportPagesToReaderNode([index]); }} alt={`Página ${index + 1} do capítulo ${chapter.chapterNumber}`} />
               </figure>
             ))}
           </div>
@@ -249,7 +377,12 @@ function MangaChapter({ chapter }: { chapter: ChapterDetail }) {
           <span>Você chegou ao fim</span>
           <strong>Capítulo {chapter.chapterNumber} concluído</strong>
         </div>
-        <Link href={titleHref}>Ver todos os capítulos</Link>
+        <nav className={styles.chapterNavigation} aria-label="Navegação entre capítulos">
+          {previousChapterId && <Link href={`/title/${chapter.manga}/${previousChapterId}`}><MdArrowBackIosNew aria-hidden="true" />Capítulo anterior</Link>}
+          {nextChapterId
+            ? <Link href={`/title/${chapter.manga}/${nextChapterId}`}>Próximo capítulo<MdArrowForwardIos aria-hidden="true" /></Link>
+            : <Link href={titleHref}><MdList className={styles.chapterListIcon} aria-hidden="true" />Ver todos os capítulos</Link>}
+        </nav>
       </footer>
     </section>
   );

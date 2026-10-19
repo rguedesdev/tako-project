@@ -4,18 +4,27 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { FaRegBell } from "react-icons/fa";
-import { FiLogIn, FiLogOut, FiSettings, FiUser } from "react-icons/fi";
+import { FiLogIn, FiLogOut, FiSettings } from "react-icons/fi";
+import { BsBackpack2 } from "react-icons/bs";
+import { MdOutlinePersonOutline } from "react-icons/md";
 import { HiOutlineBookOpen } from "react-icons/hi2";
+import { LuSquareLibrary } from "react-icons/lu";
 import { ImMakeGroup } from "react-icons/im";
 import { PiNotePencil } from "react-icons/pi";
-import { RiArrowDownSLine, RiGalleryView, RiHome3Line } from "react-icons/ri";
+import { BiDonateHeart } from "react-icons/bi";
+import { RiArrowDownSLine, RiGalleryView, RiStore3Line, RiVipCrownLine } from "react-icons/ri";
 
+import { useShopInventory } from "@/hooks/useShopInventory";
+import { SHOP_ITEMS } from "@/lib/otamart";
 import { useUser } from "@/context/UserContext";
 import TakoLogo from "../../../public/tako-logo.png";
 import styles from "./navbar.module.css";
 
 function Navbar() {
   const { authenticatedUser, authLoading, logout } = useUser();
+  const { inventory } = useShopInventory(authenticatedUser?.id ?? "demo", authenticatedUser?.username);
+  const equippedFrame = SHOP_ITEMS.find((item) => item.id === inventory.equipped.frame);
+  const equippedFont = SHOP_ITEMS.find((item) => item.id === inventory.equipped.font);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -38,15 +47,20 @@ function Navbar() {
   return (
     <header className={styles.header}>
       <nav className={styles.navbar} aria-label="Navegação principal">
-        <Link href="/" className={styles.logoLink} aria-label="Tako Project — início">
-          <Image className={styles.logo} src={TakoLogo} alt="Tako Project" priority />
-        </Link>
+        <div className={styles.logoGroup}>
+          <Link href="/" className={styles.logoLink} aria-label="Tako Project — início">
+            <Image className={styles.logo} src={TakoLogo} alt="Tako Project" priority />
+          </Link>
+          <span className={styles.alphaBadge}>Alpha</span>
+        </div>
 
         <div className={styles.primaryLinks}>
-          <Link href="/"><RiHome3Line /><span>Home</span></Link>
           <Link href="/releases"><RiGalleryView /><span>Lançamentos</span></Link>
+          <Link href="/rankings"><RiVipCrownLine /><span>Ranking</span></Link>
           <Link href="/mangas"><HiOutlineBookOpen /><span>Mangas</span></Link>
-          <Link href="/scans"><ImMakeGroup /><span>Scans</span></Link>
+          <Link href="/scans"><ImMakeGroup className={styles.scanIcon} /><span>Scans</span></Link>
+          <Link href="/otamart" aria-label="OtaMart"><RiStore3Line /><span>OtaMart</span></Link>
+          <Link href="/donate"><BiDonateHeart /><span>Apoie</span></Link>
         </div>
 
         <div className={styles.accountArea}>
@@ -54,24 +68,24 @@ function Navbar() {
             <span className={styles.accountSkeleton} aria-label="Verificando sessão" />
           ) : authenticatedUser ? (
             <>
-              <button className={styles.notificationButton} aria-label="Notificações" disabled>
-                <FaRegBell />
-              </button>
               <div className={styles.userMenu} ref={menuRef}>
                 <button className={styles.userTrigger} onClick={() => setMenuOpen((open) => !open)} aria-expanded={menuOpen} aria-haspopup="menu">
                   {authenticatedUser.profilePicture ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={authenticatedUser.profilePicture} alt="" />
+                    <img data-frame={equippedFrame?.className} src={authenticatedUser.profilePicture} alt="" />
                   ) : (
-                    <span className={styles.avatarFallback}>{authenticatedUser.name.slice(0, 1).toUpperCase()}</span>
+                    <span className={styles.avatarFallback} data-frame={equippedFrame?.className}>{authenticatedUser.name.slice(0, 1).toUpperCase()}</span>
                   )}
-                  <span className={styles.userIdentity}><strong>{authenticatedUser.name}</strong><small>@{authenticatedUser.username}</small></span>
+                  <span className={styles.userIdentity}><strong data-font={equippedFont?.className}>{authenticatedUser.name}</strong><small>@{authenticatedUser.username}</small></span>
                   <RiArrowDownSLine />
                 </button>
                 {menuOpen && (
                   <div className={styles.dropdown} role="menu">
                     <div className={styles.planBadge}>{authenticatedUser.subscription.plan}</div>
-                    <Link role="menuitem" href={`/profile/${authenticatedUser.username}`} onClick={() => setMenuOpen(false)}><FiUser /> Meu perfil</Link>
+                    <button role="menuitem" disabled><FaRegBell /> Notificações <small>Em breve</small></button>
+                    <Link role="menuitem" href={`/profile/${authenticatedUser.username}`} onClick={() => setMenuOpen(false)}><MdOutlinePersonOutline className={styles.profileMenuIcon} /> Meu perfil</Link>
+                    <Link role="menuitem" href="/library" onClick={() => setMenuOpen(false)}><LuSquareLibrary className={styles.libraryMenuIcon} /> Minha biblioteca</Link>
+                    <Link role="menuitem" href="/inventory" onClick={() => setMenuOpen(false)}><BsBackpack2 /> Meu inventário</Link>
                     <Link role="menuitem" href="/manage" onClick={() => setMenuOpen(false)}><FiSettings /> Área de gestão</Link>
                     <button role="menuitem" onClick={() => { setMenuOpen(false); logout(); }}><FiLogOut /> Sair</button>
                   </div>

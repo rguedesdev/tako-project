@@ -7,6 +7,7 @@ interface IChapter {
   chapterTitle?: string;
   chapterNumber: number;
   pages: string[];
+  telegramPages?: string[];
   views: number;
   chapterType?: "MAIN" | "EXTRA" | "SPECIAL" | "ONESHOT" | null;
 }
@@ -34,6 +35,7 @@ const chapterSchema = new Schema<IChapter>(
       type: [String],
       required: true,
     },
+    telegramPages: { type: [String], default: [] },
     views: { type: Number, default: 0, min: 0 },
     chapterType: {
       type: String,
@@ -46,7 +48,7 @@ const chapterSchema = new Schema<IChapter>(
 );
 
 // ADICIONADO: Índice composto único para evitar que a mesma scan
-// poste duas vezes o mesmo capítulo no mesmo mangá
+// poste duas vezes o mesmo capítulo no mesmo manga
 chapterSchema.index({ manga: 1, group: 1, chapterNumber: 1 }, { unique: true });
 chapterSchema.index({ group: 1, manga: 1 });
 chapterSchema.index({ manga: 1, chapterNumber: -1, createdAt: -1 });

@@ -5,27 +5,51 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
 import ImageUploadField from "@/components/ImageUploadField/page";
+import { useToast } from "@/context/ToastContext";
 import { useUser } from "@/context/UserContext";
+import { useShopInventory } from "@/hooks/useShopInventory";
 import type { AuthenticatedUser } from "@/hooks/useAuth";
 import { graphqlRequest } from "@/lib/graphql";
 import { discardImage, uploadImage, type UploadedMedia } from "@/lib/upload";
+import { SHOP_ITEMS } from "@/lib/otamart";
 import styles from "./profile.module.css";
 
-type Profile = Omit<AuthenticatedUser, "email"> & { email?: string | null };
-const FIELDS = "id name username email profilePicture accountType subscription { plan status autoRenew } preferences { showAdultContent }";
+const SOCIAL_FIELDS = [
+  ["site", "Site"], ["discord", "Discord"], ["telegram", "Telegram"], ["x", "X / Twitter"],
+  ["instagram", "Instagram"], ["facebook", "Facebook"], ["youtube", "YouTube"], ["tiktok", "TikTok"], ["bluesky", "Bluesky"],
+] as const;
+const TRACKER_FIELDS = [
+  ["myanimelist", "MyAnimeList"], ["anilist", "AniList"], ["animeplanet", "Anime-Planet"], ["anidb", "AniDB"],
+] as const;
+type SocialKey = (typeof SOCIAL_FIELDS)[number][0];
+type TrackerKey = (typeof TRACKER_FIELDS)[number][0];
+type UserSocialMedias = Partial<Record<SocialKey, string | null>>;
+type UserTrackers = Partial<Record<TrackerKey, string | null>>;
+type Profile = Omit<AuthenticatedUser, "email"> & {
+  email?: string | null;
+  socialMedias?: UserSocialMedias;
+  trackers?: UserTrackers;
+};
+const FIELDS = "id name username email profilePicture accountType subscription { plan status autoRenew } preferences { showAdultContent } socialMedias { site discord telegram x instagram facebook youtube tiktok bluesky } trackers { myanimelist anilist animeplanet anidb }";
 
 export default function ProfilePage() {
   const { username } = useParams<{ username: string }>();
   const router = useRouter();
   const { authenticatedUser, authToken, authLoading, updateAuthenticatedUser } = useUser();
+  const { showToast } = useToast();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [media, setMedia] = useState<File | null>(null);
   const [showAdultContent, setShowAdultContent] = useState(false);
+  const [socialMedias, setSocialMedias] = useState<UserSocialMedias>({});
+  const [trackers, setTrackers] = useState<UserTrackers>({});
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const ownProfile = authenticatedUser?.username === username;
+  const { inventory } = useShopInventory(profile?.id ?? authenticatedUser?.id ?? username, username);
+  const equippedFrame = SHOP_ITEMS.find((item) => item.id === inventory.equipped.frame);
+  const equippedFont = SHOP_ITEMS.find((item) => item.id === inventory.equipped.font);
   const selectedImageUrl = useMemo(() => media ? URL.createObjectURL(media) : null, [media]);
 
   useEffect(() => () => {
@@ -48,6 +72,8 @@ export default function ProfilePage() {
       setName(user?.name ?? "");
       setEmail(user?.email ?? "");
       setShowAdultContent(user?.preferences.showAdultContent === true);
+      setSocialMedias(user?.socialMedias ?? {});
+      setTrackers(user?.trackers ?? {});
     }).catch((error: Error) => {
       if (active) setMessage(error.message);
     });
@@ -65,22 +91,27 @@ export default function ProfilePage() {
     let uploaded: UploadedMedia | null = null;
     try {
       if (media) uploaded = await uploadImage(media, "USER_AVATAR");
-      const { updateMyProfile } = await graphqlRequest<{ updateMyProfile: AuthenticatedUser }>(
+      const { updateMyProfile } = await graphqlRequest<{ updateMyProfile: Profile }>(
         `mutation($data:UpdateProfileInput!){updateMyProfile(data:$data){${FIELDS}}}`,
-        { data: { name, email, showAdultContent, ...(uploaded ? { profilePictureID: uploaded.id } : {}) } },
+        { data: { name, email, showAdultContent, socialMedias, trackers, ...(uploaded ? { profilePictureID: uploaded.id } : {}) } },
         authToken,
       );
       setProfile(updateMyProfile);
-      updateAuthenticatedUser(updateMyProfile);
+      updateAuthenticatedUser({ ...updateMyProfile, email: updateMyProfile.email ?? email });
       setName(updateMyProfile.name);
-      setEmail(updateMyProfile.email);
+      setEmail(updateMyProfile.email ?? email);
       setShowAdultContent(updateMyProfile.preferences.showAdultContent);
+      setSocialMedias(updateMyProfile.socialMedias ?? {});
+      setTrackers(updateMyProfile.trackers ?? {});
       setMedia(null);
-      setMessage("Perfil atualizado.");
+      setMessage("");
+      showToast("Perfil atualizado.", "success");
       router.refresh();
     } catch (error) {
       if (uploaded) await discardImage(uploaded.id).catch(() => undefined);
-      setMessage(error instanceof Error ? error.message : "Falha ao salvar.");
+      const errorText = error instanceof Error ? error.message : "Falha ao salvar.";
+      setMessage(errorText);
+      showToast(errorText, "error");
     } finally {
       setBusy(false);
     }
@@ -90,8 +121,12 @@ export default function ProfilePage() {
     <main className={styles.page}>
       <section className={styles.card}>
         <div className={styles.header}>
-          <Image src={selectedImageUrl || profile.profilePicture || "/image-placeholder.svg"} alt="Foto de perfil" width={112} height={112} unoptimized />
-          <div><h1>{profile.name}</h1><p>@{profile.username}</p><span>{profile.subscription.plan}</span></div>
+          <Image data-frame={equippedFrame?.className} src={selectedImageUrl || profile.profilePicture || "/image-placeholder.svg"} alt="Foto de perfil" width={112} height={112} unoptimized />
+          <div>
+            <h1 data-font={equippedFont?.className}>{profile.name}</h1>
+            <p>@{profile.username}</p>
+            <span>{profile.subscription.plan}</span>
+          </div>
         </div>
         {ownProfile && (
           <form className={styles.form} onSubmit={(event) => { event.preventDefault(); void save(); }}>
@@ -99,6 +134,14 @@ export default function ProfilePage() {
             <label>Nome<input value={name} maxLength={120} onChange={(event) => setName(event.target.value)} /></label>
             <label>E-mail<input type="email" value={email} maxLength={254} autoComplete="email" required disabled={busy} onChange={(event) => setEmail(event.target.value)} /></label>
             <label className={styles.toggle}><input type="checkbox" checked={showAdultContent} onChange={(event) => setShowAdultContent(event.target.checked)} /><span><strong>Exibir conteúdo adulto (+18)</strong><small>Oculto por padrão. Esta preferência fica salva na sua conta.</small></span></label>
+            <fieldset className={styles.linkFields}>
+              <legend>Links públicos</legend>
+              <div>{SOCIAL_FIELDS.map(([key, label]) => <label key={key}>{label}<input type="url" value={socialMedias[key] ?? ""} placeholder="https://" disabled={busy} onChange={(event) => setSocialMedias((current) => ({ ...current, [key]: event.target.value }))} /></label>)}</div>
+            </fieldset>
+            <fieldset className={styles.linkFields}>
+              <legend>Trackers</legend>
+              <div>{TRACKER_FIELDS.map(([key, label]) => <label key={key}>{label}<input type="url" value={trackers[key] ?? ""} placeholder="https://" disabled={busy} onChange={(event) => setTrackers((current) => ({ ...current, [key]: event.target.value }))} /></label>)}</div>
+            </fieldset>
             <button type="submit" disabled={busy || name.trim().length < 2}>{busy ? "Salvando…" : "Salvar alterações"}</button>
             {message && <p>{message}</p>}
           </form>

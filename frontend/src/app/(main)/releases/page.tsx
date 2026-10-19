@@ -1,5 +1,6 @@
 // Style Sheet CSS
 import styles from "./releases.module.css";
+import { ReleaseCarousel } from "@/components/ReleaseCarousel/page";
 
 // Components
 import { NewChapterCard } from "@/components/NewChapterCard/page";
@@ -13,6 +14,7 @@ async function ReleasesPage() {
   return (
     <div className={styles.page}>
       <main className={styles.releasesContainer}>
+        <ReleaseCarousel chapters={chapters} />
         <NewChapterCard chapters={chapters} />
       </main>
     </div>

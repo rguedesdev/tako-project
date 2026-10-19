@@ -1,0 +1,208 @@
+.page {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  padding: 56px 24px;
+}
+
+.donateContainer {
+  width: min(100%, 1280px);
+  padding: clamp(28px, 6vw, 64px);
+  border: 1px solid rgb(255 255 255 / 9%);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 100% 0%, rgb(59 130 246 / 13%), transparent 34%),
+    #343746;
+  box-shadow: 0 24px 70px rgb(0 0 0 / 22%);
+}
+
+.hero {
+  margin-bottom: 38px;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  color: #93c5fd;
+  font-size: calc(0.74rem + 4px);
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+.eyebrow svg { font-size: calc(1em + 4px); }
+
+.hero h1 {
+  color: var(--text-primary);
+  font-size: clamp(1.7rem, 3vw, 2.75rem);
+  font-weight: 800;
+  letter-spacing: -0.055em;
+  line-height: 1.04;
+}
+
+.intro {
+  margin-top: 22px;
+  color: #d7d6d6;
+  font-size: clamp(1rem, 2vw, 1.14rem);
+  line-height: 1.75;
+}
+
+.supportCards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.supportCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  min-height: 176px;
+  padding: 24px;
+  border: 1px solid rgb(255 255 255 / 9%);
+  border-radius: 16px;
+  background: #2b2e3b;
+}
+
+.cardIcon {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  place-items: center;
+  border-radius: 12px;
+  color: #bfdbfe;
+  background: rgb(59 130 246 / 17%);
+  font-size: 1.35rem;
+}
+
+.supportCard h2 {
+  margin: 2px 0 9px;
+  color: var(--text-primary);
+  font-size: 1.04rem;
+}
+
+.supportCard p {
+  color: #c6c9d2;
+  font-size: 0.91rem;
+  line-height: 1.65;
+}
+
+.pixSection {
+  margin-top: 40px;
+  padding: clamp(22px, 4vw, 36px);
+  padding-top: 24px;
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: 18px;
+  background: rgb(22 25 35 / 40%);
+}
+
+.pixHeading { margin-bottom: 24px; }
+.pixEyebrow { display: inline-flex; align-items: center; gap: 8px; color: #93c5fd; font-size: .72rem; font-weight: 800; letter-spacing: .14em; }
+.pixHeading h2 { margin: 0 0 7px; color: var(--text-primary); font-size: clamp(1.2rem, 2.2vw, 1.55rem); }
+.pixHeading .sectionTitle { display: flex; align-items: center; gap: 11px; }
+.sectionTitleIcon { width: 28px; height: 28px; flex: 0 0 28px; color: #93c5fd; font-size: 28px; }
+.pixHeading p, .qrCard p { color: #c6c9d2; font-size: .92rem; line-height: 1.55; }
+.pixOptions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.qrCard, .pixKeyCard {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid rgb(255 255 255 / 9%);
+  border-radius: 14px;
+  background: #2b2e3b;
+}
+.qrCard h3, .pixKeyCard h3 { margin: 0 0 8px; color: var(--text-primary); font-size: 1rem; }
+.qrPlaceholder { display: grid; width: 148px; height: 148px; flex: 0 0 148px; place-items: center; border: 1px dashed rgb(147 197 253 / 55%); border-radius: 12px; color: #aeb5c4; background: transparent; font-size: .9rem; font-weight: 650; }
+.pixKeyCard { align-items: flex-start; flex-direction: column; justify-content: space-between; }
+.pixKey { overflow-wrap: anywhere; color: #d7d6d6; font-family: monospace; font-size: .9rem; line-height: 1.55; }
+.copyButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  gap: 9px;
+  min-height: 42px;
+  padding: 0 15px;
+  border: 0;
+  border-radius: 10px;
+  color: #fff;
+  background: #2563eb;
+  cursor: pointer;
+  font: inherit;
+  font-size: .9rem;
+  font-weight: 750;
+  white-space: nowrap;
+}
+.copyButton:hover { background: #1d4ed8; }
+.copyButton:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+.cryptoSection { margin-top: 20px; }
+.cryptoMethods { position: relative; display: grid; width: min(100%, 280px); grid-template-columns: repeat(2, minmax(0, 1fr)); margin-bottom: 12px; padding: 4px; border-radius: 11px; background: #222530; }
+.cryptoMethods::before { position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc((100% - 8px) / 2); border-radius: 8px; background: #2563eb; content: ""; transition: transform 220ms cubic-bezier(.2, .75, .25, 1); }
+.cryptoMethodsSecond::before { transform: translateX(100%); }
+.cryptoMethod, .cryptoMethodActive { position: relative; z-index: 1; display: inline-flex; width: 100%; align-items: center; justify-content: center; gap: 8px; min-height: 38px; padding: 0 12px; border: 0; border-radius: 8px; color: #c6c9d2; background: transparent; cursor: pointer; font: inherit; font-size: .9rem; font-weight: 700; line-height: 1; transition: color 180ms ease; }
+.cryptoMethod svg, .cryptoMethodActive svg { display: block; width: 15px; height: 15px; flex: 0 0 15px; }
+.cryptoMethodActive { color: #fff; }
+.cryptoMethod:focus-visible, .cryptoMethodActive:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.cryptoCard {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  min-height: 190px;
+  padding: 20px;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 9%);
+  border-radius: 14px;
+  background: #2b2e3b;
+}
+.cryptoQrPanel { display: flex; align-items: center; gap: 20px; }
+.qrInstruction { color: #c6c9d2; font-size: .92rem; line-height: 1.55; white-space: nowrap; }
+.cryptoDetails { width: 100%; min-width: 0; }
+.cryptoDetails h3 { margin: 0 0 8px; color: var(--text-primary); font-size: 1rem; }
+.addressInputRow { display: flex; align-items: stretch; gap: 10px; min-width: 0; }
+.addressInput {
+  width: 100%;
+  min-width: 0;
+  min-height: 42px;
+  padding: 0 13px;
+  border: 1px solid rgb(255 255 255 / 14%);
+  border-radius: 10px;
+  outline: none;
+  color: #e5e7eb;
+  background: #222530;
+  font: 500 .88rem/1.4 monospace;
+}
+.addressInput:focus { outline: none; box-shadow: none; }
+.demoWarning { margin: 12px 0 16px; color: #fbbf24; font-size: .88rem; line-height: 1.5; }
+
+.closing {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin-top: 30px;
+  color: #93c5fd;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-align: center;
+}
+.closing svg { flex: 0 0 auto; font-size: 1.1rem; }
+
+@media (max-width: 640px) {
+  .page { min-height: 100vh; padding: 32px 18px; }
+  .donateContainer { padding: 26px 20px; border-radius: 18px; }
+  .supportCards { grid-template-columns: 1fr; }
+  .supportCard { min-height: 0; padding: 20px; }
+  .pixOptions { grid-template-columns: 1fr; }
+  .qrCard { align-items: flex-start; flex-direction: column; }
+  .cryptoCard { align-items: flex-start; }
+  .cryptoQrPanel { align-items: flex-start; flex-direction: column; }
+  .addressInputRow { align-items: stretch; flex-direction: column; }
+  .addressInputRow .copyButton { align-self: flex-start; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cryptoMethods::before, .cryptoMethod, .cryptoMethodActive { transition: none; }
+}

@@ -1,0 +1,17 @@
+.page { width: min(1200px, calc(100% - 32px)); min-height: 100vh; min-height: 100dvh; margin: 0 auto 56px; color: #f2eff3; }
+.hero { display: flex; align-items: center; gap: 18px; margin: 20px 0 26px; padding: 25px 28px; border: 1px solid #ffffff12; border-radius: 14px; background: radial-gradient(ellipse at 85% 10%, #4168a433, transparent 42%), linear-gradient(115deg, #2c3040, #252733 72%); }
+.heroIcon { display: grid; width: 52px; height: 52px; flex: 0 0 52px; place-items: center; border-radius: 13px; background: #3b82f61c; color: #93c5fd; font-size: 1.6rem; }
+.hero > div { min-width: 0; flex: 1; }
+.eyebrow { color: #93c5fd; font-size: .66rem; font-weight: 800; letter-spacing: .13em; }
+.hero h1 { margin-top: 4px; color: #f6f5f8; font-size: clamp(1.6rem, 4vw, 2rem); font-weight: 800; letter-spacing: -.04em; }
+.hero p { margin-top: 5px; color: #aeb3c1; font-size: .86rem; }
+.count { flex: 0 0 auto; padding: 7px 11px; border: 1px solid #60a5fa33; border-radius: 8px; background: #3b82f618; color: #bfdbfe; font-size: .75rem; font-weight: 700; }
+.notice,.empty { border: 1px solid #ffffff12; border-radius: 12px; background: #242630; color: #c0c2cd; }
+.notice { padding: 22px; }
+.empty { display: grid; min-height: 230px; justify-items: center; align-content: center; gap: 11px; padding: 32px 20px; text-align: center; }
+.empty h2 { color: #f1f0f5; font-size: 1.1rem; }
+.empty p { max-width: 480px; font-size: .86rem; line-height: 1.5; }
+.empty a,.empty button { display: inline-flex; min-height: 38px; align-items: center; justify-content: center; margin-top: 4px; padding: 0 13px; border: 1px solid #60a5fa44; border-radius: 8px; background: #3b82f618; color: #bfdbfe; cursor: pointer; font: inherit; font-size: .8rem; font-weight: 700; text-decoration: none; }
+.empty a:hover,.empty button:hover { background: #3b82f6; color: #fff; }
+.empty a:focus-visible,.empty button:focus-visible { outline: 2px solid #93c5fd; outline-offset: 3px; }
+@media (max-width: 650px) { .page { width: min(100% - 24px, 1200px); margin-bottom: 40px; } .hero { gap: 12px; padding: 19px 16px; } .heroIcon { width: 44px; height: 44px; flex-basis: 44px; } .count { font-size: .68rem; } }

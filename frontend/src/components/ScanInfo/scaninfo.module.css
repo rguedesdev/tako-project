@@ -34,10 +34,10 @@
   min-height: 42px;
   width: 100%;
   padding: 10px 12px;
-  border: 1px solid #e63357;
+  border: 1px solid #3b82f6;
   border-radius: 8px;
   color: #fff;
-  background: #e63357;
+  background: #3b82f6;
   margin-top: 10px;
   font: inherit;
   font-size: .84rem;
@@ -66,12 +66,12 @@
 }
 
 .btnFollow:not(:disabled):hover {
-  border-color: #f04a68;
-  background: #f04a68;
+  border-color: #2563eb;
+  background: #2563eb;
 }
 
 .btnFollow:focus-visible {
-  outline: 2px solid #ff8296;
+  outline: 2px solid #93c5fd;
   outline-offset: 3px;
 }
 
@@ -93,8 +93,8 @@
 .btnFollow.following:not(:disabled):hover,
 .btnFollow.following:not(:disabled):focus-visible {
   color: #fff;
-  border-color: rgb(240 74 104 / 48%);
-  background: rgb(240 74 104 / 9%);
+  border-color: rgb(59 130 246 / 48%);
+  background: rgb(59 130 246 / 9%);
 }
 
 .following:not(:disabled):hover .followingLabel,
@@ -110,7 +110,7 @@
 .followError {
   margin-top: 7px;
   max-width: 200px;
-  color: #ff9daf;
+  color: #bfdbfe;
   font-size: 0.78rem;
   line-height: 1.35;
 }
@@ -144,6 +144,7 @@
 .mangaTags {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   gap: 5px;
   margin-bottom: 20px;
 }
@@ -167,12 +168,23 @@
 }
 
 .statsContainer {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 9px;
   margin: 0 0 20px;
   padding-top: 18px;
-  border-top: 1px solid rgb(255 255 255 / 8%);
+}
+
+.statsContainer::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #a6a8b2, transparent);
+  content: "";
+  opacity: 0.35;
 }
 
 .statsTitle {
@@ -205,8 +217,8 @@
 }
 
 .stat:hover {
-  border-color: rgb(240 74 104 / 25%);
-  background: rgb(240 74 104 / 6%);
+  border-color: rgb(59 130 246 / 25%);
+  background: rgb(59 130 246 / 6%);
 }
 
 .statIcon {
@@ -216,8 +228,8 @@
   place-items: center;
   padding: 4px;
   border-radius: 7px;
-  background: rgb(240 74 104 / 11%);
-  color: #ff8296;
+  background: rgb(59 130 246 / 11%);
+  color: #93c5fd;
   font-size: 16px;
 }
 
@@ -281,13 +293,13 @@
 }
 
 .media:hover {
-  border-color: rgb(240 74 104 / 38%);
+  border-color: rgb(59 130 246 / 38%);
   background: #302a31;
   color: #fff;
 }
 
 .media:focus-visible {
-  outline: 2px solid #ff8296;
+  outline: 2px solid #93c5fd;
   outline-offset: 2px;
 }
 
@@ -304,7 +316,7 @@
 
   .scanWrapper,
   .followError {
-    width: 100%;
+    width: min(100%, 180px);
     max-width: none;
   }
 
@@ -312,6 +324,8 @@
     height: auto;
     aspect-ratio: 1;
   }
+
+  .btnWrapper { width: min(100%, 240px); }
 
   .stats {
     gap: 8px;
