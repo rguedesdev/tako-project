@@ -1,29 +1,30 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useState } from "react";
-import { FiLoader, FiLogIn } from "react-icons/fi";
-
+import Image from "next/image";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useUser } from "@/context/UserContext";
 import { useToast } from "@/context/ToastContext";
 import { InputComponent } from "../Input/page";
 import styles from "./signincomponent.module.css";
+import { signInSchema } from "@/lib/validation";
+import type { z } from "zod";
+
+type SignInValues = z.infer<typeof signInSchema>;
 
 function SignInComponent({ pageTitle }: { pageTitle: string }) {
   const { signIn } = useUser();
-  const { showToast, showError } = useToast();
+  const { showError } = useToast();
   const [submitting, setSubmitting] = useState(false);
+  const { register, handleSubmit, formState: { errors } } = useForm<SignInValues>({
+    resolver: zodResolver(signInSchema),
+    mode: "onTouched",
+  });
 
-  async function handleSignIn(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  async function handleSignIn({ login, password }: SignInValues) {
     if (submitting) return;
-    const data = new FormData(event.currentTarget);
-    const login = String(data.get("login") ?? "").trim();
-    const password = String(data.get("password") ?? "");
-    if (!login || !password) {
-      showToast("Informe seu username ou e-mail e sua senha.", "error");
-      return;
-    }
 
     setSubmitting(true);
     try {
@@ -41,18 +42,19 @@ function SignInComponent({ pageTitle }: { pageTitle: string }) {
   return (
     <section className={styles.authSection} aria-labelledby="signin-title">
       <div className={styles.signInBox}>
-        <span className={styles.eyebrow}><FiLogIn /> Bem-vindo de volta</span>
+        <Image className={styles.logo} src="/tako-logo.png" alt="Tako Project" width={519} height={149} priority />
         <h1 id="signin-title" className={styles.signInTitle}>{pageTitle}</h1>
-        <p className={styles.subtitle}>Entre para comentar e acompanhar suas leituras.</p>
 
-        <form autoComplete="on" onSubmit={handleSignIn} noValidate>
+        <form autoComplete="off" onSubmit={handleSubmit(handleSignIn)} noValidate>
           <InputComponent
             inputLabel="Username ou e-mail"
             inputType="text"
             inputName="login"
             inputID="login"
-            autoComplete="username"
-            inputPlaceholder="seu.username ou email@exemplo.com"
+            autoComplete="off"
+            inputPlaceholder="Digite seu username ou email"
+            error={errors.login?.message}
+            inputProps={register("login")}
             required
           />
           <InputComponent
@@ -60,13 +62,15 @@ function SignInComponent({ pageTitle }: { pageTitle: string }) {
             inputType="password"
             inputName="password"
             inputID="password"
-            autoComplete="current-password"
+            autoComplete="off"
             inputPlaceholder="Digite sua senha"
+            error={errors.password?.message}
+            inputProps={register("password")}
             required
           />
 
           <button className={styles.signInBtn} disabled={submitting}>
-            {submitting && <FiLoader className={styles.spinner} aria-hidden="true" />}
+            {submitting && <span className={styles.spinner} aria-hidden="true" />}
             {submitting ? "Entrando…" : "Entrar"}
           </button>
         </form>

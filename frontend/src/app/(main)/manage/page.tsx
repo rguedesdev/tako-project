@@ -6,6 +6,7 @@ import ImageUploadField from "@/components/ImageUploadField/page";
 import { useUser } from "@/context/UserContext";
 import { useToast } from "@/context/ToastContext";
 import { graphqlRequest } from "@/lib/graphql";
+import { groupInputSchema, mangaInputSchema } from "@/lib/validation";
 import { discardImage, uploadImage, type UploadedMedia } from "@/lib/upload";
 import styles from "./manage.module.css";
 
@@ -161,12 +162,19 @@ export default function ManagePage() {
   async function saveGroup(event: React.FormEvent) {
     event.preventDefault();
     if (!authToken) return;
+    const validation = groupInputSchema.safeParse({ ...groupForm, socialMedias, ...(groupImage ? {} : {}) });
+    if (!validation.success) {
+      const message = validation.error.issues[0]?.message ?? "Confira os dados do grupo.";
+      setMessage(message);
+      showToast(message, "error");
+      return;
+    }
     setBusy(true);
     setMessage("");
     let uploaded: UploadedMedia | null = null;
     try {
       if (groupImage) uploaded = await uploadImage(groupImage, "GROUP_IMAGE");
-      const data = { ...groupForm, socialMedias, ...(uploaded ? { groupImageID: uploaded.id } : {}) };
+      const data = { ...validation.data, ...(uploaded ? { groupImageID: uploaded.id } : {}) };
       const operation = groupID === "new"
         ? `mutation($data:CreateGroupInput!){createGroup(data:$data){${GROUP_FIELDS}}}`
         : `mutation($id:ID!,$data:UpdateGroupInput!){updateGroup(id:$id,data:$data){${GROUP_FIELDS}}}`;
@@ -305,24 +313,27 @@ export default function ManagePage() {
   async function saveManga(event: React.FormEvent) {
     event.preventDefault();
     if (!authToken || !selectedMangaGroup) return;
+    const validation = mangaInputSchema.safeParse({
+      title: title.trim(), description: mangaForm.description, mangaka: mangaForm.mangaka,
+      genders: mangaForm.genders.split(",").map((value) => value.trim()).filter(Boolean),
+      demographics: selectedDemographics,
+      aliases: mangaForm.aliases.split(",").map((value) => value.trim()).filter(Boolean),
+      trackers, isAdult: mangaForm.isAdult,
+      ...(!editingMangaID && selectedMalId ? { malId: selectedMalId } : {}),
+      ...(!editingMangaID ? { translationLanguage } : {}),
+    });
+    if (!validation.success) {
+      const validationMessage = validation.error.issues[0]?.message ?? "Confira os dados do manga.";
+      setMessage(validationMessage);
+      showToast(validationMessage, "error");
+      return;
+    }
     setBusy(true);
     setMessage("");
     let uploaded: UploadedMedia | null = null;
     try {
       if (mangaCover) uploaded = await uploadImage(mangaCover, "MANGA_COVER");
-      const data = {
-        title: title.trim(),
-        description: mangaForm.description,
-        mangaka: mangaForm.mangaka,
-        genders: mangaForm.genders.split(",").map((value) => value.trim()).filter(Boolean),
-        demographics: selectedDemographics,
-        aliases: mangaForm.aliases.split(",").map((value) => value.trim()).filter(Boolean),
-        trackers,
-        isAdult: mangaForm.isAdult,
-        ...(!editingMangaID && selectedMalId ? { malId: selectedMalId } : {}),
-        ...(!editingMangaID ? { translationLanguage } : {}),
-        ...(uploaded ? { mangaCoverID: uploaded.id } : {}),
-      };
+      const data = { ...validation.data, ...(uploaded ? { mangaCoverID: uploaded.id } : {}) };
       if (editingMangaID) {
         if (selectedMalId && selectedMalId !== editingManga?.externalMetadata?.malId) {
           await graphqlRequest(
@@ -369,7 +380,7 @@ export default function ManagePage() {
         </nav>
         <section className={styles.content}>
           {area === "group" ? (
-            <form className={styles.form} onSubmit={saveGroup}>
+            <form className={styles.form} autoComplete="off" onSubmit={saveGroup}>
               <div className={styles.sectionTitle}><div><h2>{selectedGroup ? "Dados do grupo" : "Criar grupo"}</h2><p>Selecione uma scan para editar ou comece um novo cadastro.</p></div></div>
               <fieldset className={styles.groupPicker}>
                 <legend>Grupo</legend>
@@ -410,7 +421,7 @@ export default function ManagePage() {
                 {externalSearchState === "error" && <div className={styles.externalNotice}><p>Não foi possível concluir a busca agora. O título continua preenchido; tente novamente.</p><button type="button" onClick={() => setSearchNonce((value) => value + 1)}>Tentar novamente</button></div>}
                 {externalSearchState === "empty" && !manualMode && <div className={styles.externalNotice}><p>Nenhuma obra foi encontrada no catálogo local nem no MyAnimeList.</p><button type="button" onClick={startManualRegistration}>Cadastrar manualmente</button></div>}
                 {externalSearchState === "results" && !selectedMalId && !manualMode && <button type="button" className={styles.secondaryAction} onClick={startManualRegistration}>Não encontrou a obra correta? Cadastrar manualmente</button>}
-                {(editingMangaID || manualMode || selectedMalId) && <form className={`${styles.form} ${styles.stepForm}`} onSubmit={saveManga}><fieldset className={styles.stepPanel}>
+                {(editingMangaID || manualMode || selectedMalId) && <form className={`${styles.form} ${styles.stepForm}`} autoComplete="off" onSubmit={saveManga}><fieldset className={styles.stepPanel}>
                   <legend>{editingManga ? `Editando ${editingManga.title}` : "3. Novo registro global"}</legend>
                   {selectedJikanCandidate && !editingMangaID && <p className={styles.externalNotice}>Revise todos os dados importados antes de criar. A sinopse abaixo é editável e não será sobrescrita nas sincronizações futuras.</p>}
                   {manualMode && <p className={styles.externalNotice}>Cadastro manual: este registro será criado sem identificador MAL e poderá ser associado posteriormente por um AEGIS.</p>}

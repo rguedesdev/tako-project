@@ -12,6 +12,7 @@ import { Types } from "mongoose";
 import { jikanService } from "../../../services/jikan";
 import { JIKAN_RETRY_AFTER_HOURS, JIKAN_SYNC_AFTER_DAYS } from "../../../config/translation";
 import { resolveTranslationStatus, TRANSLATION_STATUSES, type TranslationStatus } from "./translation-status";
+import { parseObjectID } from "../../validation";
 
 class MangaService {
   static serialize(manga: any) {
@@ -76,6 +77,7 @@ class MangaService {
   }
 
   static async createManga(rawData: unknown, groupID: string, userID: string) {
+    groupID = parseObjectID(groupID, "Grupo");
     const group = await GroupModel.findOne({ _id: groupID, ownerID: userID });
     if (!group) {
       throw graphQLError("Sem permissão para administrar este grupo.", "FORBIDDEN");
@@ -173,6 +175,7 @@ class MangaService {
   }
 
   static async updateManga(id: string, data: any, userID: string) {
+    id = parseObjectID(id, "Obra");
     const [current, user] = await Promise.all([
       MangaModel.findById(id).lean(),
       UserModel.findById(userID).select("accountType").lean(),
@@ -238,6 +241,8 @@ class MangaService {
   }
 
   static async updateGroupManga(groupID: string, mangaID: string, rawData: any, userID: string) {
+    groupID = parseObjectID(groupID, "Grupo");
+    mangaID = parseObjectID(mangaID, "Obra");
     const allowedFields = new Set(["description", "mangaCoverID"]);
     if (!rawData || Object.keys(rawData).length === 0 || Object.keys(rawData).some((field) => !allowedFields.has(field))) {
       throw graphQLError("O grupo pode atualizar apenas a descrição e a capa da obra.", "BAD_USER_INPUT");
@@ -348,6 +353,7 @@ class MangaService {
   }
 
   static async linkExternalMetadata(mangaID: string, malId: number, userID: string) {
+    mangaID = parseObjectID(mangaID, "Obra");
     const user = await UserModel.findById(userID).select("accountType").lean();
     if (user?.accountType !== "AEGIS") throw graphQLError("Somente administradores podem vincular uma obra ao MyAnimeList.", "FORBIDDEN");
     if (!Number.isSafeInteger(malId) || malId <= 0) throw graphQLError("Identificador do MyAnimeList inválido.", "BAD_USER_INPUT");
@@ -525,6 +531,8 @@ class MangaService {
   }
 
   static async setTranslationStatusOverride(mangaID: string, groupID: string, value: TranslationStatus | null, userID: string) {
+    mangaID = parseObjectID(mangaID, "Obra");
+    groupID = parseObjectID(groupID, "Grupo");
     const user = await UserModel.findById(userID).select("accountType").lean();
     if (user?.accountType !== "AEGIS") throw graphQLError("Somente administradores podem alterar o status da tradução.", "FORBIDDEN");
     if (value != null && !TRANSLATION_STATUSES.includes(value)) throw graphQLError("Status de tradução inválido.", "BAD_USER_INPUT");

@@ -8,11 +8,13 @@ import { MangaModel } from "../manga/model";
 import { GroupMangaModel } from "../manga/group-manga-model";
 import MediaService from "../media/service";
 import { CommentLikeModel, CommentModel } from "../comment/model";
+import { parseObjectID } from "../../validation";
 import { UserChapterReadModel } from "../chapter/read-model";
 import {
   emailSchema,
   normalizeProfileSocialMedias,
   normalizeProfileTrackers,
+  normalizeProfileUpdate,
   normalizeSignIn,
   normalizeSignUp,
   usernameSchema,
@@ -119,12 +121,12 @@ class UserService {
       .lean();
 
     if (!user) {
-      throw graphQLError("Usuário não encontrado.", "UNAUTHENTICATED");
+      throw graphQLError("Credenciais inválidas.", "UNAUTHENTICATED");
     }
 
     const hash = user.passwordHash ?? user.password;
     if (!hash || !(await bcrypt.compare(parsed.password, hash))) {
-      throw graphQLError("Senha incorreta.", "UNAUTHENTICATED");
+      throw graphQLError("Credenciais inválidas.", "UNAUTHENTICATED");
     }
 
     const serialized = serializeUser(user);
@@ -206,6 +208,7 @@ class UserService {
     return followerID ? Boolean(await UserFollowModel.exists({ following: userID, follower: followerID })) : false;
   }
   static async toggleFollow(userID: string, followerID: string) {
+    userID = parseObjectID(userID, "Leitor");
     if (userID === followerID) throw graphQLError("Você não pode seguir a si mesmo.", "BAD_USER_INPUT");
     if (!(await UserModel.exists({ _id: userID }))) throw graphQLError("Leitor não encontrado.", "NOT_FOUND");
     const removed = await UserFollowModel.findOneAndDelete({ following: userID, follower: followerID });
@@ -216,7 +219,8 @@ class UserService {
     }
     return { followed, followers: await UserFollowModel.countDocuments({ following: userID }) };
   }
-  static async updateProfile(userID: string, data: any) {
+  static async updateProfile(userID: string, input: unknown) {
+    const data = normalizeProfileUpdate(input);
     const current = await UserModel.findById(userID).lean();
     if (!current) throw graphQLError("Usuário não encontrado.", "NOT_FOUND");
 

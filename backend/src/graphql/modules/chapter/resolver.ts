@@ -7,6 +7,7 @@ import { graphQLError } from "../../errors";
 import { GroupMangaModel } from "../manga/group-manga-model";
 import { selectionHasField } from "../../selection";
 import { ReaderNodeQueue } from "../../../services/reader-node-queue";
+import { parseObjectID } from "../../validation";
 
 const chapterResolvers = {
   Query: {
@@ -39,6 +40,8 @@ const chapterResolvers = {
     // 1. Capturamos o parâmetro 'mangaId' e o input 'data' separadamente
     createChapter: async (_: any, { mangaID, groupID, data }: any, context: any) => {
       const userID = requireAuthenticated(context);
+      mangaID = parseObjectID(mangaID, "Obra");
+      groupID = parseObjectID(groupID, "Grupo");
 
       // O grupo vem da área atualmente administrada, mas a propriedade é
       // sempre confirmada no backend com o usuário autenticado.

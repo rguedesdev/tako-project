@@ -10,6 +10,7 @@ import { useUser } from "@/context/UserContext";
 import { useShopInventory } from "@/hooks/useShopInventory";
 import type { AuthenticatedUser } from "@/hooks/useAuth";
 import { graphqlRequest } from "@/lib/graphql";
+import { profileSettingsSchema } from "@/lib/validation";
 import { discardImage, uploadImage, type UploadedMedia } from "@/lib/upload";
 import { SHOP_ITEMS } from "@/lib/otamart";
 import styles from "./profile.module.css";
@@ -86,6 +87,15 @@ export default function ProfilePage() {
 
   async function save() {
     if (!profile) return;
+    const normalizedSocialMedias = Object.fromEntries(SOCIAL_FIELDS.map(([key]) => [key, socialMedias[key] ?? ""])) as Record<SocialKey, string>;
+    const normalizedTrackers = Object.fromEntries(TRACKER_FIELDS.map(([key]) => [key, trackers[key] ?? ""])) as Record<TrackerKey, string>;
+    const validation = profileSettingsSchema.safeParse({ name, email, showAdultContent, socialMedias: normalizedSocialMedias, trackers: normalizedTrackers });
+    if (!validation.success) {
+      const validationMessage = validation.error.issues[0]?.message ?? "Confira os dados informados.";
+      setMessage(validationMessage);
+      showToast(validationMessage, "error");
+      return;
+    }
     setBusy(true);
     setMessage("");
     let uploaded: UploadedMedia | null = null;
@@ -93,7 +103,7 @@ export default function ProfilePage() {
       if (media) uploaded = await uploadImage(media, "USER_AVATAR");
       const { updateMyProfile } = await graphqlRequest<{ updateMyProfile: Profile }>(
         `mutation($data:UpdateProfileInput!){updateMyProfile(data:$data){${FIELDS}}}`,
-        { data: { name, email, showAdultContent, socialMedias, trackers, ...(uploaded ? { profilePictureID: uploaded.id } : {}) } },
+        { data: { ...validation.data, ...(uploaded ? { profilePictureID: uploaded.id } : {}) } },
         authToken,
       );
       setProfile(updateMyProfile);
@@ -129,10 +139,10 @@ export default function ProfilePage() {
           </div>
         </div>
         {ownProfile && (
-          <form className={styles.form} onSubmit={(event) => { event.preventDefault(); void save(); }}>
+          <form className={styles.form} autoComplete="off" onSubmit={(event) => { event.preventDefault(); void save(); }}>
             <ImageUploadField label="Foto de perfil" purpose="USER_AVATAR" shape="circle" currentUrl={profile.profilePicture} value={media} onChange={setMedia} disabled={busy} showPreview={false} />
             <label>Nome<input value={name} maxLength={120} onChange={(event) => setName(event.target.value)} /></label>
-            <label>E-mail<input type="email" value={email} maxLength={254} autoComplete="email" required disabled={busy} onChange={(event) => setEmail(event.target.value)} /></label>
+            <label>E-mail<input type="email" value={email} maxLength={254} autoComplete="off" required disabled={busy} onChange={(event) => setEmail(event.target.value)} /></label>
             <label className={styles.toggle}><input type="checkbox" checked={showAdultContent} onChange={(event) => setShowAdultContent(event.target.checked)} /><span><strong>Exibir conteúdo adulto (+18)</strong><small>Oculto por padrão. Esta preferência fica salva na sua conta.</small></span></label>
             <fieldset className={styles.linkFields}>
               <legend>Links públicos</legend>

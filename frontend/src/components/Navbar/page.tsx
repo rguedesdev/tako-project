@@ -56,9 +56,9 @@ function Navbar() {
 
         <div className={styles.primaryLinks}>
           <Link href="/releases"><RiGalleryView /><span>Lançamentos</span></Link>
-          <Link href="/rankings"><RiVipCrownLine /><span>Ranking</span></Link>
           <Link href="/mangas"><HiOutlineBookOpen /><span>Mangas</span></Link>
           <Link href="/scans"><ImMakeGroup className={styles.scanIcon} /><span>Scans</span></Link>
+          <Link href="/rankings"><RiVipCrownLine /><span>Ranking</span></Link>
           <Link href="/otamart" aria-label="OtaMart"><RiStore3Line /><span>OtaMart</span></Link>
           <Link href="/donate"><BiDonateHeart /><span>Apoie</span></Link>
         </div>

@@ -7,6 +7,7 @@ import { BiHash, BiLike } from "react-icons/bi";
 import { FaArrowTrendUp } from "react-icons/fa6";
 import { MdOutlineDeleteForever } from "react-icons/md";
 import { LuSquareLibrary } from "react-icons/lu";
+import { GoArrowSwitch } from "react-icons/go";
 
 import type { Manga } from "@/lib/catalog";
 import { MediaImage } from "@/components/MediaImage/page";
@@ -101,9 +102,12 @@ function MangaInfo({
           <div>
             <strong data-status={manga.officialPublicationStatus}>{statusLabels[manga.officialPublicationStatus]}</strong>
             {manga.officialTotalChapters != null && (
-              <span>
-                {manga.officialTotalChapters.toLocaleString("pt-BR")} {manga.officialTotalChapters === 1 ? "Capítulo oficial" : "Capítulos oficiais"}
-              </span>
+              <>
+                <GoArrowSwitch className={styles.statusSwitch} aria-hidden="true" />
+                <span>
+                  {manga.officialTotalChapters.toLocaleString("pt-BR")} {manga.officialTotalChapters === 1 ? "Capítulo oficial" : "Capítulos oficiais"}
+                </span>
+              </>
             )}
           </div>
         </div>

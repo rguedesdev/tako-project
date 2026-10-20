@@ -2,11 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { BiChat } from "react-icons/bi";
-import { FiHeart, FiLoader, FiMessageCircle, FiMoreHorizontal } from "react-icons/fi";
+import { FiHeart, FiLoader, FiMessageCircle, FiMoreHorizontal, FiTrash2 } from "react-icons/fi";
 
 import { useUser } from "@/context/UserContext";
+import { useToast } from "@/context/ToastContext";
 import { useShopInventory } from "@/hooks/useShopInventory";
 import { graphqlRequest } from "@/lib/graphql";
 import { SHOP_ITEMS } from "@/lib/otamart";
@@ -17,6 +21,7 @@ const COMMENT_FIELDS = `
   likeCount likedByMe replyCount
   author { id name username profilePicture }
 `;
+const commentSchema = z.object({ content: z.string().trim().min(1, "Escreva algo antes de publicar.").max(2000, "O comentário pode ter no máximo 2000 caracteres.") }).strict();
 
 type Sort = "NEWEST" | "OLDEST" | "MOST_LIKED";
 
@@ -110,19 +115,21 @@ function Composer({
   onCancel?: () => void;
   onSubmit: (content: string) => Promise<void>;
 }) {
-  const [content, setContent] = useState(initialValue);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const { register, handleSubmit, watch, reset, formState: { errors } } = useForm<z.infer<typeof commentSchema>>({
+    resolver: zodResolver(commentSchema), mode: "onTouched", defaultValues: { content: initialValue },
+  });
+  const content = watch("content");
   const normalized = content.trim();
 
-  async function submit(event: FormEvent) {
-    event.preventDefault();
-    if (!normalized || submitting || normalized.length > 2000) return;
+  async function submit({ content: normalizedContent }: z.infer<typeof commentSchema>) {
+    if (submitting) return;
     setSubmitting(true);
     setError("");
     try {
-      await onSubmit(normalized);
-      setContent("");
+      await onSubmit(normalizedContent);
+      reset({ content: "" });
     } catch (submitError) {
       setError(errorMessage(submitError));
     } finally {
@@ -131,33 +138,40 @@ function Composer({
   }
 
   return (
-    <form className={`${styles.composer} ${animated ? styles.composerEnter : ""}`} onSubmit={submit}>
+    <form className={`${styles.composer} ${animated ? styles.composerEnter : ""}`} autoComplete="off" noValidate onSubmit={handleSubmit(submit)}>
       <Avatar user={user} size="small" frame={frame} />
       <div className={styles.composerBody}>
-        <textarea
-          autoFocus={autoFocus}
-          maxLength={2000}
-          rows={initialValue ? 3 : 2}
-          value={content}
-          onChange={(event) => setContent(event.target.value)}
-          placeholder={placeholder}
-          aria-label={placeholder}
-        />
-        <div className={styles.composerFooter}>
-          <span className={normalized.length > 1850 ? styles.characterWarning : styles.characterCount}>
-            {content.length}/2000
-          </span>
-          {onCancel && (
-            <button type="button" className={styles.textButton} onClick={onCancel} disabled={submitting}>
-              Cancelar
-            </button>
-          )}
-          <button className={styles.primaryButton} disabled={!normalized || submitting}>
-            {submitting && <FiLoader className={styles.spinner} aria-hidden="true" />}
-            {submitting ? "Enviando" : submitLabel}
-          </button>
+        <div className={styles.textareaWrap}>
+          <textarea
+            autoFocus={autoFocus}
+            maxLength={2000}
+            rows={initialValue ? 3 : 2}
+            autoComplete="off"
+            aria-invalid={Boolean(errors.content)}
+            {...register("content")}
+            placeholder={placeholder}
+            aria-label={placeholder}
+          />
         </div>
-        {error && <p className={styles.inlineError} role="alert">{error}</p>}
+        {(errors.content?.message || error) && <p className={styles.inlineError} role="alert">{errors.content?.message ?? error}</p>}
+        <div className={styles.composerFooter}>
+          <div className={styles.composerStatus}>
+            <span className={normalized.length > 1850 ? styles.characterWarning : styles.characterCount} aria-live="polite">
+              {content.length}/2000
+            </span>
+          </div>
+          <div className={styles.composerActions}>
+            {onCancel && (
+              <button type="button" className={styles.textButton} onClick={onCancel} disabled={submitting}>
+                Cancelar
+              </button>
+            )}
+            <button className={styles.primaryButton} disabled={!normalized || submitting}>
+              {submitting && <FiLoader className={styles.spinner} aria-hidden="true" />}
+              {submitting ? "Enviando" : submitLabel}
+            </button>
+          </div>
+        </div>
       </div>
     </form>
   );
@@ -186,6 +200,8 @@ function CommentItem({
 }) {
   const [comment, setComment] = useState(initialComment);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [deletePending, setDeletePending] = useState(false);
   const [editing, setEditing] = useState(false);
   const [replying, setReplying] = useState(false);
   const [likePending, setLikePending] = useState(false);
@@ -194,6 +210,7 @@ function CommentItem({
   const [repliesOffset, setRepliesOffset] = useState<number | null>(0);
   const [repliesLoading, setRepliesLoading] = useState(false);
   const [repliesError, setRepliesError] = useState("");
+  const { showError } = useToast();
   const isOwner = currentUser?.id === comment.author.id;
   const isCurrentAuthor = currentUser?.id === comment.author.id;
   const authorFrame = isCurrentAuthor ? equippedFrame : undefined;
@@ -296,9 +313,14 @@ function CommentItem({
     setEditing(false);
   }
 
-  async function remove() {
+  function remove() {
     setMenuOpen(false);
-    if (!window.confirm("Excluir este comentário? Esta ação não pode ser desfeita.")) return;
+    setDeleteConfirmOpen(true);
+  }
+
+  async function confirmRemove() {
+    if (deletePending) return;
+    setDeletePending(true);
     try {
       const data = await graphqlRequest<{ deleteComment: Comment }>(
         `mutation DeleteComment($commentId: ID!) {
@@ -307,10 +329,14 @@ function CommentItem({
         { commentId: comment.id },
         token,
       );
+      setDeleteConfirmOpen(false);
       if (comment.replyCount > 0 && !isReply) setComment(data.deleteComment);
       else onDeleted?.(data.deleteComment);
     } catch (deleteError) {
-      window.alert(errorMessage(deleteError));
+      setDeleteConfirmOpen(false);
+      showError(deleteError, "Não foi possível excluir este comentário. Tente novamente.");
+    } finally {
+      setDeletePending(false);
     }
   }
 
@@ -431,6 +457,21 @@ function CommentItem({
           </div>
         )}
       </div>
+      {deleteConfirmOpen && (
+        <div className={styles.deleteBackdrop}>
+          <section className={styles.deleteDialog} role="alertdialog" aria-modal="true" aria-labelledby={`delete-comment-title-${comment.id}`} aria-describedby={`delete-comment-description-${comment.id}`} onKeyDown={(event) => { if (event.key === "Escape" && !deletePending) setDeleteConfirmOpen(false); }}>
+            <span className={styles.deleteIcon} aria-hidden="true"><FiTrash2 /></span>
+            <h2 id={`delete-comment-title-${comment.id}`}>Excluir comentário?</h2>
+            <p id={`delete-comment-description-${comment.id}`}>O comentário será removido. Essa ação não pode ser desfeita.</p>
+            <div className={styles.deleteActions}>
+              <button type="button" className={styles.deleteCancel} onClick={() => setDeleteConfirmOpen(false)} disabled={deletePending} autoFocus>Cancelar</button>
+              <button type="button" className={styles.deleteConfirm} onClick={() => void confirmRemove()} disabled={deletePending}>
+                {deletePending ? <><FiLoader className={styles.spinner} aria-hidden="true" /> Excluindo…</> : "Excluir comentário"}
+              </button>
+            </div>
+          </section>
+        </div>
+      )}
     </article>
   );
 }
@@ -450,10 +491,11 @@ export function Comments({ chapterId }: { chapterId: string }) {
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState("");
   const requestId = useRef(0);
+  const hasLoadedComments = useRef(false);
 
   const loadComments = useCallback(async (offset = 0, selectedSort = sort) => {
     const currentRequest = ++requestId.current;
-    if (offset === 0) setLoading(true);
+    if (offset === 0 && !hasLoadedComments.current) setLoading(true);
     else setLoadingMore(true);
     setError("");
     try {
@@ -473,7 +515,11 @@ export function Comments({ chapterId }: { chapterId: string }) {
     } catch (loadError) {
       if (currentRequest === requestId.current) setError(errorMessage(loadError));
     } finally {
-      if (currentRequest === requestId.current) { setLoading(false); setLoadingMore(false); }
+      if (currentRequest === requestId.current) {
+        hasLoadedComments.current = true;
+        setLoading(false);
+        setLoadingMore(false);
+      }
     }
   }, [chapterId, sort, token]);
 

@@ -46,8 +46,9 @@ const signUpSchema = z
 
 const signInSchema = z
   .object({
-    login: z.string().trim().min(1, "Informe username ou e-mail."),
-    password: z.string().min(1, "Informe a senha."),
+    login: z.string().trim().min(1, "Informe username ou e-mail.").max(254, "Login muito longo."),
+    password: z.string().min(1, "Informe a senha.").max(120, "A senha deve ter no máximo 120 caracteres.")
+      .refine((password) => Buffer.byteLength(password, "utf8") <= 72, "A senha é muito longa para o mecanismo de segurança utilizado."),
   })
   .strict();
 
@@ -98,6 +99,16 @@ const profileTrackersSchema = z.object({
   anidb: profileUrl("AniDB", ["anidb.net"]),
 }).strict();
 
+const profileUpdateSchema = z.object({
+  name: z.string().trim().min(2, "Informe seu nome.").max(120).optional(),
+  email: emailSchema.optional(),
+  profilePictureID: z.string().regex(/^[a-f\d]{24}$/i, "Imagem de perfil inválida.").nullable().optional(),
+  removeProfilePicture: z.boolean().optional(),
+  showAdultContent: z.boolean().optional(),
+  socialMedias: profileSocialMediasSchema.optional(),
+  trackers: profileTrackersSchema.optional(),
+}).strict();
+
 function parseOrThrow<T>(schema: z.ZodType<T>, data: unknown): T {
   const result = schema.safeParse(data);
   if (!result.success) {
@@ -110,6 +121,7 @@ const normalizeSignUp = (data: unknown) => parseOrThrow(signUpSchema, data);
 const normalizeSignIn = (data: unknown) => parseOrThrow(signInSchema, data);
 const normalizeProfileSocialMedias = (data: unknown) => parseOrThrow(profileSocialMediasSchema, data);
 const normalizeProfileTrackers = (data: unknown) => parseOrThrow(profileTrackersSchema, data);
+const normalizeProfileUpdate = (data: unknown) => parseOrThrow(profileUpdateSchema, data);
 
 export {
   emailSchema,
@@ -117,6 +129,7 @@ export {
   normalizeSignUp,
   normalizeProfileSocialMedias,
   normalizeProfileTrackers,
+  normalizeProfileUpdate,
   passwordSchema,
   signInSchema,
   signUpSchema,

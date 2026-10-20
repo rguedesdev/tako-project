@@ -1,35 +1,33 @@
-import { isValidObjectId } from "mongoose";
+import { z } from "zod";
+
+import { graphQLError } from "../../errors";
 
 const MAX_COMMENT_LENGTH = 2000;
+const objectIDSchema = z.string().regex(/^[a-f\d]{24}$/i);
+const contentSchema = z.string().trim().min(1, "Escreva algo antes de publicar.").max(MAX_COMMENT_LENGTH, `O comentário pode ter no máximo ${MAX_COMMENT_LENGTH} caracteres.`);
+const paginationSchema = z.object({
+  offset: z.number().int().min(0, "Offset de paginação inválido."),
+  limit: z.number().int().min(1, "O limite deve estar entre 1 e 50.").max(50, "O limite deve estar entre 1 e 50."),
+}).strict();
+
+function invalid(message: string): never {
+  throw graphQLError(message, "BAD_USER_INPUT");
+}
 
 class CommentValidation {
   static id(value: unknown, fieldName = "ID") {
-    if (typeof value !== "string" || !isValidObjectId(value)) {
-      throw new Error(`${fieldName} inválido.`);
-    }
+    if (!objectIDSchema.safeParse(value).success) invalid(`${fieldName} inválido.`);
   }
 
   static content(value: unknown) {
-    if (typeof value !== "string") {
-      throw new Error("O comentário precisa ser um texto.");
-    }
-
-    const content = value.trim();
-    if (!content) throw new Error("Escreva algo antes de publicar.");
-    if (content.length > MAX_COMMENT_LENGTH) {
-      throw new Error(`O comentário pode ter no máximo ${MAX_COMMENT_LENGTH} caracteres.`);
-    }
-
-    return content;
+    const parsed = contentSchema.safeParse(value);
+    if (!parsed.success) invalid(parsed.error.issues[0]?.message ?? "Comentário inválido.");
+    return parsed.data;
   }
 
   static pagination(offset: unknown, limit: unknown) {
-    if (!Number.isInteger(offset) || Number(offset) < 0) {
-      throw new Error("Offset de paginação inválido.");
-    }
-    if (!Number.isInteger(limit) || Number(limit) < 1 || Number(limit) > 50) {
-      throw new Error("O limite deve estar entre 1 e 50.");
-    }
+    const parsed = paginationSchema.safeParse({ offset, limit });
+    if (!parsed.success) invalid(parsed.error.issues[0]?.message ?? "Paginação inválida.");
   }
 }
 

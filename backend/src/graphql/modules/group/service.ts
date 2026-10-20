@@ -11,6 +11,7 @@ import { graphQLError } from "../../errors";
 import { Types } from "mongoose";
 import { CommentLikeModel, CommentModel } from "../comment/model";
 import { GroupFollowModel } from "./group-follow-model";
+import { parseObjectID } from "../../validation";
 
 class GroupService {
   static serialize(group: any) {
@@ -28,6 +29,7 @@ class GroupService {
   }
 
   static async createGroup(data: any) {
+    const ownerID = data.ownerID;
     // 1. valida entrada
     data = GroupValidation.createGroup(data);
 
@@ -45,10 +47,10 @@ class GroupService {
     }
 
     // 3. Criar Grupo
-    if(data.groupImageID)await MediaService.requireAttachable(data.groupImageID,data.ownerID,"GROUP_IMAGE");
+    if(data.groupImageID)await MediaService.requireAttachable(data.groupImageID,ownerID,"GROUP_IMAGE");
     const { countryCode, ...groupData } = data;
-    const newGroup = await GroupModel.create({ ...groupData, country: countryCode, groupImage: "" });
-    if(data.groupImageID)await MediaService.attach(data.groupImageID,data.ownerID,"GROUP_IMAGE","GROUP",newGroup._id);
+    const newGroup = await GroupModel.create({ ...groupData, ownerID, country: countryCode, groupImage: "" });
+    if(data.groupImageID)await MediaService.attach(data.groupImageID,ownerID,"GROUP_IMAGE","GROUP",newGroup._id);
 
     return newGroup;
   }
@@ -106,7 +108,7 @@ class GroupService {
       };
     });
   }
-  static async updateGroup(id:string,data:any,userID:string){const current=await GroupModel.findOne({_id:id,ownerID:userID}).lean();if(!current)throw graphQLError("Grupo não encontrado ou sem permissão.","FORBIDDEN");data=GroupValidation.updateGroup(data);const updates:any={};for(const f of ["name","description"]){if(data[f]!==undefined)updates[f]=data[f];}if(data.socialMedias!==undefined)updates.socialMedias={...(current.socialMedias??{}),...data.socialMedias};if(data.countryCode!==undefined)updates.country=data.countryCode;const next=data.removeImage?null:data.groupImageID===undefined?current.groupImageID:data.groupImageID;const changed=String(next??"")!==String(current.groupImageID??"");if(changed&&next){await MediaService.requireAttachable(next,userID,"GROUP_IMAGE");await MediaService.attach(next,userID,"GROUP_IMAGE","GROUP",id);updates.groupImageID=next;}const result=await GroupModel.findByIdAndUpdate(id,{$set:updates},{returnDocument:"after",runValidators:true});if(changed&&current.groupImageID)await MediaService.orphan(current.groupImageID,"GROUP",id);return result;}
+  static async updateGroup(id:string,data:any,userID:string){id=parseObjectID(id,"Grupo");const current=await GroupModel.findOne({_id:id,ownerID:userID}).lean();if(!current)throw graphQLError("Grupo não encontrado ou sem permissão.","FORBIDDEN");data=GroupValidation.updateGroup(data);const updates:any={};for(const f of ["name","description"]){if(data[f]!==undefined)updates[f]=data[f];}if(data.socialMedias!==undefined)updates.socialMedias={...(current.socialMedias??{}),...data.socialMedias};if(data.countryCode!==undefined)updates.country=data.countryCode;const next=data.removeImage?null:data.groupImageID===undefined?current.groupImageID:data.groupImageID;const changed=String(next??"")!==String(current.groupImageID??"");if(changed&&next){await MediaService.requireAttachable(next,userID,"GROUP_IMAGE");await MediaService.attach(next,userID,"GROUP_IMAGE","GROUP",id);updates.groupImageID=next;}const result=await GroupModel.findByIdAndUpdate(id,{$set:updates},{returnDocument:"after",runValidators:true});if(changed&&current.groupImageID)await MediaService.orphan(current.groupImageID,"GROUP",id);return result;}
 
   static async getStats(
     groupId: string,
@@ -154,6 +156,7 @@ class GroupService {
   }
 
   static async toggleFollow(groupID: string, userID: string) {
+    groupID = parseObjectID(groupID, "Grupo");
     if (!(await GroupModel.exists({ _id: groupID }))) {
       throw graphQLError("Grupo não encontrado.", "NOT_FOUND");
     }

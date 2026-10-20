@@ -76,6 +76,8 @@
   flex: 1;
 }
 
+.textareaWrap { position: relative; }
+
 .composer textarea {
   display: block;
   width: 100%;
@@ -100,17 +102,43 @@
 
 .composerFooter {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-end;
   gap: 8px;
+  margin-top: 0;
+}
+
+.composerStatus {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: 0;
+  margin-right: auto;
   margin-top: 8px;
+}
+
+.composerActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  margin-top: 8px;
+}
+
+.inlineError {
+  margin: 0;
+  color: #ff9cae;
+  font-size: 0.8rem;
+  line-height: 1.3;
 }
 
 .characterCount,
 .characterWarning {
-  margin-right: auto;
+  flex: 0 0 auto;
+  margin-left: 2px;
   color: #7e8390;
   font-size: 0.74rem;
+  line-height: normal;
 }
 .characterWarning { color: #ff9cae; }
 
@@ -395,11 +423,25 @@
 .errorState button { margin-top: 15px; }
 
 .inlineError {
-  margin-top: 7px;
+  margin: 2px 0 0 2px;
   color: #bfdbfe;
   font-size: 0.8rem;
 }
 .inlineError button { border: 0; color: inherit; background: none; text-decoration: underline; cursor: pointer; }
+
+.deleteBackdrop { position: fixed; z-index: 3000; inset: 0; display: grid; place-items: center; padding: 20px; background: rgb(8 10 16 / 76%); backdrop-filter: blur(4px); }
+.deleteDialog { display: grid; justify-items: center; gap: 12px; width: min(100%, 560px); padding: 26px; border: 1px solid rgb(255 255 255 / 12%); border-radius: 16px; color: #f5f6fa; background: #252833; box-shadow: 0 24px 80px rgb(0 0 0 / 45%); text-align: center; }
+.deleteIcon { display: grid; width: 44px; height: 44px; place-items: center; border-radius: 50%; color: #ff9daf; background: rgb(255 113 136 / 14%); font-size: 1.2rem; }
+.deleteDialog h2 { margin: 0; font-size: 1.15rem; }
+.deleteDialog p { margin: 0; color: #b9bdc9; font-size: .9rem; line-height: 1.5; }
+.deleteActions { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; width: 100%; margin-top: 8px; }
+.deleteActions button { min-height: 40px; padding: 0 14px; border: 1px solid transparent; border-radius: 8px; color: #fff; font: inherit; font-size: .84rem; font-weight: 700; cursor: pointer; }
+.deleteActions button:focus-visible { outline: 2px solid #93c5fd; outline-offset: 3px; }
+.deleteActions button:disabled { opacity: .6; cursor: wait; }
+.deleteCancel { border-color: rgb(255 255 255 / 15%) !important; background: #303342; }
+.deleteCancel:hover:not(:disabled) { background: #3b3e4e; }
+.deleteConfirm { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #dc3545; }
+.deleteConfirm:hover:not(:disabled) { background: #bb2d3b; }
 
 .skeletonList {
   border-top: 1px solid transparent;

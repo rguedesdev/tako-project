@@ -54,13 +54,18 @@ const socialMediasSchema = z.object({
   ).optional().nullable(),
 }).strict();
 
-const groupSchema = z.object({
+const groupFields = {
   name: z.string().trim().min(2, "O nome da scan é obrigatório.").max(120),
   description: z.string().trim().min(10, "A descrição deve ter ao menos 10 caracteres.").max(1200),
   countryCode: countryCodeSchema,
-  groupImageID: z.string().optional(),
+  groupImageID: z.string().regex(/^[a-f\d]{24}$/i, "Imagem do grupo inválida.").optional(),
   socialMedias: socialMediasSchema.optional(),
-}).passthrough();
+};
+const createGroupSchema = z.object(groupFields).strict();
+const updateGroupSchema = z.object({
+  ...groupFields,
+  removeImage: z.boolean().optional(),
+}).partial().strict();
 
 function parse<T>(result: { success: true; data: T } | { success: false; error: z.ZodError }) {
   if (!result.success) throw graphQLError(result.error.issues[0]?.message ?? "Dados do grupo inválidos.", "BAD_USER_INPUT");
@@ -68,8 +73,8 @@ function parse<T>(result: { success: true; data: T } | { success: false; error: 
 }
 
 class GroupValidation {
-  static createGroup(data: unknown) { return parse(groupSchema.safeParse(data)); }
-  static updateGroup(data: unknown) { return parse(groupSchema.partial().safeParse(data)); }
+  static createGroup(data: unknown) { return parse(createGroupSchema.safeParse(data)); }
+  static updateGroup(data: unknown) { return parse(updateGroupSchema.safeParse(data)); }
 }
 
 export { GroupValidation };

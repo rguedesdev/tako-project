@@ -172,6 +172,12 @@
   line-height: 1.2;
 }
 
+.statusSwitch {
+  flex: 0 0 auto;
+  color: #aaa6b0;
+  font-size: .9rem;
+}
+
 .officialStatus strong[data-status="COMPLETED"] {
   border-color: rgb(112 186 143 / 18%);
   background: rgb(112 186 143 / 9%);
