@@ -26,8 +26,10 @@
 .filters span { padding: 7px 11px; border: 1px solid transparent; border-radius: 7px; color: #aeb0bb; font-size: .76rem; font-weight: 650; }
 .filters .filterActive { border-color: rgb(59 130 246 / 22%); background: rgb(59 130 246 / 10%); color: #bfdbfe; }
 .products { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
-.product { overflow: hidden; border: 1px solid rgb(255 255 255 / 7%); border-radius: 12px; background: #242630; transition: border-color 160ms ease, transform 160ms ease; }
-.product:hover { transform: translateY(-2px); border-color: rgb(59 130 246 / 30%); }
+.product { position: relative; z-index: 0; overflow: hidden; border: 1px solid rgb(255 255 255 / 7%); border-radius: 12px; background: #242630; transition: transform 0.2s ease-in-out, border-color 200ms ease-in-out; will-change: transform; backface-visibility: hidden; }
+.product:hover { transform: translateY(-5px); z-index: 1; border-color: rgb(59 130 246 / 30%); }
+.product:focus-visible { transform: translateY(-5px); }
+.product svg { display: block; flex: 0 0 auto; transform: none; transition: none; animation: none; }
 .productArt { position: relative; display: grid; min-height: 150px; place-items: center; overflow: hidden; background: radial-gradient(circle at 50% 44%, rgb(255 255 255 / 10%), transparent 41%), #2b2d39; }
 .productArt::before { position: absolute; width: 126px; height: 126px; border: 1px solid rgb(255 255 255 / 10%); border-radius: 50%; content: ""; }
 .namePreview { position: relative; color: #f8f6fb; font-family: Georgia, serif; font-size: 1.8rem; font-weight: 700; text-shadow: 0 2px 18px rgb(255 255 255 / 25%); }

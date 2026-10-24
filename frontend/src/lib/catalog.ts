@@ -32,9 +32,31 @@ export interface Group {
   countryFlag: string;
   stats: GroupStats;
   followedByMe?: boolean;
+  claimableByMe?: boolean;
+  claimPendingByMe?: boolean;
+  supportButtonVisible?: boolean;
+  owner?: GroupOwner | null;
+  teamMembers?: GroupTeamMember[];
   socialMedias?: SocialMedias | null;
   mangas?: MangaCardData[];
   translations?: MangaTranslation[];
+}
+
+export interface GroupOwner {
+  userID: string;
+  username: string;
+  name: string;
+  profilePicture?: string | null;
+}
+
+export interface GroupTeamMember {
+  id: string;
+  userID: string;
+  username: string;
+  name: string;
+  profilePicture?: string | null;
+  role: "TRANSLATOR" | "REVIEWER" | "EDITOR" | "UPLOADER" | "REDRAWER" | "CLEANER" | "RAW_PROVIDER";
+  addedAt: string;
 }
 
 export interface Trackers {
@@ -124,6 +146,9 @@ export interface ReaderRanking {
 
 const GROUP_FIELDS = `
   id groupImage name description country countryCode countryFlag
+  claimableByMe claimPendingByMe supportButtonVisible
+  owner { userID username name profilePicture }
+  teamMembers { id userID username name profilePicture role addedAt }
   stats { followers mangas chapters views likes }
   socialMedias { site discord telegram x instagram facebook youtube tiktok bluesky orkut email }
 `;

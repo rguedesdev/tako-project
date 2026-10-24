@@ -58,28 +58,30 @@ export default function ProfilePage() {
   }, [selectedImageUrl]);
 
   useEffect(() => {
-    let active = true;
-    const request = ownProfile && authToken
-      ? graphqlRequest<{ me: Profile }>(`query{me{${FIELDS}}}`, {}, authToken).then(({ me }) => me)
-      : graphqlRequest<{ user: Profile | null }>(
-          `query($username:String!){user(username:$username){${FIELDS}}}`,
-          { username },
-          authToken,
-        ).then(({ user }) => user);
+    if (authLoading) return;
+    if (!authenticatedUser || !authToken) {
+      router.replace("/signin");
+      return;
+    }
+    if (!ownProfile) {
+      router.replace(`/member/${encodeURIComponent(username)}`);
+      return;
+    }
 
-    request.then((user) => {
+    let active = true;
+    graphqlRequest<{ me: Profile }>(`query{me{${FIELDS}}}`, {}, authToken).then(({ me }) => {
       if (!active) return;
-      setProfile(user);
-      setName(user?.name ?? "");
-      setEmail(user?.email ?? "");
-      setShowAdultContent(user?.preferences.showAdultContent === true);
-      setSocialMedias(user?.socialMedias ?? {});
-      setTrackers(user?.trackers ?? {});
+      setProfile(me);
+      setName(me?.name ?? "");
+      setEmail(me?.email ?? "");
+      setShowAdultContent(me?.preferences.showAdultContent === true);
+      setSocialMedias(me?.socialMedias ?? {});
+      setTrackers(me?.trackers ?? {});
     }).catch((error: Error) => {
       if (active) setMessage(error.message);
     });
     return () => { active = false; };
-  }, [username, authToken, ownProfile]);
+  }, [username, authToken, authLoading, authenticatedUser, ownProfile, router]);
 
   if (authLoading || !profile) {
     return <main className={styles.page}><p>{message || "Carregando perfil…"}</p></main>;

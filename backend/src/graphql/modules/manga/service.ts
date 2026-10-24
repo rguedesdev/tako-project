@@ -182,8 +182,8 @@ class MangaService {
     ]);
     if (!current) throw graphQLError("Manga não encontrado.", "NOT_FOUND");
 
-    if (user?.accountType !== "AEGIS") {
-      throw graphQLError("Somente a autoridade AEGIS pode editar metadados globais.", "FORBIDDEN");
+    if (user?.accountType !== "HADES") {
+      throw graphQLError("Somente a autoridade HADES pode editar metadados globais.", "FORBIDDEN");
     }
 
     data = MangaValidation.updateManga(data);
@@ -348,14 +348,14 @@ class MangaService {
 
   static async syncExternalMetadataAsAdmin(mangaID: string, userID: string) {
     const user = await UserModel.findById(userID).select("accountType").lean();
-    if (user?.accountType !== "AEGIS") throw graphQLError("Somente administradores podem sincronizar metadados oficiais.", "FORBIDDEN");
+    if (user?.accountType !== "HADES") throw graphQLError("Somente administradores podem sincronizar metadados oficiais.", "FORBIDDEN");
     return this.syncExternalMetadata(mangaID, true);
   }
 
   static async linkExternalMetadata(mangaID: string, malId: number, userID: string) {
     mangaID = parseObjectID(mangaID, "Obra");
     const user = await UserModel.findById(userID).select("accountType").lean();
-    if (user?.accountType !== "AEGIS") throw graphQLError("Somente administradores podem vincular uma obra ao MyAnimeList.", "FORBIDDEN");
+    if (user?.accountType !== "HADES") throw graphQLError("Somente administradores podem vincular uma obra ao MyAnimeList.", "FORBIDDEN");
     if (!Number.isSafeInteger(malId) || malId <= 0) throw graphQLError("Identificador do MyAnimeList inválido.", "BAD_USER_INPUT");
     const current = await MangaModel.findById(mangaID).lean();
     if (!current) throw graphQLError("Manga não encontrado.", "NOT_FOUND");
@@ -534,7 +534,7 @@ class MangaService {
     mangaID = parseObjectID(mangaID, "Obra");
     groupID = parseObjectID(groupID, "Grupo");
     const user = await UserModel.findById(userID).select("accountType").lean();
-    if (user?.accountType !== "AEGIS") throw graphQLError("Somente administradores podem alterar o status da tradução.", "FORBIDDEN");
+    if (user?.accountType !== "HADES") throw graphQLError("Somente administradores podem alterar o status da tradução.", "FORBIDDEN");
     if (value != null && !TRANSLATION_STATUSES.includes(value)) throw graphQLError("Status de tradução inválido.", "BAD_USER_INPUT");
     const relation = await GroupMangaModel.findOneAndUpdate(
       { manga: mangaID, group: groupID },

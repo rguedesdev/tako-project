@@ -21,7 +21,7 @@ const userTypeDefs = /* GraphQL */ `
 
   enum AccountType {
     MEMBER
-    AEGIS
+    HADES
   }
 
   enum SubscriptionStatus {

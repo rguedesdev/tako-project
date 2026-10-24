@@ -16,14 +16,14 @@ import { useShopInventory } from "@/hooks/useShopInventory";
 import { graphqlRequest } from "@/lib/graphql";
 import { SHOP_ITEMS } from "@/lib/otamart";
 import { MediaImage } from "@/components/MediaImage/page";
-import styles from "./reader.module.css";
+import styles from "./member.module.css";
 
 type PublicProfile = {
   id: string;
   name: string;
   username: string;
   profilePicture?: string | null;
-  accountType: "MEMBER" | "AEGIS";
+  accountType: "MEMBER" | "HADES";
   subscription: { plan: "FREE" | "PREMIUM" | "VIP" };
   profileStats: { mangasRead: number; chaptersRead: number; comments: number; likes: number; followers: number };
   followedByMe: boolean;
@@ -135,7 +135,7 @@ function safeProfileUrl(value?: string | null) {
   }
 }
 
-export default function PublicReaderPage() {
+export default function MemberPage() {
   const { username } = useParams<{ username: string }>();
   const { authToken, authenticatedUser } = useUser();
   const [profile, setProfile] = useState<PublicProfile | null>(null);

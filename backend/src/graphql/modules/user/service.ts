@@ -37,7 +37,7 @@ const serializeUser = (user: any) => {
   // password hash selected during sign-in from leaking into another caller.
   return {
     id: user._id?.toString() ?? user.id?.toString(),
-    accountType: user.accountType === "AEGIS" ? "AEGIS" : "MEMBER",
+    accountType: user.accountType === "HADES" ? "HADES" : "MEMBER",
     profilePicture: user.profilePicture ?? null,
     profilePictureID: user.profilePictureID ?? null,
     name: user.name,
@@ -52,7 +52,9 @@ const serializeUser = (user: any) => {
       autoRenew: subscription.autoRenew,
       source: subscription.source ?? null,
     },
-    preferences: { showAdultContent: user.preferences?.showAdultContent === true },
+    preferences: {
+      showAdultContent: user.preferences?.showAdultContent === true,
+    },
     socialMedias: user.socialMedias ?? {},
     trackers: user.trackers ?? {},
   };

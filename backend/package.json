@@ -6,8 +6,10 @@
   "scripts": {
     "dev": "node --watch --env-file=.env --import tsx ./src/server.ts",
     "migrate:users": "node --env-file=.env --import tsx ./src/scripts/migrate-users.ts",
+    "migrate:account-role": "node --env-file=.env --import tsx ./src/scripts/migrate-account-role.ts",
     "verify:auth": "node --env-file=.env --import tsx ./src/scripts/verify-auth-integration.ts",
     "migrate:catalog": "node --env-file=.env --import tsx ./src/scripts/migrate-manga-catalog.ts",
+    "migrate:chapter-indexes": "node --env-file=.env --import tsx ./src/scripts/migrate-chapter-indexes.ts",
     "migrate:group-countries": "node --env-file=.env --import tsx ./src/scripts/migrate-group-countries.ts",
     "migrate:adult-content": "node --env-file=.env --import tsx ./src/scripts/migrate-adult-content.ts",
     "account:role": "node --env-file=.env --import tsx ./src/scripts/set-account-role.ts",

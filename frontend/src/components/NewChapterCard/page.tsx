@@ -17,7 +17,7 @@ function timeAgo(value: string) {
 
 function NewChapterCard({ chapters }: { chapters: LatestChapter[] }) {
   const releases = [...chapters.reduce<Map<string, LatestChapter[]>>((result, chapter) => {
-    const key = `${chapter.manga}:${chapter.group}`;
+    const key = chapter.manga;
     const current = result.get(key) ?? [];
     if (current.length < 4) current.push(chapter);
     result.set(key, current);
@@ -31,23 +31,33 @@ function NewChapterCard({ chapters }: { chapters: LatestChapter[] }) {
       {releases.map((release) => {
         const first = release[0];
         return (
-          <article key={`${first.manga}:${first.group}`} className={styles.newChapterCard}>
-            <figure className={styles.coverWrapper}>
-              <MediaImage className={styles.mangaCover} source={first.mangaInfo.mangaCover} alt={`Capa de ${first.mangaInfo.title}`} />
-            </figure>
-            <div className={styles.capList}>
-              <div className={styles.chaptersWrapper}>
-                <h2 className={styles.mangaTitle}><Link href={`/title/${first.manga}`}>{first.mangaInfo.title}</Link></h2>
-                {release.map((chapter) => (
-                  <div key={chapter.id} className={styles.capLi}>
-                    <div className={styles.capInfo}><BiHash size={18} /><Link className={styles.capLink} href={`/title/${chapter.manga}/${chapter.id}`}>Capítulo {chapter.chapterNumber}</Link></div>
-                    <div className={styles.capTime}><MdAccessTime size={16} /><span>{timeAgo(chapter.createdAt)}</span></div>
-                  </div>
-                ))}
+          <article key={first.manga} className={styles.newChapterCard}>
+            <figure className={styles.releaseContent}>
+              <div className={styles.coverWrapper}>
+                <MediaImage className={styles.mangaCover} source={first.mangaInfo.mangaCover} alt={`Capa de ${first.mangaInfo.title}`} />
               </div>
-              <hr className={styles.hrFaded} />
-              <h3 className={styles.scanWrapper}><ImMakeGroup size={13} /><Link className={styles.scanName} href={`/scan/${first.group}`}>{first.groupInfo.name}</Link></h3>
-            </div>
+              <figcaption className={styles.capList}>
+                <div className={styles.chaptersWrapper}>
+                  <h2 className={styles.mangaTitle}><Link href={`/title/${first.manga}`}>{first.mangaInfo.title}</Link></h2>
+                  {release.map((chapter) => (
+                    <div key={chapter.id} className={styles.capLi}>
+                      <div className={styles.capInfo}><BiHash size={18} /><Link className={styles.capLink} href={`/title/${chapter.manga}/${chapter.id}`}>Capítulo {chapter.chapterNumber}</Link></div>
+                      <div className={styles.capTime}><MdAccessTime size={16} /><span>{timeAgo(chapter.createdAt)}</span></div>
+                    </div>
+                  ))}
+                </div>
+                <hr className={styles.hrFaded} />
+                <h3 className={styles.scanWrapper}>
+                  <ImMakeGroup size={13} />
+                  {[...new Map(release.map((chapter) => [chapter.group, chapter.groupInfo])).values()].map((group, index) => (
+                    <span key={group.id}>
+                      {index > 0 ? " | " : ""}
+                      <Link className={styles.scanName} href={`/scan/${group.id}`}>{group.name}</Link>
+                    </span>
+                  ))}
+                </h3>
+              </figcaption>
+            </figure>
           </article>
         );
       })}

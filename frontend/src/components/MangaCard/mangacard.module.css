@@ -252,11 +252,16 @@
   background: #343746;
   color: inherit;
   text-decoration: none;
-  transition: border-color 150ms ease, background 150ms ease, transform 150ms ease;
+  transition: transform 200ms ease-in-out, border-color 200ms ease-in-out, background 200ms ease-in-out;
+  position: relative;
+  z-index: 0;
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 .groupResultCard:hover {
-  transform: translateY(-2px);
+  transform: translateY(-5px);
+  z-index: 1;
   border-color: #3b82f6a8;
   background: #3b3e4e;
 }
@@ -294,30 +299,61 @@
 }
 
 .emptyState {
-  display: grid;
-  min-height: 150px;
-  justify-items: center;
-  align-content: center;
-  gap: 12px;
-  margin: 8px 0 24px;
-  padding: 28px 20px;
-  border: 1px solid #ffffff16;
+  display: flex;
+  min-height: 100px;
+  align-items: center;
+  gap: 15px;
+  margin: 0 0 24px;
+  padding: 20px 22px;
+  border: 1px solid rgb(147 197 253 / 18%);
   border-radius: 12px;
-  background: linear-gradient(135deg, #343746, #2d303d);
-  color: #c3c6d0;
-  text-align: center;
+  background: linear-gradient(120deg, rgb(147 197 253 / 10%), rgb(255 255 255 / 3%));
+  box-shadow: 0 8px 22px rgb(0 0 0 / 10%);
 }
 
-.emptyState svg {
-  width: 28px;
-  height: 28px;
+.emptyIcon {
+  width: 46px;
+  height: 46px;
+  flex: 0 0 46px;
+  display: grid;
+  place-items: center;
   color: #60a5fa;
+  background: rgb(147 197 253 / 12%);
+  border: 1px solid rgb(147 197 253 / 20%);
+  border-radius: 12px;
 }
 
-.emptyState p {
-  max-width: 520px;
+.emptyIcon svg {
+  width: 25px;
+  height: 25px;
+}
+
+.emptyCopy h3 {
+  margin: 0 0 5px;
+  color: #f4f1f4;
+  font-size: .98rem;
+  font-weight: 650;
+}
+
+.emptyCopy p {
+  margin: 0;
+  color: #b7b3bd;
   font-size: .92rem;
   line-height: 1.55;
+}
+
+@media (max-width: 480px) {
+  .emptyState {
+    align-items: flex-start;
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .emptyIcon {
+    width: 40px;
+    height: 40px;
+    flex-basis: 40px;
+  }
 }
 
 .mangaCard {
@@ -327,26 +363,40 @@
   outline: 1px solid rgb(255 255 255 / 8%);
   outline-offset: -1px;
 
-  transition:
-    transform 0.2s ease-in-out,
-    box-shadow 0.2s ease-in-out;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 
   position: relative;
+  z-index: 0;
   will-change: transform;
   backface-visibility: hidden;
   cursor: pointer;
+}
+
+.groupResultCard svg,
+.mangaCard svg {
+  display: block;
+  flex: 0 0 auto;
+  transform: none;
+  transition: none;
+  animation: none;
 }
 
 .cardLink { display: block; color: inherit; text-decoration: none; }
 .removeFromLibrary { position: absolute; z-index: 1; top: 8px; right: 8px; display: block; width: 30px; height: 30px; padding: 0; border: 1px solid #ff7185; border-radius: 8px; background: #8f263b; color: #fff; cursor: pointer; transition: background-color 150ms ease, border-color 150ms ease; }
 .removeFromLibrary::before,.removeFromLibrary::after { position: absolute; top: 50%; left: 50%; width: 13px; height: 2px; border-radius: 1px; background: currentColor; content: ""; transform: translate(-50%, -50%) rotate(45deg); }
 .removeFromLibrary::after { transform: translate(-50%, -50%) rotate(-45deg); }
-.removeFromLibrary:hover { border-color: #ff9aaa; background: #a83249; }
+.removeFromLibrary:hover { border-color: rgb(255 154 170 / 85%); background: rgb(168 50 73 / 68%); }
 .removeFromLibrary:focus-visible { outline: 2px solid #93c5fd; outline-offset: 2px; }
 
 .mangaCard:hover {
   transform: translateY(-5px);
+  z-index: 1;
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25);
+}
+
+.groupResultCard:focus-visible,
+.mangaCard:focus-visible {
+  transform: translateY(-5px);
 }
 
 .mangaWraper {
@@ -375,12 +425,25 @@
 
   display: flex;
   align-items: center;
+  line-height: 1.2;
   gap: 10px;
   margin-bottom: 5px;
 }
 
-.mangaInfoLine > *:first-child {
-  flex-shrink: 0;
+.mangaInfoLine > svg {
+  display: block;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  transform: none;
+  transition: none;
+  animation: none;
+}
+
+.mangaInfoLine > span {
+  display: block;
+  min-width: 0;
+  line-height: inherit;
 }
 
 .mangaInfoLine > *:nth-child(2) {

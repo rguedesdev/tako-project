@@ -144,7 +144,7 @@
 .profileLinkTitle { margin: 0 !important; color: #a6a2ad; font-size: 0.72rem !important; font-weight: 700; letter-spacing: 0.12em; line-height: 1.2; text-transform: uppercase; }
 .mediasContainer, .trackersContainer { display: grid; justify-items: start; gap: 8px; margin-bottom: 17px; }
 .medias, .trackers { display: flex; flex-wrap: wrap; gap: 7px; }
-.media, .tracker { display: inline-flex; min-height: 30px; align-items: center; gap: 7px; padding: 5px 10px; border: 1px solid rgb(255 255 255 / 8%); border-radius: 7px; background: #292830; color: #dedbe2; font-size: 0.76rem; font-weight: 600; line-height: 1.2; text-decoration: none; transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease; }
+.media, .tracker { display: inline-flex; min-height: 30px; align-items: center; gap: 7px; padding: 5px 10px; border: 1px solid rgb(255 255 255 / 6%); border-radius: 7px; background: rgb(255 255 255 / 3%); color: #dedbe2; font-size: 0.76rem; font-weight: 600; line-height: 1.2; text-decoration: none; transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease; }
 .media svg { flex: 0 0 auto; font-size: 15px; }
 .tracker svg { flex: 0 0 auto; font-size: 30px; }
 .trackerIconOnly { min-width: 70px; justify-content: center; padding-block: 0; }
@@ -153,7 +153,7 @@
 .myAnimeListLogo { display: block; width: 72px; height: auto; flex: 0 0 auto; }
 .aniDbLogo { display: block; width: 48px; height: auto; flex: 0 0 auto; }
 .animePlanetLogo { display: block; width: 96px; height: auto; flex: 0 0 auto; }
-.media:hover, .tracker:hover { border-color: rgb(59 130 246 / 38%); background: #302a31; color: #fff; }
+.media:hover, .tracker:hover { border-color: rgb(59 130 246 / 25%); background: rgb(59 130 246 / 6%); color: #fff; }
 .media:focus-visible, .tracker:focus-visible { outline: 2px solid #93c5fd; outline-offset: 2px; }
 .recentCard { margin-top: 16px; }
 .recentSection { display: grid; gap: 10px; padding: 25px 34px; }

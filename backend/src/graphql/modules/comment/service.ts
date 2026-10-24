@@ -254,7 +254,7 @@ class CommentService {
     if (!comment) throw new Error("Comentário não encontrado.");
 
     const isAuthor = comment.author.toString() === userId;
-    const isModerator = user?.accountType === "AEGIS";
+    const isModerator = user?.accountType === "HADES";
     if (!isAuthor && !isModerator) {
       throw new Error("Você não pode excluir este comentário.");
     }

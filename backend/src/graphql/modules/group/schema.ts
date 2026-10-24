@@ -3,6 +3,8 @@ const groupTypeDefs = /* GraphQL */ `
   extend type Query {
     groups: [Group!]!
     group(id: ID!): Group
+    groupTeamCandidates(groupID: ID!, search: String!): [GroupTeamCandidate!]!
+    groupClaims: [GroupClaim!]!
     countries: [Country!]!
   }
 
@@ -10,6 +12,10 @@ const groupTypeDefs = /* GraphQL */ `
     createGroup(data: CreateGroupInput!): Group!
     updateGroup(id: ID!, data: UpdateGroupInput!): Group!
     toggleGroupFollow(groupID: ID!): GroupFollowResult!
+    setGroupTeamMember(groupID: ID!, memberID: ID!, role: GroupTeamRole!): GroupTeamMember!
+    removeGroupTeamMember(groupID: ID!, memberID: ID!): Boolean!
+    createGroupClaim(data: CreateGroupClaimInput!): GroupClaim!
+    reviewGroupClaim(id: ID!, approve: Boolean!, note: String): GroupClaim!
   }
 
   ### MAIN TYPES ###
@@ -25,6 +31,11 @@ const groupTypeDefs = /* GraphQL */ `
     countryFlag: String!
     stats: GroupStats!
     followedByMe: Boolean!
+    claimableByMe: Boolean!
+    claimPendingByMe: Boolean!
+    supportButtonVisible: Boolean!
+    owner: GroupOwner
+    teamMembers: [GroupTeamMember!]!
     socialMedias: GroupLinks
     mangas: [Manga!]!
     translations: [MangaTranslation!]!
@@ -60,6 +71,44 @@ const groupTypeDefs = /* GraphQL */ `
     followers: Int!
   }
 
+  enum GroupClaimStatus { PENDING APPROVED REJECTED }
+  enum GroupTeamRole { TRANSLATOR REVIEWER EDITOR UPLOADER REDRAWER CLEANER RAW_PROVIDER }
+  type GroupOwner {
+    userID: ID!
+    username: String!
+    name: String!
+    profilePicture: String
+  }
+  type GroupTeamMember {
+    id: ID!
+    userID: ID!
+    username: String!
+    name: String!
+    profilePicture: String
+    role: GroupTeamRole!
+    addedAt: String!
+  }
+  type GroupTeamCandidate {
+    id: ID!
+    username: String!
+    name: String!
+    profilePicture: String
+  }
+  type GroupClaim {
+    id: ID!
+    groupID: ID!
+    groupName: String!
+    groupImage: String
+    claimantName: String!
+    claimantUsername: String!
+    contactEmail: String!
+    socialMedias: GroupLinks
+    proof: String!
+    status: GroupClaimStatus!
+    createdAt: String!
+    reviewNote: String
+  }
+
   ### INPUTS ###
   input CreateGroupInput {
     groupImageID: ID
@@ -69,6 +118,12 @@ const groupTypeDefs = /* GraphQL */ `
     socialMedias: SocialMediasInput
   }
   input UpdateGroupInput { name: String description: String countryCode: String groupImageID: ID removeImage: Boolean socialMedias: SocialMediasInput }
+  input CreateGroupClaimInput {
+    groupID: ID!
+    contactEmail: String!
+    socialMedias: SocialMediasInput
+    proof: String!
+  }
 
   ### AUX INPUTS ###
   input SocialMediasInput {

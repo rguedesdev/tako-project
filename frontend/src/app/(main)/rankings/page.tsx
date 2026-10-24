@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import Link from "next/link";
 import { MdOutlinePeopleAlt } from "react-icons/md";
-import { RiVipCrownLine } from "react-icons/ri";
+import { PiRanking } from "react-icons/pi";
 import { HiOutlineBookOpen } from "react-icons/hi2";
 
 import { MediaImage } from "@/components/MediaImage/page";
@@ -17,7 +17,7 @@ async function RankingsPage() {
   return (
     <main className={styles.page}>
       <header className={styles.hero}>
-        <span className={styles.heroIcon}><RiVipCrownLine aria-hidden="true" /></span>
+        <span className={styles.heroIcon}><PiRanking aria-hidden="true" /></span>
         <div><span className={styles.eyebrow}>DESTAQUES DA COMUNIDADE</span><h1>Ranking</h1><p>Descubra as obras mais lidas e os leitores mais ativos do Tako.</p></div>
       </header>
 
@@ -45,7 +45,7 @@ async function RankingsPage() {
             {rankings.topReaders.map(({ user, chaptersRead }, index) => <Fragment key={user.id}>
               <li className={styles.entry}>
                 <span className={`${styles.position} ${index < 3 ? styles.topPosition : ""}`}>{index + 1}</span>
-                <Link className={styles.readerLink} href={`/reader/${user.username}`}>
+                <Link className={styles.readerLink} href={`/member/${user.username}`}>
                   {user.profilePicture ? <MediaImage className={styles.avatar} source={user.profilePicture} alt="" fallback="/image-placeholder.svg" /> : <span className={styles.avatarFallback}>{user.name.slice(0, 1).toUpperCase()}</span>}
                   <span className={styles.readerName}><strong>{user.name}</strong><small>@{user.username}</small></span>
                 </Link>

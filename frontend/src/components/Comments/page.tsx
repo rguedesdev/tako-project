@@ -352,7 +352,7 @@ function CommentItem({
       <div className={styles.commentBody}>
         <header className={styles.commentHeader}>
           <div className={styles.identity}>
-            <strong><Link className={styles.identityName} data-font={authorFont} href={`/reader/${encodeURIComponent(comment.author.username)}`} aria-label={`Ver perfil de ${comment.author.name}`}>
+            <strong><Link className={styles.identityName} data-font={authorFont} href={`/member/${encodeURIComponent(comment.author.username)}`} aria-label={`Ver perfil de ${comment.author.name}`}>
               {comment.author.name}
             </Link></strong>
             <div className={styles.identityMeta}>

@@ -48,7 +48,7 @@ async function migrateUsers() {
           update: {
             $set: {
               passwordHash,
-              accountType: String(user.accountType) === "admin" || user.accountType === "AEGIS" ? "AEGIS" : "MEMBER",
+              accountType: String(user.accountType) === "admin" || user.accountType === "HADES" || String(user.accountType) === "AEGIS" ? "HADES" : "MEMBER",
               subscription: {
                 ...defaultSubscription,
                 ...(user.subscription ?? {}),

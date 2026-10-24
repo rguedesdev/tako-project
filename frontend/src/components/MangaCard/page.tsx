@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { GiEvilBook } from "react-icons/gi";
+import { GiEvilBook, GiOpenBook } from "react-icons/gi";
 import { HiOutlineBookOpen } from "react-icons/hi2";
 import { RiQuillPenLine } from "react-icons/ri";
 import { TbProgressCheck } from "react-icons/tb";
@@ -22,7 +22,7 @@ function normalizeSearchText(value: string) {
     .trim();
 }
 
-function MangaCard({ pageTitle, mangas, groups = [], translations = [], filterable = false, initialTitleQuery = "", initialGenres = [], initialDemographics = [], showSectionHeader = true, onRemove }: { pageTitle: string; mangas: MangaCardData[]; groups?: GroupCard[]; translations?: MangaTranslation[]; filterable?: boolean; initialTitleQuery?: string; initialGenres?: string[]; initialDemographics?: string[]; showSectionHeader?: boolean; onRemove?: (mangaID: string) => void }) {
+function MangaCard({ pageTitle, mangas, groups = [], translations = [], filterable = false, initialTitleQuery = "", initialGenres = [], initialDemographics = [], showSectionHeader = true, showAdultMarker = true, onRemove }: { pageTitle: string; mangas: MangaCardData[]; groups?: GroupCard[]; translations?: MangaTranslation[]; filterable?: boolean; initialTitleQuery?: string; initialGenres?: string[]; initialDemographics?: string[]; showSectionHeader?: boolean; showAdultMarker?: boolean; onRemove?: (mangaID: string) => void }) {
   const [titleQuery, setTitleQuery] = useState(initialTitleQuery);
   const [selectedGenres, setSelectedGenres] = useState<string[]>(initialGenres);
   const [selectedDemographics, setSelectedDemographics] = useState<string[]>(initialDemographics);
@@ -180,7 +180,7 @@ function MangaCard({ pageTitle, mangas, groups = [], translations = [], filterab
                       <MediaImage className={styles.mangaCover} source={manga.mangaCover} alt={`Capa de ${manga.title}`} />
                     </div>
                     <figcaption className={styles.mangaInfo}>
-                      <div className={styles.mangaInfoLine}><GiEvilBook size={16} /><span>{manga.title}{manga.isAdult ? " · +18" : ""}</span></div>
+                      <div className={styles.mangaInfoLine}><GiEvilBook size={16} /><span>{manga.title}{showAdultMarker && manga.isAdult ? " · +18" : ""}</span></div>
                       <hr className={styles.hrFaded} />
                       <div className={styles.mangaInfoLine}><RiQuillPenLine size={16} /><span>{manga.mangaka}</span></div>
                       {translation && (
@@ -202,12 +202,23 @@ function MangaCard({ pageTitle, mangas, groups = [], translations = [], filterab
         </div>
       ) : filteredGroups.length === 0 && (
         <div className={styles.emptyState} role="status">
-          <MdOutlineSearchOff aria-hidden="true" />
-          <p>{!filterable
-            ? "Nenhuma obra com capítulos publicados até o momento."
-            : mangas.length === 0 && !titleQuery
-              ? "Nenhuma obra cadastrada."
-              : "Nenhuma obra ou grupo encontrado com esses filtros."}</p>
+          <span className={styles.emptyIcon} aria-hidden="true">
+            {filterable ? <MdOutlineSearchOff /> : <GiOpenBook />}
+          </span>
+          <div className={styles.emptyCopy}>
+            <h3>{!filterable
+              ? pageTitle === "Mangas traduzidos" ? "Esta scan ainda não tem mangás cadastrados" : "Nenhuma obra disponível ainda"
+              : mangas.length === 0 && !titleQuery
+                ? "Nenhuma obra cadastrada"
+                : "Nenhum resultado encontrado"}</h3>
+            <p>{!filterable
+              ? pageTitle === "Mangas traduzidos"
+                ? "Quando uma obra for vinculada a esta scan, ela aparecerá aqui."
+                : "As obras com capítulos publicados aparecerão aqui."
+              : mangas.length === 0 && !titleQuery
+                ? "As obras cadastradas aparecerão aqui."
+                : "Tente ajustar os filtros ou a busca para encontrar uma obra ou grupo."}</p>
+          </div>
         </div>
       )}
     </section>

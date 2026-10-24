@@ -6,7 +6,7 @@ async function setAccountRole() {
   const accountType = process.argv[3]?.trim().toUpperCase();
 
   if (!username || !ACCOUNT_TYPES.includes(accountType as (typeof ACCOUNT_TYPES)[number])) {
-    throw new Error("Uso: npm run account:role -- <username> <MEMBER|AEGIS>");
+    throw new Error("Uso: npm run account:role -- <username> <MEMBER|HADES>");
   }
 
   const user = await UserModel.findOneAndUpdate(

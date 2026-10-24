@@ -48,7 +48,7 @@ async function upload(token: string, filename: string, mimeType: string, content
   });
 }
 
-async function makeUser(label: string, accountType: "MEMBER" | "AEGIS" = "MEMBER") {
+async function makeUser(label: string, accountType: "MEMBER" | "HADES" = "MEMBER") {
   const user = await UserModel.create({
     name: `Teste ${label}`,
     username: `catalog_${label}_${suffix}`,
@@ -64,7 +64,7 @@ const description = "Descrição de integração suficientemente longa para sati
 
 try {
   await app.ready();
-  const [ownerA, ownerB, aegis] = await Promise.all([makeUser("a"), makeUser("b"), makeUser("aegis", "AEGIS")]);
+  const [ownerA, ownerB, hades] = await Promise.all([makeUser("a"), makeUser("b"), makeUser("hades", "HADES")]);
   const image = await sharp({ create: { width: 80, height: 100, channels: 3, background: "#e63357" } }).png().toBuffer();
 
   const invalid = await upload(ownerA.token, "fake.png", "image/png", Buffer.from("não é uma imagem"), "USER_AVATAR");
@@ -201,7 +201,7 @@ try {
   const linkedLegacyManga = await graphQL(
     "mutation($mangaID:ID!,$malId:Int!){linkMangaExternalMetadata(mangaID:$mangaID,malId:$malId){id officialPublicationStatus officialTotalChapters externalMetadata{malId lastSyncedAt lastSyncError}}}",
     { mangaID: manga.id, malId: 1_500_002 },
-    aegis.token,
+    hades.token,
   );
   assert.equal(linkedLegacyManga.data.linkMangaExternalMetadata.externalMetadata.malId, 1_500_002);
   assert.equal(linkedLegacyManga.data.linkMangaExternalMetadata.officialPublicationStatus, "COMPLETED");
@@ -454,28 +454,28 @@ try {
     const overridden = await graphQL(
       "mutation($mangaID:ID!,$groupID:ID!,$status:TranslationStatus){setTranslationStatusOverride(mangaID:$mangaID,groupID:$groupID,status:$status){translationStatus calculatedTranslationStatus translationStatusOverride overridden statusOverrideByUserID statusOverrideAt}}",
       { mangaID: manga.id, groupID: groupB.id, status },
-      aegis.token,
+      hades.token,
     );
     assert.equal(overridden.data.setTranslationStatusOverride.translationStatus, status);
     assert.equal(overridden.data.setTranslationStatusOverride.calculatedTranslationStatus, "PAUSED");
-    assert.equal(overridden.data.setTranslationStatusOverride.statusOverrideByUserID, aegis.id);
+    assert.equal(overridden.data.setTranslationStatusOverride.statusOverrideByUserID, hades.id);
     assert.ok(overridden.data.setTranslationStatusOverride.statusOverrideAt);
   }
   const automaticAgain = await graphQL(
     "mutation($mangaID:ID!,$groupID:ID!){setTranslationStatusOverride(mangaID:$mangaID,groupID:$groupID,status:null){translationStatus calculatedTranslationStatus translationStatusOverride overridden}}",
     { mangaID: manga.id, groupID: groupB.id },
-    aegis.token,
+    hades.token,
   );
   assert.deepEqual(automaticAgain.data.setTranslationStatusOverride, { translationStatus: "PAUSED", calculatedTranslationStatus: "PAUSED", translationStatusOverride: null, overridden: false });
   assert.equal(await MangaModel.countDocuments({ normalizedTitle: mangaResult.data.createManga.title.toLowerCase() }), 1);
 
   const forbiddenEdit = await graphQL("mutation($id:ID!,$data:UpdateMangaInput!){updateManga(id:$id,data:$data){id}}", { id: manga.id, data: { mangaka: "Sem permissão" } }, ownerA.token);
   assert.equal(forbiddenEdit.errors[0].extensions.code, "FORBIDDEN");
-  const allowedEdit = await graphQL("mutation($id:ID!,$data:UpdateMangaInput!){updateManga(id:$id,data:$data){id mangaka}}", { id: manga.id, data: { mangaka: "Autoria Atualizada" } }, aegis.token);
+  const allowedEdit = await graphQL("mutation($id:ID!,$data:UpdateMangaInput!){updateManga(id:$id,data:$data){id mangaka}}", { id: manga.id, data: { mangaka: "Autoria Atualizada" } }, hades.token);
   assert.equal(allowedEdit.data.updateManga.mangaka, "Autoria Atualizada");
-  const classificationEdit = await graphQL("mutation($id:ID!,$data:UpdateMangaInput!){updateManga(id:$id,data:$data){id isAdult}}", { id: adultMangaID, data: { isAdult: false } }, aegis.token);
+  const classificationEdit = await graphQL("mutation($id:ID!,$data:UpdateMangaInput!){updateManga(id:$id,data:$data){id isAdult}}", { id: adultMangaID, data: { isAdult: false } }, hades.token);
   assert.equal(classificationEdit.data.updateManga.isAdult, false);
-  await graphQL("mutation($id:ID!,$data:UpdateMangaInput!){updateManga(id:$id,data:$data){id}}", { id: adultMangaID, data: { isAdult: true } }, aegis.token);
+  await graphQL("mutation($id:ID!,$data:UpdateMangaInput!){updateManga(id:$id,data:$data){id}}", { id: adultMangaID, data: { isAdult: true } }, hades.token);
 
   await MediaModel.updateOne({ _id: avatarOne.id }, { $set: { orphanedAt: new Date(0) } });
   const cleanup = await MediaService.cleanup();

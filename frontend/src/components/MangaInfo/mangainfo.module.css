@@ -65,6 +65,11 @@
   background: rgb(59 130 246 / 9%);
 }
 
+.btnAdd[aria-pressed="true"]:hover:not(:disabled) {
+  border-color: rgb(255 113 133 / 48%);
+  background: rgb(255 75 103 / 10%);
+}
+
 .btnAdd:focus-visible {
   outline: 2px solid #93c5fd;
   outline-offset: 3px;
@@ -510,9 +515,9 @@
   align-items: center;
   gap: 7px;
   padding: 5px 10px;
-  border: 1px solid rgb(255 255 255 / 8%);
+  border: 1px solid rgb(255 255 255 / 6%);
   border-radius: 7px;
-  background: #292830;
+  background: rgb(255 255 255 / 3%);
   color: #dedbe2;
   font-size: .76rem;
   font-weight: 600;
@@ -522,8 +527,8 @@
 }
 
 .trackers a:hover {
-  border-color: rgb(59 130 246 / 38%);
-  background: #302a31;
+  border-color: rgb(59 130 246 / 25%);
+  background: rgb(59 130 246 / 6%);
   color: #fff;
 }
 

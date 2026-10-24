@@ -51,6 +51,18 @@ const resolvers = {
   Group: {
     ...groupResolvers.Group,
   },
+  GroupOwner: {
+    ...groupResolvers.GroupOwner,
+  },
+  GroupClaim: {
+    ...groupResolvers.GroupClaim,
+  },
+  GroupTeamMember: {
+    ...groupResolvers.GroupTeamMember,
+  },
+  GroupTeamCandidate: {
+    ...groupResolvers.GroupTeamCandidate,
+  },
   Manga: {
     ...mangaResolvers.Manga,
   },

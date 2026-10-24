@@ -15,6 +15,59 @@
   letter-spacing: 0;
 }
 
+.emptyState {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin: 0 0 18px;
+  padding: 20px 22px;
+  color: var(--text-primary, #f4f1f4);
+  background: linear-gradient(120deg, rgb(147 197 253 / 10%), rgb(255 255 255 / 3%));
+  border: 1px solid rgb(147 197 253 / 18%);
+  border-radius: 12px;
+  box-shadow: 0 8px 22px rgb(0 0 0 / 10%);
+}
+
+.emptyIcon {
+  width: 46px;
+  height: 46px;
+  flex: 0 0 46px;
+  display: grid;
+  place-items: center;
+  color: #93c5fd;
+  background: rgb(147 197 253 / 12%);
+  border: 1px solid rgb(147 197 253 / 20%);
+  border-radius: 12px;
+}
+
+.emptyCopy h3 {
+  margin: 0 0 5px;
+  color: #f4f1f4;
+  font-size: .98rem;
+  font-weight: 650;
+}
+
+.emptyCopy p {
+  margin: 0;
+  color: #b7b3bd;
+  font-size: .88rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 480px) {
+  .emptyState {
+    align-items: flex-start;
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .emptyIcon {
+    width: 40px;
+    height: 40px;
+    flex-basis: 40px;
+  }
+}
+
 .capContent {
   color: var(--text-primary);
   background-color: var(--card-bg-color);

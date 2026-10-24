@@ -7,6 +7,7 @@
   box-shadow: 0 8px 24px #001a3d55;
 }
 
+
 .navbar {
   display: flex;
   align-items: center;
@@ -122,21 +123,22 @@
   background: #ffffff0d;
 }
 
-.userTrigger img,
-.avatarFallback {
+.userTrigger img {
   display: grid;
   place-items: center;
   width: 36px;
   height: 36px;
+  flex: 0 0 36px;
   border: 2px solid #ffffff20;
   border-radius: 50%;
   object-fit: cover;
 }
 
 .avatarFallback {
-  color: white;
-  background: linear-gradient(145deg, #60a5fa, #1d4ed8);
-  font-weight: 700;
+  display: block;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
 }
 
 .userTrigger [data-frame="aurora"] { border-color: #78e6cf; box-shadow: 0 0 0 3px #78e6cf2b, 0 0 14px #78e6cf66; }

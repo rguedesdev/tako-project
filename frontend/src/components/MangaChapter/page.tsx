@@ -4,7 +4,6 @@ import Link from "next/link";
 import { MdArrowBackIosNew, MdArrowForwardIos, MdList } from "react-icons/md";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  FiArrowLeft,
   FiBookOpen,
   FiMaximize2,
   FiMinimize2,
@@ -42,16 +41,31 @@ function MangaChapter({
   const readerRetryTimers = useRef(new Set<ReturnType<typeof setTimeout>>());
   const preloadImages = useRef<HTMLImageElement[]>([]);
   const readerRef = useRef<HTMLElement>(null);
+  const canvasRef = useRef<HTMLDivElement>(null);
+  const toolbarRef = useRef<HTMLDivElement>(null);
   const { authToken, authenticatedUser } = useUser();
   const readerUserID = authenticatedUser?.id;
   const [isWide, setIsWide] = useState(false);
   const [pageAspectRatio, setPageAspectRatio] = useState(0.72);
   const [currentPage, setCurrentPage] = useState(0);
+  const [pageFrame, setPageFrame] = useState({ width: 648, height: 900 });
   const [mode, setMode] = useState<ReaderMode>("swap");
   const [direction, setDirection] = useState<ReadingDirection>("rtl");
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [controlsVisible, setControlsVisible] = useState(true);
+  const controlsTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [progressVisible, setProgressVisible] = useState(false);
+  const progressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastProgressPage = useRef({ chapterID: chapter.id, page: currentPage });
   const titleHref = `/title/${chapter.manga}`;
   const progress = ((currentPage + 1) / pages.length) * 100;
+
+  const revealReaderControls = useCallback(() => {
+    if (!isFullscreen) return;
+    setControlsVisible(true);
+    if (controlsTimer.current) clearTimeout(controlsTimer.current);
+    controlsTimer.current = setTimeout(() => setControlsVisible(false), 2200);
+  }, [isFullscreen]);
 
   const reportPagesToReaderNode = useCallback((pageIndexes: number[]) => {
     if (!authToken || !readerUserID || pageIndexes.length === 0) return;
@@ -185,6 +199,83 @@ function MangaChapter({
   }, []);
 
   useEffect(() => {
+    if (isFullscreen) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const updatePageFrame = () => {
+      const canvasStyle = window.getComputedStyle(canvas);
+      const horizontalPadding = parseFloat(canvasStyle.paddingLeft) + parseFloat(canvasStyle.paddingRight);
+      const verticalPadding = parseFloat(canvasStyle.paddingTop) + parseFloat(canvasStyle.paddingBottom);
+      const availableWidth = Math.max(240, canvas.clientWidth - horizontalPadding);
+      const availableHeight = Math.max(260, canvas.clientHeight - verticalPadding);
+      const maxWidth = isWide ? 1300 : 900;
+      const width = Math.min(maxWidth, availableWidth, availableHeight * pageAspectRatio);
+      const height = width / pageAspectRatio;
+      setPageFrame((current) => current.width === width && current.height === height ? current : { width, height });
+    };
+    updatePageFrame();
+    const observer = new ResizeObserver(updatePageFrame);
+    observer.observe(canvas);
+    window.addEventListener("resize", updatePageFrame);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", updatePageFrame);
+    };
+  }, [isFullscreen, isWide, pageAspectRatio]);
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      const canvas = canvasRef.current;
+      const firstPage = canvas?.querySelector<HTMLElement>(
+        `.${styles.pageStage}, [data-reader-page="0"]`,
+      );
+      if (!firstPage) return;
+      const toolbarHeight = toolbarRef.current?.getBoundingClientRect().height ?? 70;
+      firstPage.style.scrollMarginTop = `${toolbarHeight + 12}px`;
+      firstPage.scrollIntoView({ behavior: "auto", block: "start" });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [chapter.id]);
+
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    if (isFullscreen) document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isFullscreen]);
+
+  useEffect(() => {
+    if (lastProgressPage.current.chapterID !== chapter.id) {
+      lastProgressPage.current = { chapterID: chapter.id, page: currentPage };
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setProgressVisible(false);
+      return;
+    }
+    if (lastProgressPage.current.page === currentPage) return;
+    lastProgressPage.current.page = currentPage;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setProgressVisible(true);
+    if (progressTimer.current) clearTimeout(progressTimer.current);
+    progressTimer.current = setTimeout(() => setProgressVisible(false), 1400);
+    return () => {
+      if (progressTimer.current) clearTimeout(progressTimer.current);
+      progressTimer.current = null;
+    };
+  }, [chapter.id, currentPage]);
+
+  useEffect(() => {
+    if (!isFullscreen) return;
+    setControlsVisible(false);
+    if (controlsTimer.current) clearTimeout(controlsTimer.current);
+    controlsTimer.current = null;
+    return () => {
+      if (controlsTimer.current) clearTimeout(controlsTimer.current);
+      controlsTimer.current = null;
+    };
+  }, [isFullscreen]);
+
+  useEffect(() => {
     if (!isFullscreen) return;
     function handleFullscreenKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") setIsFullscreen(false);
@@ -274,13 +365,15 @@ function MangaChapter({
   }
 
   return (
-    <section className={`${styles.reader} ${isFullscreen ? styles.isFullscreen : ""}`} ref={readerRef} aria-labelledby="chapter-heading">
+    <>
+    <section
+      className={`${styles.reader} ${isFullscreen ? `${styles.isFullscreen} ${controlsVisible ? "" : styles.controlsHidden}` : ""}`}
+      ref={readerRef}
+      onMouseMove={revealReaderControls}
+      onTouchStart={revealReaderControls}
+      aria-labelledby="chapter-heading"
+    >
       <header className={styles.readerHeader}>
-        <Link className={styles.backLink} href={titleHref}>
-          <FiArrowLeft aria-hidden="true" />
-          Voltar para a obra
-        </Link>
-
         <div className={styles.titleBlock}>
           <span className={styles.eyebrow}><FiBookOpen /> Leitor de capítulo</span>
           <Link href={titleHref} className={styles.mangaTitle}>
@@ -288,8 +381,6 @@ function MangaChapter({
           </Link>
           <h1 id="chapter-heading">Capítulo {chapter.chapterNumber} {chapter.chapterTitle && <span>— {chapter.chapterTitle}</span>}</h1>
           <div className={styles.metadata}>
-            <span>{chapter.groupInfo.countryFlag} {chapter.groupInfo.country}</span>
-            <span aria-hidden="true">•</span>
             <span>{chapter.groupInfo.name}</span>
             <span aria-hidden="true">•</span>
             <span>{pages.length} páginas</span>
@@ -297,7 +388,7 @@ function MangaChapter({
         </div>
       </header>
 
-      <div className={styles.toolbar}>
+      <div className={styles.toolbar} ref={toolbarRef}>
         <div className={styles.pageNavigation}>
           <label className={styles.pageSelector}>
             <span>Página</span>
@@ -333,16 +424,13 @@ function MangaChapter({
           <span>{isFullscreen ? "Sair" : "Tela cheia"}</span>
         </button>
 
-        <span className={styles.progressTrack} aria-hidden="true">
-          <span style={{ width: `${progress}%` }} />
-        </span>
       </div>
 
-      <div className={`${styles.canvas} ${mode === "scroll" ? styles.continuousCanvas : ""}`}>
+      <div ref={canvasRef} className={`${styles.canvas} ${mode === "scroll" ? styles.continuousCanvas : ""}`}>
         {mode === "swap" ? (
           <div
             className={`${styles.pageStage} ${isWide ? styles.wideStage : ""}`}
-            style={{ aspectRatio: `${pageAspectRatio}` }}
+            style={{ aspectRatio: `${pageAspectRatio}`, ...(isFullscreen ? {} : pageFrame) }}
           >
             <MediaImage
               key={pages[currentPage]}
@@ -358,7 +446,6 @@ function MangaChapter({
               backupSource={chapter.telegramPages?.[currentPage]}
               alt={`Página ${currentPage + 1} do capítulo ${chapter.chapterNumber}`}
             />
-            <span className={styles.pageBadge}>{currentPage + 1} / {pages.length}</span>
           </div>
         ) : (
           <div className={styles.pageStack}>
@@ -385,6 +472,16 @@ function MangaChapter({
         </nav>
       </footer>
     </section>
+    <div className={`${styles.progressIndicator} ${progressVisible ? styles.progressVisible : ""}`} role="status" aria-live="polite" aria-atomic="true">
+      <span
+        className={`${styles.progressLabel} ${progress >= 100 ? styles.progressLabelAtEnd : ""}`}
+        style={{ left: `${progress}%` }}
+      >{currentPage + 1}</span>
+      <span className={styles.progressTrack} aria-hidden="true">
+        <span style={{ width: `${progress}%` }} />
+      </span>
+    </div>
+    </>
   );
 }
 

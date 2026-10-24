@@ -24,6 +24,7 @@ async function MangasPage({ searchParams }: { searchParams: Promise<{ genero?: s
           mangas={mangas}
           groups={groups}
           filterable
+          showAdultMarker={false}
           initialTitleQuery={mangaka ?? ""}
           initialGenres={genero ? [genero] : []}
           initialDemographics={demografia ? [demografia] : []}

@@ -23,31 +23,50 @@
   outline-offset: -1px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 
-  /* ==== TRANSIÇÃO E CAMADA GPU ==== */
   transition:
     transform 0.2s ease-in-out,
     box-shadow 0.2s ease-in-out;
-  position: relative; /* garante transform isolado */
-  will-change: transform; /* força navegador otimizar transform */
-  backface-visibility: hidden; /* evita flicker no hover */
+  position: relative;
+  will-change: transform;
+  backface-visibility: hidden;
+  z-index: 0;
+}
+
+.newChapterCard svg {
+  display: block;
+  flex: 0 0 auto;
+  transform: none;
+  transition: none;
+  animation: none;
 }
 
 .newChapterCard:hover {
-  transform: translateY(-5px); /* levanta o card sem alterar tamanho */
+  transform: translateY(-5px);
+  z-index: 1;
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25);
+}
+
+.newChapterCard:focus-within {
+  transform: translateY(-5px);
 }
 
 /* =========================
    FIGURA / IMAGEM DO MANGA
    ========================= */
+.releaseContent {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: row;
+  gap: 10px;
+}
+
 .coverWrapper {
   position: relative;
   aspect-ratio: 2 / 3;
   height: 191px;
   width: auto;
-
-  /* ==== CAMADA PRÓPRIA PARA ESTABILIDADE ==== */
-  will-change: transform; /* GPU render */
+  flex: 0 0 auto;
 }
 
 .mangaCover {
@@ -55,9 +74,6 @@
   height: 100%;
   object-fit: cover;
   border-radius: 8px 0 0 8px;
-
-  /* ==== EVITA TREMER AO HOVER DO CARD ==== */
-  transform: translateZ(0); /* cria camada GPU própria */
 }
 
 /* =========================
@@ -106,8 +122,10 @@
 
 .capInfo {
   display: flex;
+  min-width: 0;
   align-items: center;
   gap: 2px;
+  line-height: 1.2;
   color: #93c5fd;
 }
 
@@ -115,8 +133,27 @@
   display: flex;
   align-items: center;
   gap: 3px;
+  line-height: 1.2;
   font-size: 0.75em;
   color: #aaa6b0;
+}
+
+.capInfo > svg {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+}
+
+.capTime > svg {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+}
+
+.scanWrapper > svg {
+  width: 13px;
+  height: 13px;
+  flex: 0 0 13px;
 }
 
 /* =========================
@@ -164,6 +201,7 @@
   flex-direction: row;
   align-items: center;
   gap: 2px;
+  line-height: 1.2;
   margin-bottom: 5px;
 }
 

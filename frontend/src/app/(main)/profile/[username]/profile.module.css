@@ -63,7 +63,7 @@
 .header > div { position: relative; z-index: 1; min-width: 0; }
 .header h1 { overflow-wrap: anywhere; font-size: clamp(1.45rem, 4vw, 1.85rem); font-weight: 800; letter-spacing: -.035em; }
 .header p { margin: 5px 0 12px; color: #b9bdc9; font-size: .9rem; }
-.header span { display: inline-flex; padding: 5px 10px; border: 1px solid #60a5fa33; border-radius: 999px; background: #3b82f61c; color: #bfdbfe; font-size: .7rem; font-weight: 750; letter-spacing: .04em; text-transform: uppercase; }
+.header span { display: inline-flex; padding: 5px 10px; border: 1px solid #60a5fa33; border-radius: 8px; background: #3b82f61c; color: #bfdbfe; font-size: .7rem; font-weight: 750; letter-spacing: .04em; text-transform: uppercase; }
 
 .form {
   display: grid;

@@ -2,7 +2,7 @@ import { Schema, Types } from "mongoose";
 
 import { TakoProjectDB } from "../../../plugins/mongoose";
 
-const ACCOUNT_TYPES = ["MEMBER", "AEGIS"] as const;
+const ACCOUNT_TYPES = ["MEMBER", "HADES"] as const;
 const PLAN_TYPES = ["FREE", "PREMIUM", "VIP"] as const;
 const SUBSCRIPTION_STATUSES = [
   "NONE",
@@ -78,7 +78,9 @@ const subscriptionSchema = new Schema<IUserSubscription>(
 );
 
 const preferencesSchema = new Schema(
-  { showAdultContent: { type: Boolean, default: false } },
+  {
+    showAdultContent: { type: Boolean, default: false },
+  },
   { _id: false },
 );
 

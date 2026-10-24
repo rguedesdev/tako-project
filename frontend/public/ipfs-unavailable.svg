@@ -1,8 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1100" role="img" aria-label="Conteúdo IPFS indisponível">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1100" role="img" aria-label="Não foi possível carregar esta página">
   <rect width="800" height="1100" fill="#11131a"/>
   <path d="M260 390h280v220H260z" fill="none" stroke="#5b6074" stroke-width="18"/>
   <path d="M315 455l70 75 48-50 62 72" fill="none" stroke="#5b6074" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
   <circle cx="470" cy="445" r="22" fill="#5b6074"/>
-  <text x="400" y="690" fill="#d5d7df" font-family="sans-serif" font-size="34" text-anchor="middle">Conteúdo IPFS indisponível</text>
-  <text x="400" y="742" fill="#858a9c" font-family="sans-serif" font-size="24" text-anchor="middle">Nenhum nó está fornecendo este CID.</text>
+  <text x="400" y="690" fill="#d5d7df" font-family="sans-serif" font-size="34" text-anchor="middle">Não foi possível carregar esta página</text>
+  <text x="400" y="742" fill="#858a9c" font-family="sans-serif" font-size="24" text-anchor="middle">Tente novamente mais tarde.</text>
 </svg>

@@ -5,6 +5,14 @@ import { graphQLError } from "../../errors";
 const CHAPTER_TYPES = ["MAIN", "EXTRA", "SPECIAL", "ONESHOT"] as const;
 type ChapterType = (typeof CHAPTER_TYPES)[number];
 
+function isAllowedBackupUrl(rawUrl: string) {
+  const url = new URL(rawUrl);
+  if (url.protocol === "https:") return true;
+
+  const isLoopback = ["localhost", "127.0.0.1", "[::1]"].includes(url.hostname);
+  return process.env.NODE_ENV !== "production" && url.protocol === "http:" && isLoopback;
+}
+
 const chapterSchema = z.object({
   chapterTitle: z.string().trim().max(180, "O título do capítulo deve ter no máximo 180 caracteres.").nullable().optional().transform((value) => value ?? undefined),
   chapterNumber: z.number().finite().min(0, "O número do capítulo deve ser válido e não negativo."),
@@ -17,8 +25,8 @@ const chapterSchema = z.object({
   if (data.telegramPages.length && data.telegramPages.length !== data.pages.length) {
     context.addIssue({ code: "custom", path: ["telegramPages"], message: "Cada página precisa ter uma URL de reserva correspondente." });
   }
-  if (data.telegramPages.some((url) => new URL(url).protocol !== "https:")) {
-    context.addIssue({ code: "custom", path: ["telegramPages"], message: "As URLs de reserva devem usar HTTPS." });
+  if (data.telegramPages.some((url) => !isAllowedBackupUrl(url))) {
+    context.addIssue({ code: "custom", path: ["telegramPages"], message: "As URLs de reserva devem usar HTTPS. HTTP só é permitido para localhost fora de produção." });
   }
   const kind = data.chapterType ?? (Number.isInteger(data.chapterNumber) && data.chapterNumber > 0 ? "MAIN" : "EXTRA");
   if (kind === "MAIN" && (!Number.isInteger(data.chapterNumber) || data.chapterNumber <= 0)) {

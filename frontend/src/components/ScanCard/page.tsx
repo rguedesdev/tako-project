@@ -22,31 +22,30 @@ function ScansCard({ scans, loadError = false }: { scans: GroupCard[]; loadError
         <div className={styles.scansGrid}>
           {scans.map((scan) => {
             return (
-              <Link key={scan.id} href={`/scan/${scan.id}`}>
-                <article className={styles.scanCard}>
-                  <figure className={styles.scanContent}>
-                    <MediaImage className={styles.scanPicture} source={scan.groupImage} fallback="/group-placeholder.svg" alt={`Imagem da ${scan.name}`} />
-                    <figcaption className={styles.scanInfo}>
-                      <div>
-                        <h2 className={styles.scanNameWrapper}>
-                          <span className={styles.scanName}>{scan.name}</span>
-                        </h2>
-                        <p className={styles.scanDescription}>{scan.description}</p>
+              <article key={scan.id} className={styles.scanCard}>
+                <figure className={styles.scanContent}>
+                  <MediaImage className={styles.scanPicture} source={scan.groupImage} fallback="/group-placeholder.svg" alt={`Imagem da ${scan.name}`} />
+                  <figcaption className={styles.scanInfo}>
+                    <div>
+                      <h2 className={styles.scanNameWrapper}>
+                        <span className={styles.scanName}>{scan.name}</span>
+                      </h2>
+                      <p className={styles.scanDescription}>{scan.description}</p>
+                    </div>
+                    <div className={styles.scanMoreInfo}>
+                      <div className={styles.scanManga}>
+                        <HiOutlineBookOpen className={styles.scanMangaIcon} size={17} />
+                        <span>{scan.stats.mangas} Mangas</span>
                       </div>
-                      <div className={styles.scanMoreInfo}>
-                        <div className={styles.scanManga}>
-                          <HiOutlineBookOpen size={17} />
-                          <span>{scan.stats.mangas} Mangas</span>
-                        </div>
-                        <div className={styles.scanManga}>
-                          <BiHash size={17} />
-                          <span>{scan.stats.chapters} Caps</span>
-                        </div>
+                      <div className={styles.scanManga}>
+                        <BiHash className={styles.scanMangaIcon} size={17} />
+                        <span>{scan.stats.chapters} Caps</span>
                       </div>
-                    </figcaption>
-                  </figure>
-                </article>
-              </Link>
+                    </div>
+                  </figcaption>
+                </figure>
+                <Link href={`/scan/${scan.id}`} className={styles.scanLink} aria-label={`Ver scan ${scan.name}`} />
+              </article>
             );
           })}
         </div>

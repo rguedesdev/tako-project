@@ -22,7 +22,15 @@ function Chapters({ mangaId, chapters }: { mangaId: string; chapters: ChapterLis
         <GiEvilBook size={20} />
         <h2 className={styles.volTitle}>Capítulos disponíveis</h2>
       </div>
-      {entries.length === 0 && <p>Nenhum capítulo publicado para esta obra.</p>}
+      {entries.length === 0 && (
+        <div className={styles.emptyState} role="status">
+          <div className={styles.emptyIcon}><BiHash size={25} /></div>
+          <div className={styles.emptyCopy}>
+            <h3>Nenhum capítulo por aqui ainda</h3>
+            <p>Assim que um capítulo desta obra for publicado, ele aparecerá nesta lista.</p>
+          </div>
+        </div>
+      )}
       {entries.map(([number, releases]) => (
         <div key={number} className={styles.capContent}>
           <div className={styles.capNumber}><BiHash size={18} /><h3>Capítulo {number}</h3></div>
